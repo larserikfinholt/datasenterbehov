@@ -4,8 +4,9 @@ import '@fontsource/source-serif-4/latin-500.css'
 import { createElement, ArrowDown, ArrowUpRight, ChevronDown, ChevronUp } from 'lucide'
 import './editorial.css'
 import summary from './data/summary.json'
-import { CAPACITY_SCENARIO, HIGH_SCENARIO, SOURCE_REPO, occupationEstimate, referenceWatts, ssbOrder, type Occupation, type ReferenceMethod } from './model'
+import { CAPACITY_SCENARIO, HIGH_SCENARIO, occupationEstimate, referenceWatts, ssbOrder, type Occupation, type ReferenceMethod } from './model'
 
+const PROJECT_REPO = 'https://github.com/larserikfinholt/datasenterbehov'
 const format = (value: number, decimals = 0) => new Intl.NumberFormat('nb-NO', { minimumFractionDigits: decimals, maximumFractionDigits: decimals }).format(value)
 const highMw = summary.equivalentsBeforeAdoption * HIGH_SCENARIO.adoption * referenceWatts('h100') / 1e6
 const capacityTotal = CAPACITY_SCENARIO.existing + CAPACITY_SCENARIO.committed + CAPACITY_SCENARIO.planned
@@ -76,14 +77,15 @@ get<HTMLDivElement>('#app').innerHTML = `
           </ul></div>
           <div class="reference-control">
             <label for="reference-method">Hvordan anslår vi effekt per aktiv bruker?</label>
-            <select id="reference-method" aria-describedby="reference-calculation reference-note"><option value="h100">Delt H100-server</option><option value="mac">Lokal Mac</option><option value="fixed">Fast effekt</option></select>
+            <select id="reference-method" aria-describedby="reference-calculation reference-note"><option value="h100">Delt NVIDIA H100-server</option><option value="mac">Lokal Mac</option><option value="fixed">Fast effekt</option></select>
             <div id="fixed-control" hidden><label for="fixed-watts">Watt per aktiv referansebruker</label><input id="fixed-watts" type="number" inputmode="decimal" min="0" max="10000" step="any" value="640" aria-describedby="input-error"><p id="input-error" class="input-error" role="status"></p></div>
             <p class="reference-value"><output id="watts-value">640</output> <span>W / aktiv referansebruker</span></p><p id="reference-calculation" class="calculation"></p><p id="reference-note" class="muted"></p>
             <div class="result" aria-live="polite" aria-atomic="true"><span>Med valgt metode</span><strong><output id="result-mw"></output> MW</strong><small id="result-calculation"></small></div>
           </div>
         </div>
-        <p class="source-line">Årsverk: <a href="https://www.ssb.no/statbank/table/11658/">SSB tabell 11658</a>, gjennomsnitt av kvartalene i 2025. Beregningsprinsipp og basisfaktorer: <a href="${SOURCE_REPO}">DatacenterNeed på GitHub <span data-icon="external"></span></a>.</p>
-        <p class="fine-print">Faktorene er scenarioantakelser, ikke observerte målinger. H100-høyscenarioet her antar 8 GPU-er à 700 W, 800 W øvrig servereffekt og 10 samtidige brukere. Dette er en eksplisitt tilpasning av kilderepoets delingsprinsipp, ikke dets 220 W-baseline. Verken gjennomstrømning eller likeverdig modellkvalitet er verifisert.</p>
+        <p class="source-line">Årsverk: <a href="https://www.ssb.no/statbank/table/11658/">SSB tabell 11658</a>, gjennomsnitt av kvartalene i 2025. Beregningsprinsipp og basisfaktorer: <a href="${PROJECT_REPO}">Datasenterbehov på GitHub <span data-icon="external"></span></a>.</p>
+        <p class="fine-print">Faktorene er scenarioantakelser, ikke observerte målinger.</p>
+        <p id="h100-note" class="fine-print">NVIDIA H100-høyscenarioet her antar 8 GPU-er à 700 W, 800 W øvrig servereffekt og 10 samtidige brukere. Oppgitte driftserfaringer med GLM 5.3 Flash de siste ukene viser at serveren med 8 × NVIDIA H100 fint håndterer dobbelt så mange samtidige brukere (20). Regnestykket beholder likevel 10 brukere som en konservativ antakelse. Erfaringen er ikke en standardisert ytelsestest; likeverdig modellkvalitet er ikke verifisert.</p>
       </section>
       <section id="yrker" class="wrap article-section" aria-labelledby="occupations-title">
         <div class="section-heading"><p class="eyebrow">03 / YRKENE BAK TALLET</p><h2 id="occupations-title">En gartner er ikke en utvikler.</h2></div>
@@ -99,7 +101,7 @@ get<HTMLDivElement>('#app').innerHTML = `
       <section class="wrap closing" aria-label="Avslutning"><p>Et norsk datasenter er ikke nødvendigvis<br>et datasenter for norske behov.</p><span>Skillet mellom innenlandsk bruk og eksport er avgjørende. Dette regnestykket belyser skillet, men dokumenterer ikke eksportandelen.</span></section>
     </article>
   </main>
-  <footer class="wrap"><div><a class="wordmark" href="#">Datakraftbehov / Norge</a><p>Åpent regnestykke. Synlige antakelser.</p></div><div><a href="${SOURCE_REPO}">Kilder og metode på GitHub <span data-icon="external"></span></a><p>SSB-grunnlag: 2025 · Kilderevisjon: ${summary.sourceCommit.slice(0, 7)}</p></div></footer>
+  <footer class="wrap"><div><a class="wordmark" href="#">Datakraftbehov / Norge</a><p>Åpent regnestykke. Synlige antakelser.</p></div><div><a href="${PROJECT_REPO}">Kilder og metode på GitHub <span data-icon="external"></span></a><p>SSB-grunnlag: 2025 · Kilderevisjon: ${summary.sourceCommit.slice(0, 7)}</p></div></footer>
 `
 
 document.querySelectorAll('[data-icon]').forEach(element => element.append(createElement(element.getAttribute('data-icon') === 'down' ? ArrowDown : ArrowUpRight, { width: 17, height: 17, 'aria-hidden': 'true' })))
@@ -150,6 +152,7 @@ function renderFullTable() {
 function updateReference() {
   const method = methodControl.value as ReferenceMethod
   get('#fixed-control').hidden = method !== 'fixed'
+  get('#h100-note').hidden = method !== 'h100'
   if (method === 'fixed' && (fixedInput.value.trim() === '' || !fixedInput.checkValidity() || !Number.isFinite(fixedInput.valueAsNumber))) {
     fixedInput.setAttribute('aria-invalid', 'true')
     get('#input-error').textContent = 'Skriv et tall fra 0 til 10 000 W. Beregningen viser siste gyldige verdi.'

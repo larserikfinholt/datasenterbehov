@@ -2,6 +2,14 @@
 
 En redaksjonell, responsiv nettside om modellert AI-effektbehov i norsk arbeidsliv. Vite, TypeScript og semantisk HTML, uten backend, dashboard eller legacy-visning. Skrifter leveres lokalt.
 
+Nettside: <https://larserikfinholt.github.io/datasenterbehov/>
+
+Prosjekt: <https://github.com/larserikfinholt/datasenterbehov>
+
+## Publisering
+
+GitHub Actions bygger, tester og publiserer til GitHub Pages ved push til `main`. GitHub Pages må bruke **GitHub Actions** som kilde i repoets innstillinger. Produksjonsbygget bruker `/datasenterbehov/` som base for skript, stiler og yrkesdata. Lokal forhåndsvisning etter `npm run build` og `npm run preview` ligger på samme understi.
+
 ## Kjør lokalt
 
 Node.js 22.18+ (eller nyere støttet LTS) og npm.
@@ -33,6 +41,7 @@ Playwright starter selv produksjonsforhåndsvisning på port 4177. Porten må v�
 - 385 koder uten vurdert faktor får det årsverksvektede gjennomsnittet 0,2454626993. Vurderte faktorer beholdes. Dette kalles interpolasjon i grensesnittet, men er metodisk en usikker ekstrapolering.
 - 14 koder mangler komplett årsverksgrunnlag. De står som ukjent, ikke null, og inngår ikke i summen. Observerte nullverdier beholdes.
 - Høyscenario: 80 % adopsjon og `(8 × 700 W + 800 W) / 10 = 640 W` per aktiv referansebruker. Resultat: **309,7976166 MW**, avrundet til 310.
+- Oppgitte driftserfaringer med GLM 5.3 Flash de siste ukene viser at serveren med 8 × NVIDIA H100 fint håndterer 20 samtidige brukere. Høyscenarioet beholder konservativt 10 brukere. Dette er ikke en standardisert ytelsestest. Merknaden vises bare når NVIDIA H100 er valgt.
 - Lokal Mac: illustrativt 200 W / én bruker. Dette er lokal effekt, ikke datasenterlast eller et mål på likeverdig modellkvalitet.
 - Fast effekt: 0 til 10 000 W i grensesnittet. Grensen holder segmentetikettene lesbare på samme lineære skala; den er ikke en fysisk begrensning i modellen.
 
@@ -40,7 +49,7 @@ Antakelsene ligger i [src/model.ts](src/model.ts). `CAPACITY_SCENARIO` inneholde
 
 ## Kilder og reproduksjon
 
-Kilderepo: <https://github.com/larserikfinholt/DatacenterNeed>
+Opprinnelig datakilde (kun for sporbarhet): <https://github.com/larserikfinholt/DatacenterNeed>
 
 Importen er låst til revisjon `9a6f7d727af24171593f15bde34c078bfacd08ad`, filen `data/norway/occupation-workforce-factors-2025-v0.csv`. SSB-data er kreditert Statistisk sentralbyrå, tabell 11658 (2025); kilderepoet oppgir CC BY 4.0 og hentedato 10.09.2026. Yrkesfaktorene er uavhengige scenarioantakelser fra kilderepoet, ikke SSB-estimater.
 
@@ -55,7 +64,7 @@ npm run data:prepare
 
 Dette regenererer fra den lokale CSV-en uten nettverk. `npm run data:refresh` henter eksplisitt den samme versjonslåste CSV-en på nytt. Bytt `SOURCE_COMMIT` i modellen ved en bevisst kildeoppdatering, regenerer og kjør testene. Bygg og vanlig sidebruk krever ikke kontakt med GitHub eller SSB.
 
-Beregningsprinsippene er videreført, men ingen dashboardkode er portert. H100-scenarioet er en synlig lokal tilpasning av kilderepoets delingsprinsipp, ikke dets 220 W-baseline. Mac-verdien er en ny illustrativ antakelse, ikke empirisk dokumentasjon.
+Beregningsprinsippene er videreført, men ingen dashboardkode er portert. Mac-verdien er en ny illustrativ antakelse, ikke empirisk dokumentasjon.
 
 ## Avgrensning
 

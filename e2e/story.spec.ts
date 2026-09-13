@@ -9,7 +9,7 @@ async function expectNoOverflow(page: Page) {
 test('two linear bars, three capacity segments and readable visual assets', async ({ page }, testInfo) => {
   const errors: string[] = []
   page.on('pageerror', error => errors.push(error.message))
-  await page.goto('/')
+  await page.goto('./')
   await page.evaluate(() => document.fonts.ready)
   await expect(page.locator('.headline-number')).toContainText('310')
   await expect(page.locator('[data-bar]')).toHaveCount(2)
@@ -45,14 +45,21 @@ test('two linear bars, three capacity segments and readable visual assets', asyn
 })
 
 test('all reference methods update the chart and table, with invalid-input recovery', async ({ page }) => {
-  await page.goto('/')
+  await page.goto('./')
   const method = page.getByLabel('Hvordan anslår vi effekt per aktiv bruker?')
   await expect(page.locator('#result-mw')).toHaveText('309,8')
+  await expect(method.locator('option:checked')).toHaveText('Delt NVIDIA H100-server')
+  await expect(page.locator('#h100-note')).toBeVisible()
+  await expect(page.locator('#h100-note')).toContainText('GLM 5.3 Flash')
+  await expect(page.locator('#h100-note')).toContainText('(20)')
+  await expect(page.locator('#metode')).not.toContainText('220 W-baseline')
   await method.selectOption('mac')
+  await expect(page.locator('#h100-note')).toBeHidden()
   await expect(page.locator('#watts-value')).toHaveText('200')
   await expect(page.locator('#result-mw')).toHaveText('96,8')
   await expect(page.locator('#chart-scenario')).toContainText('ikke datasenterlast')
   await method.selectOption('fixed')
+  await expect(page.locator('#h100-note')).toBeHidden()
   const input = page.getByLabel('Watt per aktiv referansebruker', { exact: true })
   await input.fill('1280')
   await expect(page.locator('#result-mw')).toHaveText('619,6')
@@ -76,13 +83,14 @@ test('all reference methods update the chart and table, with invalid-input recov
   await input.fill('10001')
   await expect(input).toHaveAttribute('aria-invalid', 'true')
   await method.selectOption('h100')
+  await expect(page.locator('#h100-note')).toBeVisible()
   await expect(page.locator('#result-mw')).toHaveText('309,8')
 })
 
 test('occupations load only on expansion, preserve SSB order and support search', async ({ page }) => {
   let dataRequests = 0
   page.on('request', request => { if (request.url().endsWith('/data/occupations.json')) dataRequests++ })
-  await page.goto('/')
+  await page.goto('./')
   await expect(page.locator('#example-table tbody tr')).toHaveCount(6)
   await expect(page.locator('#full-table tr')).toHaveCount(0)
   expect(dataRequests).toBe(0)
@@ -114,7 +122,7 @@ test('occupations load only on expansion, preserve SSB order and support search'
 
 test('failed data loads can be retried', async ({ page }) => {
   await page.route('**/data/occupations.json', route => route.fulfill({ status: 503, body: 'Unavailable' }))
-  await page.goto('/')
+  await page.goto('./')
   await page.getByRole('button', { name: /Vis alle yrker/ }).click()
   await expect(page.locator('#load-status')).toContainText('kunne ikke lastes')
   await expect(page.locator('#toggle-occupations')).toBeEnabled()
@@ -124,7 +132,7 @@ test('failed data loads can be retried', async ({ page }) => {
 })
 
 test('native FAQ, skip link and source links are keyboard accessible', async ({ page }) => {
-  await page.goto('/')
+  await page.goto('./')
   await page.keyboard.press('Tab')
   await expect(page.getByRole('link', { name: 'Hopp til innhold' })).toBeFocused()
   await expect(page.locator('details')).toHaveCount(8)
@@ -133,14 +141,15 @@ test('native FAQ, skip link and source links are keyboard accessible', async ({ 
   await page.keyboard.press('Enter')
   await expect(page.locator('details').first()).toHaveAttribute('open', '')
   await expect(page.locator('details').first()).toContainText('309,80 MW')
-  await expect(page.locator('#metode a[href="https://github.com/larserikfinholt/DatacenterNeed"]')).toBeVisible()
-  await expect(page.locator('footer a[href="https://github.com/larserikfinholt/DatacenterNeed"]')).toBeVisible()
+  await expect(page.locator('#metode a[href="https://github.com/larserikfinholt/datasenterbehov"]')).toBeVisible()
+  await expect(page.locator('footer a[href="https://github.com/larserikfinholt/datasenterbehov"]')).toBeVisible()
+  await expect(page.locator('a[href*="DatacenterNeed"]')).toHaveCount(0)
 })
 
 test('small mobile and tablet widths have no horizontal overflow', async ({ page }) => {
   for (const width of [320, 375, 768]) {
     await page.setViewportSize({ width, height: 900 })
-    await page.goto('/')
+    await page.goto('./')
     await page.evaluate(() => document.fonts.ready)
     await expectNoOverflow(page)
     await page.getByRole('button', { name: /Vis alle yrker/ }).click()
