@@ -1,0 +1,28 @@
+{
+  "name": "datasenterbehov",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "data:refresh": "node scripts/prepare-data.mjs --refresh",
+    "data:prepare": "node scripts/prepare-data.mjs",
+    "test": "vitest run",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.5.1",
+    "csv-parse": "^7.0.2",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0",
+    "vitest": "^5.0.0"
+  },
+  "dependencies": {
+    "@fontsource-variable/source-sans-3": "^5.3.0",
+    "@fontsource/source-serif-4": "^5.3.0",
+    "lucide": "^1.45.0"
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "sourceRepo": "https://github.com/larserikfinholt/DatacenterNeed",
+  "sourceCommit": "9a6f7d727af24171593f15bde34c078bfacd08ad",
+  "sourceSha256": "a8141b6afe919d3d268254094237c397bbbee170b342f03a4fe7476bbde43d01",
+  "sourceTable": "SSB 11658, kvartalsgjennomsnitt 2025",
+  "count": 407,
+  "assessedCount": 22,
+  "missingFteCount": 14,
+  "knownFte": 2465032.25,
+  "assessedFte": 752935,
+  "fallback": 0.24546269930339268,
+  "equivalentsBeforeAdoption": 605073.4699549155,
+  "examples": [
+    {
+      "code": "2512",
+      "title": "Programvareutviklere",
+      "fte": 7954.25,
+      "factor": 1
+    },
+    {
+      "code": "6113",
+      "title": "Gartnere",
+      "fte": 5947.75,
+      "factor": 0.03
+    },
+    {
+      "code": "2611",
+      "title": "Jurister og advokater",
+      "fte": 11178.5,
+      "factor": 0.6
+    },
+    {
+      "code": "7115",
+      "title": "Tømrere og snekkere",
+      "fte": 44051.75,
+      "factor": 0.05
+    },
+    {
+      "code": "other-assessed",
+      "title": "Øvrige vurderte yrker",
+      "fte": 683802.75,
+      "factor": 0.24535597070938947
+    },
+    {
+      "code": "interpolated",
+      "title": "Andre/interpolerte yrker",
+      "fte": 1712097.25,
+      "factor": null
+    }
+  ]
+}
