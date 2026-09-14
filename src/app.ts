@@ -4,7 +4,7 @@ import '@fontsource/source-serif-4/latin-500.css'
 import { createElement, ArrowDown, ArrowUpRight, ChevronDown, ChevronUp } from 'lucide'
 import './editorial.css'
 import summary from './data/summary.json'
-import { CAPACITY_SCENARIO, HIGH_SCENARIO, occupationEstimate, referenceWatts, ssbOrder, type Occupation, type ReferenceMethod } from './model'
+import { CAPACITY_SCENARIO, HIGH_SCENARIO, assessedFirstOrder, factorDisplay, occupationEstimate, referenceWatts, type Occupation, type ReferenceMethod } from './model'
 
 const PROJECT_REPO = 'https://github.com/larserikfinholt/datasenterbehov'
 const format = (value: number, decimals = 0) => new Intl.NumberFormat('nb-NO', { minimumFractionDigits: decimals, maximumFractionDigits: decimals }).format(value)
@@ -88,14 +88,14 @@ get<HTMLDivElement>('#app').innerHTML = `
         <p id="h100-note" class="fine-print">NVIDIA H100-høyscenarioet her antar 8 GPU-er à 700 W, 800 W øvrig servereffekt og 10 samtidige brukere. Oppgitte driftserfaringer med GLM 5.3 Flash de siste ukene viser at serveren med 8 × NVIDIA H100 fint håndterer dobbelt så mange samtidige brukere (20). Regnestykket beholder likevel 10 brukere som en konservativ antakelse. Erfaringen er ikke en standardisert ytelsestest; likeverdig modellkvalitet er ikke verifisert.</p>
       </section>
       <section id="yrker" class="wrap article-section" aria-labelledby="occupations-title">
-        <div class="section-heading"><p class="eyebrow">03 / YRKENE BAK TALLET</p><h2 id="occupations-title">En gartner er ikke en utvikler.</h2></div>
-        <p class="section-lead">En gartner trenger langt mindre AI-datakraft enn en utvikler i modellen. Arbeidets innhold betyr mer enn at begge kan bruke AI.</p>
-        <div class="occupation-comparison"><div><span class="occupation-name">Programvareutvikler</span><strong>1,00</strong><p>Referansen. Tung AI-bruk til kode, analyse og testing.</p></div><div><span class="occupation-name">Gartner</span><strong>0,03</strong><p>Fysisk arbeid, med noe AI til planlegging og administrasjon.</p></div></div>
-        <p class="muted">Gartnerfaktoren er 3 % av utviklerreferansen i basisscenarioet. Det er en antakelse om relativ AI-bruk, ikke om yrkets verdi eller produktivitet.</p>
+        <div class="section-heading"><p class="eyebrow">03 / YRKENE BAK TALLET</p><h2 id="occupations-title">En barnehagelærer er ikke en utvikler.</h2></div>
+        <p class="section-lead">En barnehagelærer trenger langt mindre AI-datakraft enn en utvikler i modellen. Arbeidets innhold betyr mer enn at begge kan bruke AI.</p>
+        <div class="occupation-comparison"><div><span class="occupation-name">Programvareutvikler</span><strong>1,00</strong><p>Referansen. Tung AI-bruk til kode, analyse og testing.</p></div><div><span class="occupation-name">Barnehagelærer</span><strong>0,08</strong><p>Interaksjon og omsorg dominerer, med begrenset AI-bruk i admin og planning.</p></div></div>
+        <p class="muted">Barnehagelærerfaktoren er 8 % av utviklerreferansen i basisscenarioet. Det er en antakelse om relativ AI-bruk, ikke om yrkets verdi eller produktivitet.</p>
         <div id="example-table"></div>
         <p class="table-note">Årsverk er en proxy: gjennomsnitt av fire kvartalsvise SSB-observasjoner, ikke antall ansatte. <strong>Interpolert betyr anslått, ikke null.</strong> Bare ${summary.assessedCount} av ${summary.count} koder har vurderte faktorer (${format(summary.assessedFte / summary.knownFte * 100, 1)} % av kjente årsverk). ${summary.missingFteCount} koder mangler komplett årsverksgrunnlag og bidrar ikke til summen.</p>
         <button id="toggle-occupations" class="expand-button" aria-expanded="false" aria-controls="all-occupations"><span id="toggle-label">Vis alle yrker</span><span class="count">407</span><span id="toggle-icon"></span></button><p id="load-status" role="status" class="muted"></p>
-        <div id="all-occupations" hidden><div class="search-line"><div><label for="occupation-search">Søk etter yrke eller STYRK-08-kode</label><input id="occupation-search" type="search" placeholder="For eksempel gartner eller 6113" autocomplete="off"></div><p id="search-count" role="status"></p></div><p class="fine-print">SSB-rekkefølge innen hver gruppe: komplett årsverksgrunnlag først, manglende grunnlag sist. Null observerte årsverk er ikke det samme som manglende data.</p><div id="full-table"></div></div>
+        <div id="all-occupations" hidden><div class="search-line"><div><label for="occupation-search">Søk etter yrke eller STYRK-08-kode</label><input id="occupation-search" type="search" placeholder="For eksempel barnehagelærer eller 2342" autocomplete="off"></div><p id="search-count" role="status"></p></div><p class="fine-print">Målt først: de 22 vurderte yrkene. Deretter følger interpolerte yrker i SSB-rekkefølge. Null observerte årsverk er ikke det samme som manglende data.</p><div id="full-table"></div></div>
       </section>
       <section id="sporsmal" class="faq-section band" aria-labelledby="faq-title"><div class="wrap"><div class="section-heading"><p class="eyebrow">04 / SPØRSMÅL OG FORBEHOLD</p><h2 id="faq-title">Hva tallet sier. Og ikke sier.</h2></div><div class="faq">${faq.map(([question, answer]) => `<details><summary>${question}</summary><p>${answer}</p></details>`).join('')}</div></div></section>
       <section class="wrap closing" aria-label="Avslutning"><p>Et norsk datasenter er ikke nødvendigvis<br>et datasenter for norske behov.</p><span>Skillet mellom innenlandsk bruk og eksport er avgjørende. Dette regnestykket belyser skillet, men dokumenterer ikke eksportandelen.</span></section>
@@ -134,8 +134,9 @@ function renderChart() {
 function tableMarkup(rows: readonly Occupation[], caption: string, total = false) {
   const dataRows = rows.map(row => {
     const estimate = occupationEstimate(row, summary.fallback, watts)
+    const displayFactor = factorDisplay(row, summary.fallback)
     const factor = estimate.effectiveFactor
-    return `<tr data-code="${row.code}" data-fte-status="${row.fte === null ? 'missing' : 'observed'}"><th scope="row">${escapeHtml(row.title)}${/^\d{4}$/.test(row.code) ? `<small class="code">${row.code}</small>` : ''}</th><td data-label="Årsverk (SSB)">${row.fte === null ? '<span class="missing">Ukjent</span>' : format(row.fte, 2)}</td><td data-label="AI-faktor">${factor === null ? 'Ukjent' : format(factor, row.code === 'interpolated' || row.code === 'other-assessed' ? 3 : 2)}</td><td data-label="Grunnlag"><span class="${estimate.interpolated ? 'interpolated' : ''}">${estimate.interpolated ? 'Interpolert' : 'Vurdert'}</span>${row.code === 'other-assessed' ? '<small>vektet snitt</small>' : ''}</td><td data-label="Estimert MW">${estimate.mw === null ? '<span class="missing">Ukjent</span>' : format(estimate.mw, 2)}</td></tr>`
+    return `<tr data-code="${row.code}" data-fte-status="${row.fte === null ? 'missing' : 'observed'}"><th scope="row">${escapeHtml(row.title)}${/^\d{4}$/.test(row.code) ? `<small class="code">${row.code}</small>` : ''}</th><td data-label="Årsverk (SSB)">${row.fte === null ? '<span class="missing">Ukjent</span>' : format(row.fte, 2)}</td><td data-label="AI-faktor">${factor === null ? 'Ukjent' : format(factor, displayFactor.interpolated ? 3 : 2)}</td><td data-label="Grunnlag"><span class="${estimate.interpolated ? 'interpolated' : ''}">${estimate.interpolated ? 'Interpolert' : 'Vurdert'}</span>${row.code === 'other-assessed' ? '<small>vektet snitt</small>' : ''}</td><td data-label="Estimert MW">${estimate.mw === null ? '<span class="missing">Ukjent</span>' : format(estimate.mw, 2)}</td></tr>`
   }).join('')
   return `<table><caption>${caption}</caption><thead><tr><th scope="col">Yrke</th><th scope="col">Årsverk fra SSB</th><th scope="col">AI-faktor</th><th scope="col">Vurdert / interpolert</th><th scope="col">Estimert MW</th></tr></thead><tbody>${dataRows}</tbody>${total ? `<tfoot><tr><th scope="row">Total<small>Kjente årsverk</small></th><td data-label="Årsverk (SSB)">${format(summary.knownFte, 2)}</td><td data-label="AI-faktor">${format(summary.fallback, 3)}</td><td data-label="Grunnlag">Blandet</td><td data-label="Estimert MW">${format(summary.equivalentsBeforeAdoption * HIGH_SCENARIO.adoption * watts / 1e6, 2)}</td></tr></tfoot>` : ''}</table>`
 }
@@ -187,7 +188,7 @@ get('#toggle-occupations').addEventListener('click', async () => {
       if (!response.ok) throw new Error('Kunne ikke laste yrkesgrunnlaget')
       const loaded: Occupation[] = await response.json()
       if (!Array.isArray(loaded) || loaded.length !== summary.count) throw new Error('Ufullstendig yrkesgrunnlag')
-      allRows = ssbOrder(loaded)
+      allRows = assessedFirstOrder(loaded)
     }
     expanded = true
     updateToggle()

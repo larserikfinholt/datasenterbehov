@@ -37,6 +37,16 @@ export function weightedFactor(rows: readonly Occupation[]): number | null {
   return fte === 0 ? null : assessed.reduce((total, row) => total + row.fte! * row.factor!, 0) / fte
 }
 
+export function factorDisplay(row: Occupation, fallback: number | null) {
+  const isInterpolated = row.factor === null && fallback !== null
+  const value = isInterpolated ? fallback : row.factor
+  return {
+    value,
+    interpolated: isInterpolated,
+    decimals: isInterpolated ? 3 : 2,
+  }
+}
+
 export function occupationEstimate(row: Occupation, fallback: number | null, watts: number, adoption: number = HIGH_SCENARIO.adoption) {
   if (!Number.isFinite(watts) || watts < 0 || !Number.isFinite(adoption) || adoption < 0 || adoption > 1) {
     throw new Error('Ugyldige scenarioverdier')
@@ -59,4 +69,10 @@ export function workforceEstimate(rows: readonly Occupation[], watts: number, ad
 
 export function ssbOrder(rows: readonly Occupation[]): Occupation[] {
   return [...rows.filter(row => row.fte !== null), ...rows.filter(row => row.fte === null)]
+}
+
+export function assessedFirstOrder(rows: readonly Occupation[]): Occupation[] {
+  const assessed = ssbOrder(rows.filter(row => row.factor !== null))
+  const interpolated = ssbOrder(rows.filter(row => row.factor === null))
+  return [...assessed, ...interpolated]
 }

@@ -3,7 +3,7 @@ import { parse } from 'csv-parse/sync'
 import sourceCsv from '../data/workforce.csv?raw'
 import occupations from '../public/data/occupations.json'
 import summary from './data/summary.json'
-import { occupationEstimate, referenceWatts, ssbOrder, weightedFactor, workforceEstimate, type Occupation } from './model'
+import { factorDisplay, occupationEstimate, referenceWatts, ssbOrder, weightedFactor, workforceEstimate, type Occupation } from './model'
 
 const rows: Occupation[] = [
   { code: '0001', title: 'Referanse', fte: 10, factor: 1 },
@@ -42,6 +42,13 @@ describe('weighted interpolation', () => {
     expect(ssbOrder([rows[3]!, rows[0]!, rows[2]!]).map(row => row.code)).toEqual(['0001', '0003', '0004'])
   })
   it('rejects invalid adoption', () => expect(() => workforceEstimate(rows, 640, 1.1)).toThrow())
+  it('keeps interpolated occupations at the fallback average rather than a rounded manual value', () => {
+    expect(factorDisplay({ code: '9999', title: 'Interpolert yrke', fte: 150, factor: null }, 0.2454626993)).toEqual({
+      value: 0.2454626993,
+      interpolated: true,
+      decimals: 3,
+    })
+  })
 })
 
 describe('pinned SSB dataset and default scenario', () => {
