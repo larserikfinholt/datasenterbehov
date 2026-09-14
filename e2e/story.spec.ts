@@ -1,5 +1,6 @@
 import { expect, test, type Page } from '@playwright/test'
 import occupations from '../public/data/occupations.json' with { type: 'json' }
+import { assessedFirstOrder } from '../src/model'
 
 async function expectNoOverflow(page: Page) {
   const dimensions = await page.evaluate(() => ({ viewport: document.documentElement.clientWidth, content: document.documentElement.scrollWidth }))
@@ -101,15 +102,15 @@ test('occupations load only on expansion, preserve SSB order and support search'
   await expect(page.locator('#toggle-occupations')).toHaveAttribute('aria-expanded', 'true')
   expect(dataRequests).toBe(1)
   const codes = await page.locator('#full-table tbody tr').evaluateAll(rows => rows.map(row => row.getAttribute('data-code')))
-  expect(codes).toEqual([...occupations.filter(row => row.fte !== null), ...occupations.filter(row => row.fte === null)].map(row => row.code))
+  expect(codes).toEqual(assessedFirstOrder(occupations).map(row => row.code))
   await expect(page.locator('#full-table [data-fte-status="observed"]')).toHaveCount(393)
   await expect(page.locator('#full-table [data-fte-status="missing"]')).toHaveCount(14)
   await expectNoOverflow(page)
   const search = page.getByLabel('Søk etter yrke eller STYRK-08-kode')
-  await search.fill('6113')
+  await search.fill('2342')
   await expect(page.locator('#full-table tbody tr')).toHaveCount(1)
-  await expect(page.locator('#full-table tbody tr')).toContainText('Gartnere')
-  await expect(page.locator('#full-table tbody tr')).toContainText('0,03')
+  await expect(page.locator('#full-table tbody tr')).toContainText('Førskole-/barnehagelærere')
+  await expect(page.locator('#full-table tbody tr')).toContainText('0,08')
   await search.fill('ikke-et-yrke')
   await expect(page.locator('#full-table')).toHaveText('Ingen yrker passer med søket.')
   await search.fill('')
