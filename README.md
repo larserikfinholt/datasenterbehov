@@ -2,6 +2,8 @@
 
 En redaksjonell, responsiv nettside om modellert AI-effektbehov i norsk arbeidsliv. Vite, TypeScript og semantisk HTML, uten backend, dashboard eller legacy-visning. Skrifter leveres lokalt.
 
+Artikkel er publisert på kode24.no: https://www.kode24.no/artikkel/norge-setter-av-10-ganger-mer-kraft-til-datasentre-enn-vi-trenger/272717
+
 Nettside: <https://larserikfinholt.github.io/datasenterbehov/>
 
 Prosjekt: <https://github.com/larserikfinholt/datasenterbehov>
