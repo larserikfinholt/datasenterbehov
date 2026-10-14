@@ -3,6 +3,7 @@ import occupations from '../public/data/occupations.json' with { type: 'json' }
 import { assessedFirstOrder } from '../src/model'
 import datacenters from '../src/data/datacenters.json' with { type: 'json' }
 import { byMwDesc, markerRadius, maxMw } from '../src/datacenters'
+import { buildupSteps } from '../src/datacenter-buildup'
 
 async function expectNoOverflow(page: Page) {
   const dimensions = await page.evaluate(() => ({ viewport: document.documentElement.clientWidth, content: document.documentElement.scrollWidth }))
@@ -293,10 +294,35 @@ test('the Klimacafé presentation is published next to the site and linked from 
   await link.click()
   await expect(page).toHaveURL(/\/datasenterbehov\/presentasjon\/$/)
   await expect(page).toHaveTitle(/Trenger vi datasentre\?/)
-  await expect(page.locator('svg[data-marpit-svg]')).toHaveCount(5)
+  await expect(page.locator('svg[data-marpit-svg]')).toHaveCount(6)
   await expect(page.locator('section').first()).toContainText('Trenger vi datasentre? Ja. Men hvor mye?')
-  await expect(page.locator('section').nth(3).locator('[role="img"]')).toHaveAttribute('aria-label', /300 MW.*3 500 MW/)
+  await expect(page.locator('section').nth(1).locator('[data-datacenter-buildup]')).toHaveAttribute('aria-label', /21 datasentre/)
+  await expect(page.locator('section').nth(4).locator('[role="img"]')).toHaveAttribute('aria-label', /300 MW.*3 500 MW/)
   await expect(page.locator('section').last().locator('img[src="qr.svg"]')).toHaveAttribute('alt', /QR-kode/)
   const fontsLoaded = await page.evaluate(async () => { await document.fonts.ready; return document.fonts.check('30px "Source Sans 3"') && document.fonts.check('54px "Source Serif 4"') })
   expect(fontsLoaded).toBe(true)
+})
+test('the Norway map buildup slide adds data centers one by one until the summed bar is complete', async ({ page }, testInfo) => {
+  test.setTimeout(60_000)
+  const errors: string[] = []
+  page.on('pageerror', error => errors.push(error.message))
+  const steps = buildupSteps(datacenters.sites)
+  const finalTotal = new Intl.NumberFormat('nb-NO').format(steps.at(-1)!.total)
+  await page.goto('presentasjon/#2')
+  const slide = page.locator('section').nth(1)
+  const buildup = slide.locator('[data-datacenter-buildup]')
+  const count = buildup.locator('.dc-count-value')
+  await expect(count).toBeAttached()
+  await expect(count).not.toHaveText(String(steps.length))
+  await expect(buildup.locator('.dc-marker.is-shown').first()).toBeAttached({ timeout: 5_000 })
+  await page.screenshot({ path: `artifacts/${testInfo.project.name}-slide-buildup-start.png` })
+  await expect(count).toHaveText(String(steps.length), { timeout: 30_000 })
+  await expect(buildup.locator('.dc-total-value')).toHaveText(finalTotal)
+  await expect(buildup.locator('.dc-marker')).toHaveCount(datacenters.sites.length)
+  await expect(buildup.locator('.dc-marker.is-shown')).toHaveCount(datacenters.sites.length)
+  await page.waitForTimeout(1_800)
+  await page.screenshot({ path: `artifacts/${testInfo.project.name}-slide-buildup.png` })
+  await page.keyboard.press('ArrowRight')
+  await expect(count).toHaveText('0')
+  expect(errors).toEqual([])
 })

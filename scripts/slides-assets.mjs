@@ -4,8 +4,10 @@ import { copyFile, mkdir, writeFile } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import QRCode from 'qrcode'
+import { build } from 'vite'
 
 export const SITE_URL = 'https://larserikfinholt.github.io/datasenterbehov/'
+export const SLIDE_SCRIPT = 'datacenter-buildup.js'
 export const SLIDES_DIR = fileURLToPath(new URL('../slides/', import.meta.url))
 const ROOT = fileURLToPath(new URL('../', import.meta.url))
 
@@ -23,9 +25,31 @@ export async function prepareSlideAssets() {
   }
   const svg = await QRCode.toString(SITE_URL, { type: 'svg', margin: 0, errorCorrectionLevel: 'M', color: { dark: '#252824', light: '#0000' } })
   await writeFile(path.join(SLIDES_DIR, 'qr.svg'), svg)
+  await buildSlideScripts()
+}
+
+// Kartanimasjonen på lysbilde 2 gjenbruker komponenten fra nettsiden, pakket som ett skript.
+async function buildSlideScripts() {
+  await build({
+    configFile: false,
+    root: ROOT,
+    logLevel: 'warn',
+    publicDir: false,
+    build: {
+      outDir: SLIDES_DIR,
+      emptyOutDir: false,
+      copyPublicDir: false,
+      lib: {
+        entry: path.join(ROOT, 'src/slides/datacenter-buildup.ts'),
+        formats: ['iife'],
+        name: 'datacenterBuildup',
+        fileName: () => SLIDE_SCRIPT,
+      },
+    },
+  })
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   await prepareSlideAssets()
-  console.log('Presentasjonsressurser skrevet til slides/fonts og slides/qr.svg')
+  console.log(`Presentasjonsressurser skrevet til slides/fonts, slides/qr.svg og slides/${SLIDE_SCRIPT}`)
 }

@@ -28,6 +28,10 @@ Ferdig bygget versjon vises med `npm run build` og `npm run preview` på <http:/
 
 Skriftfiler og QR-kode til nettsiden genereres til `slides/fonts/` og `slides/qr.svg` ved bygging og er ikke sjekket inn. I presentasjonen gir `P` presentatørvisning med notater, `F` fullskjerm, og piltaster bytter lysbilde.
 
+Lysbilde 2 er et animert kart: anleggene i `data/datacenters.csv` dukker opp ett for ett, største først, mens én stolpe til høyre vokser og totalen teller opp. Animasjonen starter når lysbildet vises; gå tilbake og fram igjen for å spille den av på nytt. Uten animasjon (PDF, redusert bevegelse) vises sluttilstanden. Komponenten ligger i `src/datacenter-buildup.ts` (beregning), `src/datacenter-buildup-view.ts` og `src/datacenter-buildup.css`, slik at den også kan brukes på nettsiden senere. `scripts/slides-assets.mjs` bygger `src/slides/datacenter-buildup.ts` til `slides/datacenter-buildup.js`, som ikke er sjekket inn. Marp-serveren bygger ikke skriptet på nytt ved endringer; kjør `npm run slides:assets` igjen.
+
+Stolpen er en visuell sum, ikke en kapasitetsoversikt. For hvert anlegg legges lagene oppå hverandre uten å telle samme MW to ganger: i bruk, nettreservasjon utover dette, omsøkt effekt og planlagt kapasitet utover reservert og omsøkt. Summen på tvers av anleggene blander likevel tall med ulike definisjoner, kan overlappe og dekker bare prosjektets kartutvalg. Den er derfor ikke det samme som 3 500 MW reservert nettkapasitet på lysbilde 5, og det står en merknad om dette på lysbildet.
+
 ## Kjør lokalt
 
 Node.js 22.18+ (eller nyere støttet LTS) og npm.

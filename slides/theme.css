@@ -51,7 +51,13 @@ strong { font-weight: 650; }
 /* Fragmenter: Marp viser `* `-punkter trinnvis. Kulepunktet skjules. */
 .machine ul { list-style: none; padding: 0; margin-top: 18px; }
 
-/* Lysbilde 2: maskin og 20 utviklere */
+/* Lysbilde 2: datasentre på kartet og én oppsummert stolpe (src/datacenter-buildup-view.ts) */
+section.buildup-slide { justify-content: flex-start; gap: 14px; padding-top: 48px; padding-bottom: 48px; }
+section.buildup-slide h2 { font-size: 44px; }
+section.buildup-slide .buildup { flex: 1; min-height: 0; font-size: 22px; }
+section.buildup-slide .note { font-size: 16px; max-width: none; }
+
+/* Lysbilde 3: maskin og 20 utviklere */
 .machine { display: grid; grid-template-columns: 300px 1fr; gap: 56px; align-items: start; }
 .server { width: 300px; display: flex; flex-direction: column; gap: 8px; }
 .server .box { border: 2px solid var(--ink); display: flex; flex-direction: column; gap: 8px; padding: 14px; background: var(--wash); }
@@ -64,13 +70,13 @@ strong { font-weight: 650; }
 .formula { font-size: 50px; font-weight: 600; color: var(--green); margin-top: 6px; }
 .formula small { display: block; font-size: 22px; font-weight: 400; color: var(--muted); margin-top: 4px; }
 
-/* Lysbilde 3: tre yrker */
+/* Lysbilde 4: tre yrker */
 .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; flex: 1; max-height: 380px; }
 .trio div { background: var(--wash); border: 1px solid var(--rule); display: flex; flex-direction: column; justify-content: flex-end; padding: 28px 30px; font-size: 38px; font-family: var(--serif); position: relative; overflow: hidden; }
 .trio div::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 10px; background: var(--green); }
 .trio div span { display: block; font-family: var(--sans); font-size: 18px; color: var(--muted); margin-top: 8px; min-height: 2.6em; text-wrap: pretty; }
 
-/* Lysbilde 4: to vannrette stolper på samme skala */
+/* Lysbilde 5: to vannrette stolper på samme skala */
 .bars { display: grid; gap: 34px; margin-top: 10px; }
 .bars > div { display: grid; grid-template-columns: 320px 1fr; align-items: center; gap: 30px; }
 .bars .label { font-size: 24px; line-height: 1.3; text-align: right; }
@@ -85,7 +91,7 @@ strong { font-weight: 650; }
 .bars .scale span:first-child { transform: none; }
 .bars .scale span:last-child { transform: translateX(-100%); white-space: nowrap; }
 
-/* Lysbilde 5: Gromstul og sluttspørsmål */
+/* Lysbilde 6: Gromstul og sluttspørsmål */
 .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 8px; }
 .compare > div { border-top: 3px solid var(--green); padding-top: 18px; }
 .compare .mw { display: flex; align-items: baseline; gap: 10px; font-size: 84px; font-weight: 600; line-height: 1; color: var(--green); white-space: nowrap; }

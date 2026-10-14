@@ -4,7 +4,7 @@ theme: datakraft
 paginate: true
 lang: nb
 title: Trenger vi datasentre? Ja. Men hvor mange? | Klimacafé i Skien 15.10.2026
-description: Fem lysbilder om KI-behovet i norsk arbeidsliv og nettkapasiteten som er reservert til nye datasentre. Lars Erik Finholt, Klimacafé i Skien 15. oktober 2026.
+description: Seks lysbilder om datasentrene på kartet, KI-behovet i norsk arbeidsliv og nettkapasiteten som er reservert til nye datasentre. Lars Erik Finholt, Klimacafé i Skien 15. oktober 2026.
 ---
 
 <!-- _class: lead -->
@@ -26,12 +26,39 @@ Tid: 1,5 minutt.
 - «Men hvor mye ny datasenterkapasitet trenger vi egentlig? Det spørsmålet har jeg forsøkt å regne på.»
 - «Her skal vi se på én del av behovet: KI i norsk arbeidsliv.»
 
-Overgang: «For å regne på hele arbeidslivet må vi begynne et sted. Vi begynner med én maskin.»
+Overgang: «Først: hvor mye kraft er det egentlig snakk om? La oss se på kartet.»
 -->
 
 ---
 
-<p class="eyebrow">1 / Utgangspunktet</p>
+<!-- _class: buildup-slide -->
+
+<p class="eyebrow">1 / Datasentrene</p>
+
+## Hvor mye kraft vil datasentrene ha?
+
+<div class="buildup" data-datacenter-buildup></div>
+
+<p class="note">Sum av oppgitte tall for 21 anlegg i prosjektets kartutvalg: nettreservasjon, omsøkt effekt og planlagt kapasitet utover dette. Tallene har ulike definisjoner, kan overlappe og er ikke en nasjonal oversikt.</p>
+
+<script src="datacenter-buildup.js" defer></script>
+
+<!--
+Tid: 1,5 minutt. Animasjonen starter når lysbildet vises og tar rundt 20 sekunder. Gå tilbake og fram igjen for å spille den av på nytt.
+
+- «Dette er datasentre i Norge som vi har funnet kilder for. De største kommer først: Gromstul her i Skien, så Bolvik i Skien, Narvik og Fyresdal.»
+- «Stolpen til høyre legger sammen det som er oppgitt: kraft som er reservert i nettet, kraft det er søkt om, og planlagt kapasitet.»
+- «Det blir flere tusen megawatt. Men tallene betyr ulike ting, og noen kan overlappe. Dette er ikke en offisiell oversikt, bare det vi har funnet kilder til.»
+- «Noen anlegg har vi ikke tall for i det hele tatt. De vises som små prikker.»
+
+Talernotat: summen er ikke det samme som 3 500 MW reservert nettkapasitet på «Hele arbeidslivet»-lysbildet. Den blander reservasjon, søknader og planer for 21 anlegg. Ikke bruk summen som et presist tall.
+
+Overgang: «Så hvor mye av dette trenger vi selv? For å regne på hele arbeidslivet må vi begynne et sted. Vi begynner med én maskin.»
+-->
+
+---
+
+<p class="eyebrow">2 / Utgangspunktet</p>
 
 ## Vi begynner med én maskin og 20 utviklere
 
@@ -70,7 +97,7 @@ Overgang: «Men trenger alle i arbeidslivet like mye KI som en utvikler?»
 
 ---
 
-<p class="eyebrow">2 / Yrkene</p>
+<p class="eyebrow">3 / Yrkene</p>
 
 ## Trenger en gartner like mye KI som en utvikler?
 
@@ -97,7 +124,7 @@ Overgang: «Hva blir summen hvis vi regner som om hele norsk arbeidsliv tar KI i
 
 ---
 
-<p class="eyebrow">3 / Hele arbeidslivet</p>
+<p class="eyebrow">4 / Hele arbeidslivet</p>
 
 ## Hva blir det for hele norsk arbeidsliv?
 
@@ -132,7 +159,7 @@ Overgang: «Og hvor stort er egentlig 300 megawatt? Her i Skien har vi en lokal 
 
 ---
 
-<p class="eyebrow">4 / Gromstul, Skien</p>
+<p class="eyebrow">5 / Gromstul, Skien</p>
 
 ## Hva skal kapasiteten brukes til?
 

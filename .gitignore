@@ -29,3 +29,4 @@ playwright-report/
 # Genererte presentasjonsressurser (npm run slides:assets)
 slides/fonts/
 slides/qr.svg
+slides/datacenter-buildup.js
