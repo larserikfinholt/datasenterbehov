@@ -25,3 +25,7 @@ playwright-report/
 *.njsproj
 *.sln
 *.sw?
+
+# Genererte presentasjonsressurser (npm run slides:assets)
+slides/fonts/
+slides/qr.svg

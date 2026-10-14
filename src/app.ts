@@ -4,6 +4,7 @@ import '@fontsource/source-serif-4/latin-500.css'
 import { createElement, ArrowDown, ArrowUpRight, ChevronDown, ChevronUp } from 'lucide'
 import './editorial.css'
 import summary from './data/summary.json'
+import { datacenterMapMarkup, initializeDatacenterMap } from './datacenter-view'
 import { CAPACITY_SCENARIO, HIGH_SCENARIO, assessedFirstOrder, factorDisplay, occupationEstimate, referenceWatts, type Occupation, type ReferenceMethod } from './model'
 
 const PROJECT_REPO = 'https://github.com/larserikfinholt/datasenterbehov'
@@ -28,7 +29,7 @@ get<HTMLDivElement>('#app').innerHTML = `
   <a class="skip-link" href="#innhold">Hopp til innhold</a>
   <header class="masthead wrap">
     <a class="wordmark" href="#" aria-label="Datakraftbehov, til toppen"><span class="brand-mark" aria-hidden="true"></span>Datakraftbehov<span class="country"> / Norge</span></a>
-    <nav aria-label="Hovedmeny"><a href="#metode">Metoden</a><a href="#yrker">Yrker</a><a href="#sporsmal">Spørsmål</a></nav>
+    <nav aria-label="Hovedmeny"><a href="#kart">Kartet</a><a href="#metode">Metoden</a><a href="#yrker">Yrker</a><a href="#sporsmal">Spørsmål</a></nav>
   </header>
   <main id="innhold">
     <article>
@@ -43,8 +44,9 @@ get<HTMLDivElement>('#app').innerHTML = `
         <p class="thesis">Stor datasenterutbygging bør derfor begrunnes som <strong>internasjonal datakraftindustri</strong>, ikke tas for gitt som nødvendig for norske bedrifters AI-bruk.</p>
         <a class="text-link jump" href="#sammenligning">Se størrelsesforholdet <span data-icon="down"></span></a>
       </section>
+      ${datacenterMapMarkup()}
       <section id="sammenligning" class="comparison band" aria-labelledby="comparison-title"><div class="wrap">
-        <div class="section-heading"><p class="eyebrow">01 / STØRRELSESFORHOLDET</p><h2 id="comparison-title">Behov er ikke det samme som kapasitet.</h2></div>
+        <div class="section-heading"><p class="eyebrow">02 / STØRRELSESFORHOLDET</p><h2 id="comparison-title">Behov er ikke det samme som kapasitet.</h2></div>
         <p class="section-lead">Ett regnestykke for norsk arbeidsliv. Ett foreløpig scenario for datasentre i Norge.</p>
         <figure aria-labelledby="comparison-title" aria-describedby="chart-note">
           <div id="chart" role="img" class="chart">
@@ -66,7 +68,7 @@ get<HTMLDivElement>('#app').innerHTML = `
         </figure>
       </div></section>
       <section id="metode" class="wrap article-section" aria-labelledby="method-title">
-        <div class="section-heading"><p class="eyebrow">02 / REGNESTYKKET</p><h2 id="method-title">Fire antakelser. Ett synlig regnestykke.</h2></div>
+        <div class="section-heading"><p class="eyebrow">03 / REGNESTYKKET</p><h2 id="method-title">Fire antakelser. Ett synlig regnestykke.</h2></div>
         <p class="formula">årsverk <span>×</span> yrkesfaktor <span>×</span> AI-adopsjon <span>×</span> watt per aktiv referansebruker</p>
         <p class="muted formula-note">Summeres over yrkene. Watt deles på 1 000 000 for å gi MW.</p>
         <div class="method-layout">
@@ -88,7 +90,7 @@ get<HTMLDivElement>('#app').innerHTML = `
         <p id="h100-note" class="fine-print">NVIDIA H100-høyscenarioet her antar 8 GPU-er à 700 W, 800 W øvrig servereffekt og 10 samtidige brukere. Oppgitte driftserfaringer med GLM 5.3 Flash de siste ukene viser at serveren med 8 × NVIDIA H100 fint håndterer dobbelt så mange samtidige brukere (20). Regnestykket beholder likevel 10 brukere som en konservativ antakelse. Erfaringen er ikke en standardisert ytelsestest; likeverdig modellkvalitet er ikke verifisert.</p>
       </section>
       <section id="yrker" class="wrap article-section" aria-labelledby="occupations-title">
-        <div class="section-heading"><p class="eyebrow">03 / YRKENE BAK TALLET</p><h2 id="occupations-title">En barnehagelærer er ikke en utvikler.</h2></div>
+        <div class="section-heading"><p class="eyebrow">04 / YRKENE BAK TALLET</p><h2 id="occupations-title">En barnehagelærer er ikke en utvikler.</h2></div>
         <p class="section-lead">En barnehagelærer trenger langt mindre AI-datakraft enn en utvikler i modellen. Arbeidets innhold betyr mer enn at begge kan bruke AI.</p>
         <div class="occupation-comparison"><div><span class="occupation-name">Programvareutvikler</span><strong>1,00</strong><p>Referansen. Tung AI-bruk til kode, analyse og testing.</p></div><div><span class="occupation-name">Barnehagelærer</span><strong>0,08</strong><p>Interaksjon og omsorg dominerer, med begrenset AI-bruk i admin og planning.</p></div></div>
         <p class="muted">Barnehagelærerfaktoren er 8 % av utviklerreferansen i basisscenarioet. Det er en antakelse om relativ AI-bruk, ikke om yrkets verdi eller produktivitet.</p>
@@ -97,13 +99,14 @@ get<HTMLDivElement>('#app').innerHTML = `
         <button id="toggle-occupations" class="expand-button" aria-expanded="false" aria-controls="all-occupations"><span id="toggle-label">Vis alle yrker</span><span class="count">407</span><span id="toggle-icon"></span></button><p id="load-status" role="status" class="muted"></p>
         <div id="all-occupations" hidden><div class="search-line"><div><label for="occupation-search">Søk etter yrke eller STYRK-08-kode</label><input id="occupation-search" type="search" placeholder="For eksempel barnehagelærer eller 2342" autocomplete="off"></div><p id="search-count" role="status"></p></div><p class="fine-print">Målt først: de 22 vurderte yrkene. Deretter følger interpolerte yrker i SSB-rekkefølge. Null observerte årsverk er ikke det samme som manglende data.</p><div id="full-table"></div></div>
       </section>
-      <section id="sporsmal" class="faq-section band" aria-labelledby="faq-title"><div class="wrap"><div class="section-heading"><p class="eyebrow">04 / SPØRSMÅL OG FORBEHOLD</p><h2 id="faq-title">Hva tallet sier. Og ikke sier.</h2></div><div class="faq">${faq.map(([question, answer]) => `<details><summary>${question}</summary><p>${answer}</p></details>`).join('')}</div></div></section>
+      <section id="sporsmal" class="faq-section band" aria-labelledby="faq-title"><div class="wrap"><div class="section-heading"><p class="eyebrow">05 / SPØRSMÅL OG FORBEHOLD</p><h2 id="faq-title">Hva tallet sier. Og ikke sier.</h2></div><div class="faq">${faq.map(([question, answer]) => `<details><summary>${question}</summary><p>${answer}</p></details>`).join('')}</div></div></section>
       <section class="wrap closing" aria-label="Avslutning"><p>Et norsk datasenter er ikke nødvendigvis<br>et datasenter for norske behov.</p><span>Skillet mellom innenlandsk bruk og eksport er avgjørende. Dette regnestykket belyser skillet, men dokumenterer ikke eksportandelen.</span></section>
     </article>
   </main>
-  <footer class="wrap"><div><a class="wordmark" href="#">Datakraftbehov / Norge</a><p>Åpent regnestykke. Synlige antakelser.</p></div><div><a href="${PROJECT_REPO}">Kilder og metode på GitHub <span data-icon="external"></span></a><p>SSB-grunnlag: 2025 · Kilderevisjon: ${summary.sourceCommit.slice(0, 7)}</p></div></footer>
+  <footer class="wrap"><div><a class="wordmark" href="#">Datakraftbehov / Norge</a><p>Åpent regnestykke. Synlige antakelser.</p><p><a class="text-link" href="${import.meta.env.BASE_URL}presentasjon/">Presentasjon: Klimacafé i Skien 15.10.2026</a></p></div><div><a href="${PROJECT_REPO}">Kilder og metode på GitHub <span data-icon="external"></span></a><p>SSB-grunnlag: 2025 · Kilderevisjon: ${summary.sourceCommit.slice(0, 7)}</p></div></footer>
 `
 
+initializeDatacenterMap()
 document.querySelectorAll('[data-icon]').forEach(element => element.append(createElement(element.getAttribute('data-icon') === 'down' ? ArrowDown : ArrowUpRight, { width: 17, height: 17, 'aria-hidden': 'true' })))
 let watts = referenceWatts('h100')
 let allRows: Occupation[] | null = null

@@ -5,20 +5,32 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build --base=/datasenterbehov/",
+    "build": "npm run data:datacenters && tsc && vite build --base=/datasenterbehov/ && npm run slides:build",
     "preview": "vite preview --base=/datasenterbehov/",
     "data:refresh": "node scripts/prepare-data.mjs --refresh",
     "data:prepare": "node scripts/prepare-data.mjs",
+    "data:datacenters": "node scripts/prepare-datacenters.mjs",
+    "data:datacenters:check": "node scripts/prepare-datacenters.mjs --check",
+    "data:datacenters:refresh": "node scripts/prepare-datacenters.mjs --refresh",
     "test": "vitest run",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "slides:assets": "node scripts/slides-assets.mjs",
+    "slides:dev": "npm run slides:assets && marp -s slides",
+    "slides:build": "node scripts/build-slides.mjs",
+    "slides:pdf": "npm run slides:assets && marp slides/klimacafe.md --pdf --pdf-notes --allow-local-files -o article/Klimacafe-datasenter.pdf"
   },
   "devDependencies": {
+    "@marp-team/marp-cli": "^4.5.1",
     "@playwright/test": "^1.63.0",
     "@types/node": "^26.5.1",
     "csv-parse": "^7.0.2",
+    "d3-geo": "^3.1.1",
+    "qrcode": "^1.5.4",
+    "topojson-client": "^3.1.0",
     "typescript": "~6.0.2",
     "vite": "^8.3.0",
-    "vitest": "^5.0.0"
+    "vitest": "^5.0.0",
+    "world-atlas": "^2.0.2"
   },
   "dependencies": {
     "@fontsource-variable/source-sans-3": "^5.3.0",

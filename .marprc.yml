@@ -1,0 +1,3 @@
+# Marp CLI-konfigurasjon for presentasjonen i slides/.
+themeSet: slides/theme.css
+html: true
