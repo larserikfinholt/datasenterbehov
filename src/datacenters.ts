@@ -1,4 +1,5 @@
 export type SiteStatus = 'operating' | 'construction' | 'planned'
+export type PlannedBasis = 'it_capacity' | 'facility_capacity' | 'development_potential' | 'announced_total' | 'grid_connection'
 export type DataCenter = {
   id: string
   name: string
@@ -13,9 +14,12 @@ export type DataCenter = {
   mw_in_use: number | null
   mw_reserved: number | null
   mw_planned: number | null
+  mw_planned_basis: PlannedBasis | null
   mw_queued: number | null
   power_status: string
   source_urls: string[]
+  source_dates: (string | null)[]
+  reviewed_at: string | null
   note: string
   x: number
   y: number
@@ -25,6 +29,20 @@ export type DataCenter = {
 
 export const statusLabels: Record<SiteStatus, string> = {
   operating: 'I drift', construction: 'Under bygging', planned: 'Planlagt',
+}
+
+export const plannedBasisLabels: Record<PlannedBasis, string> = {
+  it_capacity: 'IT-kapasitet',
+  facility_capacity: 'anleggskapasitet',
+  development_potential: 'utbyggingspotensial',
+  announced_total: 'annonsert kapasitet, udefinert',
+  grid_connection: 'planlagt nettilknytning',
+}
+
+export function formatIsoDate(value: string | null): string | null {
+  if (value === null) return null
+  const [year, month, day] = value.split('-')
+  return `${day}.${month}.${year}`
 }
 
 export function maxMw(site: Pick<DataCenter, 'mw_in_use' | 'mw_reserved' | 'mw_planned'>): number | null {

@@ -10,6 +10,7 @@
     "data:refresh": "node scripts/prepare-data.mjs --refresh",
     "data:prepare": "node scripts/prepare-data.mjs",
     "data:datacenters": "node scripts/prepare-datacenters.mjs",
+    "data:datacenters:check": "node scripts/prepare-datacenters.mjs --check",
     "data:datacenters:refresh": "node scripts/prepare-datacenters.mjs --refresh",
     "test": "vitest run",
     "test:e2e": "playwright test"

@@ -1,5 +1,18 @@
 {
-  "generatedAt": "2026-10-14T12:52:44.929Z",
+  "generatedAt": "2026-10-14T14:44:25.941Z",
+  "provenance": {
+    "generatedAt": "2026-10-14T14:44:25.941Z",
+    "nkomFetchedAt": "2026-10-14T12:52:44.929Z",
+    "inputsSha256": "658d4a9c13f1e1e84687a3e20daaa4562ae2182ed325a43bb856ccc633cc12c0",
+    "inputs": {
+      "data/datacenters.csv": "435b9bc369bf1ff41f836a68c047cf7d3349f77e236d5fb4a8b504e1c9b00ef6",
+      "data/sources/nkom-operatorer.csv": "7f3370dd0c9e17ef67a508d4e89348e3a2e612cf57c816dae1d497dd14061bb4",
+      "data/sources/brreg-enheter.json": "e63b09b7ddc6c5ea84e3aca8b5d26185f883381630ac34c43aee78f53c451517",
+      "data/sources/nkom-totals.json": "64caa413d2b534012016da00dcd66acc8a085223323fbad826aeb1720f711731",
+      "data/sources/geocode-cache.json": "f02a0de40cee71fcc656b1d738fc825c2a6cb81c5d3adef979e8890369be4241"
+    },
+    "note": "generatedAt er tidspunktet for siste endring i inndataene (CSV, Nkom-, Brønnøysund-, totals- og geokodecache). Den sier ikke at kapasitetstall er verifisert; se source_dates og reviewed_at per anlegg."
+  },
   "nkom": {
     "registered": 117,
     "commercialOperators": 61,
@@ -458,12 +471,17 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": 25,
+      "mw_planned_basis": "it_capacity",
       "mw_queued": null,
-      "power_status": "Publisert total IT-kapasitet; ikke målt forbruk",
+      "power_status": "Publisert total IT-kapasitet 25 MW; ikke nettreservasjon; ikke målt forbruk",
       "source_urls": [
         "https://greenmountain.no/data-center/svg-rennesoy/"
       ],
-      "note": "Tidligere NATO-anlegg; omtrentlig plassering",
+      "source_dates": [
+        null
+      ],
+      "reviewed_at": "2026-10-14",
+      "note": "Tidligere NATO-anlegg; omtrentlig plassering; operatørsiden er udatert",
       "nkomRegistered": true,
       "cryptoMining": false,
       "x": 46.547,
@@ -483,12 +501,17 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": 50,
+      "mw_planned_basis": "development_potential",
       "mw_queued": null,
-      "power_status": "Potensiell anleggskapasitet; ikke målt forbruk",
+      "power_status": "Publisert potensiell anleggskapasitet 50 MW; ikke nettreservasjon; ikke målt forbruk",
       "source_urls": [
         "https://greenmountain.no/data-center/tel-rjukan/"
       ],
-      "note": "Publisert utbyggingspotensial",
+      "source_dates": [
+        null
+      ],
+      "reviewed_at": "2026-10-14",
+      "note": "Publisert utbyggingspotensial; operatørsiden er udatert",
       "nkomRegistered": true,
       "cryptoMining": false,
       "x": 112.987,
@@ -508,12 +531,17 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": 75,
+      "mw_planned_basis": "it_capacity",
       "mw_queued": null,
-      "power_status": "Publisert total IT-kapasitet; ikke målt forbruk",
+      "power_status": "Publisert total IT-kapasitet 75 MW; operatøren oppgir 94 MW nettkapasitet som ikke er verifisert mot nettselskap og ikke føres som reservasjon; ikke målt forbruk",
       "source_urls": [
         "https://greenmountain.no/data-center/osl-enebakk/"
       ],
-      "note": "Flere byggetrinn i drift; kapasitet er ikke faktisk last",
+      "source_dates": [
+        null
+      ],
+      "reviewed_at": "2026-10-14",
+      "note": "Flere byggetrinn i drift (oppgitt 4 + 14.5 + 10 MW); kapasitet er ikke faktisk last; operatørsiden er udatert",
       "nkomRegistered": true,
       "cryptoMining": false,
       "x": 165.161,
@@ -531,14 +559,19 @@
       "precision": "place",
       "status": "operating",
       "mw_in_use": null,
-      "mw_reserved": 90,
+      "mw_reserved": null,
       "mw_planned": 150,
+      "mw_planned_basis": "it_capacity",
       "mw_queued": null,
-      "power_status": "90 MW kontrahert IT-kapasitet; 150 MW med utvidelse",
+      "power_status": "Publisert total IT-kapasitet 150 MW; 90 MW kontrahert IT-kapasitet for TikTok er kundekontrakt og føres ikke som nettreservasjon; ikke målt forbruk",
       "source_urls": [
         "https://greenmountain.no/data-center/osl-hamar/"
       ],
-      "note": "Tre bygg i drift for TikTok; utvidelsesopsjon til 150 MW",
+      "source_dates": [
+        null
+      ],
+      "reviewed_at": "2026-10-14",
+      "note": "Tre bygg i drift for TikTok med opsjon til 150 MW; 90 MW sto tidligere som reservert og ble flyttet ut av reservasjonsfeltet 14.10.2026 fordi kilden beskriver kontrahert IT-kapasitet; operatørsiden er udatert",
       "nkomRegistered": true,
       "cryptoMining": false,
       "x": 172.133,
@@ -558,12 +591,17 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": 100,
+      "mw_planned_basis": "facility_capacity",
       "mw_queued": null,
-      "power_status": "100 MW anleggskapasitet; 80 MW IT-kapasitet",
+      "power_status": "Publisert total anleggskapasitet 100 MW; to bygg med samlet 80 MW IT-kapasitet; ikke nettreservasjon; ikke målt forbruk",
       "source_urls": [
         "https://greenmountain.no/data-center/svg-undheim/"
       ],
-      "note": "Under bygging; oppgitt ferdigstillelse 2028",
+      "source_dates": [
+        null
+      ],
+      "reviewed_at": "2026-10-14",
+      "note": "Under bygging; oppgitt ferdigstillelse 2028; operatørsiden er udatert",
       "nkomRegistered": true,
       "cryptoMining": false,
       "x": 45.742,
@@ -583,12 +621,17 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": 200,
+      "mw_planned_basis": "development_potential",
       "mw_queued": null,
-      "power_status": "Potensiell kapasitet opptil 200 MW; ikke målt forbruk",
+      "power_status": "Publisert potensial opptil 200 MW; ikke nettreservasjon; ikke målt forbruk",
       "source_urls": [
         "https://lefdalmine.com/"
       ],
-      "note": "Utbyggingspotensial i fjellanlegg",
+      "source_dates": [
+        null
+      ],
+      "reviewed_at": "2026-10-14",
+      "note": "Utbyggingspotensial i fjellanlegg; operatørsiden er udatert",
       "nkomRegistered": true,
       "cryptoMining": false,
       "x": 56.872,
@@ -608,12 +651,17 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": null,
+      "mw_planned_basis": null,
       "mw_queued": null,
       "power_status": "MW ikke dokumentert i dette utvalget",
       "source_urls": [
         "https://www.tydaldatacenter.com/"
       ],
-      "note": "Omtrentlig plassering; kapasitet ikke tallfestet",
+      "source_dates": [
+        null
+      ],
+      "reviewed_at": null,
+      "note": "Omtrentlig plassering; kapasitet ikke tallfestet; kilden kunne ikke leses maskinelt 14.10.2026 og raden er ikke gjennomgått mot kilde",
       "nkomRegistered": true,
       "cryptoMining": false,
       "x": 185.339,
@@ -633,12 +681,17 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": null,
+      "mw_planned_basis": null,
       "mw_queued": null,
       "power_status": "MW ikke dokumentert i dette utvalget",
       "source_urls": [
         "https://renroros.no/renere-sikrere-og-gronnere/"
       ],
-      "note": "Oppgradert datasenter; omtrentlig plassering",
+      "source_dates": [
+        "2024-02-06"
+      ],
+      "reviewed_at": "2026-10-14",
+      "note": "Oppgradert datasenter; omtrentlig plassering; kildeartikkelen oppgir ikke effekt",
       "nkomRegistered": true,
       "cryptoMining": false,
       "x": 179.05,
@@ -658,12 +711,17 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": null,
+      "mw_planned_basis": null,
       "mw_queued": null,
       "power_status": "MW ikke verifisert i dette utvalget",
       "source_urls": [
         "https://bulkinfrastructure.com/data-centers/locations/n01/"
       ],
-      "note": "Campus ved Kristiansand; omtrentlig stedsposisjon",
+      "source_dates": [
+        null
+      ],
+      "reviewed_at": null,
+      "note": "Campus ved Kristiansand; omtrentlig stedsposisjon; kilden kunne ikke leses maskinelt 14.10.2026 (samtykkevegg) og raden er ikke gjennomgått mot kilde",
       "nkomRegistered": true,
       "cryptoMining": false,
       "x": 92.475,
@@ -683,12 +741,17 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": null,
+      "mw_planned_basis": null,
       "mw_queued": null,
       "power_status": "MW ikke verifisert i dette utvalget",
       "source_urls": [
         "https://bulkinfrastructure.com/data-centers/locations/os-ix/"
       ],
-      "note": "Omtrentlig plassering i Oslo",
+      "source_dates": [
+        null
+      ],
+      "reviewed_at": null,
+      "note": "Omtrentlig plassering i Oslo; kilden kunne ikke leses maskinelt 14.10.2026 (samtykkevegg) og raden er ikke gjennomgått mot kilde",
       "nkomRegistered": true,
       "cryptoMining": false,
       "x": 160.935,
@@ -708,12 +771,17 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": 60,
+      "mw_planned_basis": "announced_total",
       "mw_queued": null,
-      "power_status": "30 MW operativ kapasitet; utvidbar til 60 MW; ikke målt last",
+      "power_status": "Operatøren oppgir 30 MW operativ kapasitet utvidbar til 60 MW uten å oppgi om det er IT- eller anleggseffekt; ikke nettreservasjon; ikke målt last",
       "source_urls": [
         "https://www.nscale.com/ai-infrastructure/glomfjord/"
       ],
-      "note": "Operativ kapasitet er ikke dokumentert forbruk",
+      "source_dates": [
+        null
+      ],
+      "reviewed_at": "2026-10-14",
+      "note": "Operativ kapasitet er ikke dokumentert forbruk; operatørsiden er udatert",
       "nkomRegistered": true,
       "cryptoMining": false,
       "x": 232.41,
@@ -733,12 +801,17 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": 520,
+      "mw_planned_basis": "announced_total",
       "mw_queued": null,
-      "power_status": "230 MW første fase og ytterligere 290 MW planlagt",
+      "power_status": "Operatøren oppgir 230 MW kapasitet og ytterligere 290 MW planlagt utvidelse; effektdefinisjon ikke oppgitt; nettkapasitet ikke verifisert som reservert",
       "source_urls": [
         "https://www.nscale.com/ai-infrastructure#dc-narvik"
       ],
-      "note": "Annonsert samlet kapasitet; omtrentlig stedsposisjon",
+      "source_dates": [
+        null
+      ],
+      "reviewed_at": "2026-10-14",
+      "note": "Annonsert samlet kapasitet slik operatøren selv beskriver fasene som additive; omtrentlig stedsposisjon; operatørsiden er udatert",
       "nkomRegistered": false,
       "cryptoMining": false,
       "x": 288.259,
@@ -758,12 +831,17 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": 22,
+      "mw_planned_basis": "announced_total",
       "mw_queued": null,
-      "power_status": "Publisert campuskapasitet; ikke målt forbruk",
+      "power_status": "Publisert campuskapasitet 22 MW (10 + 3 + 3 + 6) uten oppgitt effektdefinisjon; ikke nettreservasjon; ikke målt forbruk",
       "source_urls": [
         "https://www.stackinfra.com/locations/emea/oslo/osl03/"
       ],
-      "note": "Fire bygg samlet; Nkom-kobling til SI OSL 03.1",
+      "source_dates": [
+        null
+      ],
+      "reviewed_at": "2026-10-14",
+      "note": "Fire bygg samlet; Nkom-kobling til SI OSL 03.1; operatørsiden er udatert",
       "nkomRegistered": true,
       "cryptoMining": false,
       "x": 168.057,
@@ -783,12 +861,17 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": 18,
+      "mw_planned_basis": "announced_total",
       "mw_queued": null,
-      "power_status": "Publisert campuskapasitet; ikke målt forbruk",
+      "power_status": "Publisert campuskapasitet 18 MW (3 × 6) uten oppgitt effektdefinisjon; ikke nettreservasjon; ikke målt forbruk",
       "source_urls": [
         "https://www.stackinfra.com/locations/emea/oslo/osl04/"
       ],
-      "note": "Tre bygg samlet; omtrentlig stedsposisjon",
+      "source_dates": [
+        null
+      ],
+      "reviewed_at": "2026-10-14",
+      "note": "Tre bygg samlet; omtrentlig stedsposisjon; operatørsiden er udatert",
       "nkomRegistered": true,
       "cryptoMining": false,
       "x": 164.163,
@@ -808,17 +891,55 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": 52,
+      "mw_planned_basis": "it_capacity",
       "mw_queued": null,
-      "power_status": "52 MW IT-last under utvikling; ikke målt forbruk",
+      "power_status": "52 MW IT-last under utvikling ifølge operatøren; energikapasitet oppgitt til 40 MVA; nettkapasitet ikke verifisert som reservert; ikke målt forbruk",
       "source_urls": [
         "https://www.polardc.com/current-locations",
         "https://www.polardc.com/post/polar-announces-dra02-expansion-at-flagship-ai-ready-data-center-campus-in-norway"
       ],
-      "note": "DRA01 med annonsert DRA02-utvidelse; én rad for campus",
+      "source_dates": [
+        null,
+        "2026-07-23"
+      ],
+      "reviewed_at": "2026-10-14",
+      "note": "DRA01 med annonsert DRA02-utvidelse på om lag 40 MW IT (pressemelding 23.07.2026); én rad for campus; lokasjonssiden er udatert",
       "nkomRegistered": true,
       "cryptoMining": false,
       "x": 119.921,
       "y": 561.178
+    },
+    {
+      "id": "polar-heroya",
+      "name": "HER01 Herøya",
+      "operator": "Polar Data Centers",
+      "operator_orgnr": "928431096",
+      "kommune": "Porsgrunn",
+      "place": "Herøya",
+      "lat": 59.11765,
+      "lon": 9.63283,
+      "precision": "place",
+      "status": "planned",
+      "mw_in_use": null,
+      "mw_reserved": null,
+      "mw_planned": 40,
+      "mw_planned_basis": "it_capacity",
+      "mw_queued": null,
+      "power_status": "Omtrent 40 MW IT-kapasitet i første fase ifølge pressemelding 12.05.2026; lokasjonssiden oppgir 41 MW IT-last og 100 MW energikapasitet totalt; nettkapasitet ikke verifisert som reservert",
+      "source_urls": [
+        "https://www.polardc.com/post/polar-announces-new-ai-ready-data-center-development-in-her%C3%B8ya-norway",
+        "https://www.polardc.com/current-locations"
+      ],
+      "source_dates": [
+        "2026-05-12",
+        null
+      ],
+      "reviewed_at": "2026-10-14",
+      "note": "Forskningsspor lagt til 14.10.2026: HER01 på Herøya industripark i forprosjektfase; pressemeldingen oppgir ca. 130 km fra Oslo mens lokasjonssiden oppgir NO1 og 85 km – uavklart konflikt; posisjon er Kartverkets representasjonspunkt for industriområdet; ikke summert med andre Grenland-prosjekter",
+      "nkomRegistered": true,
+      "cryptoMining": false,
+      "x": 132.57,
+      "y": 561.409
     },
     {
       "id": "google-skien",
@@ -834,17 +955,89 @@
       "mw_in_use": null,
       "mw_reserved": 240,
       "mw_planned": null,
+      "mw_planned_basis": null,
       "mw_queued": 840,
       "power_status": "240 MW innvilget nettkapasitet; 840 MW historisk omtalt som omsøkt / i kapasitetskø; ikke dokumentert faktisk last",
       "source_urls": [
         "https://www.nrk.no/vestfoldogtelemark/frykter-datasentre-med-google-i-spissen-vil-sluke-all-strom-i-grenland-1.17374873",
         "https://www.datacenter-forum.com/google/google-started-building-240mw-data-center-in-norway"
       ],
-      "note": "NRK 20.04.2025 omtaler 840 MW omsøkt / i kapasitetskø; uavklart om de 240 MW tildelt inngår eller kommer i tillegg; ingen utledet total eller neste byggetrinn; ikke verifisert som dagens Statnett-kø; én rad for campus",
+      "source_dates": [
+        "2025-04-20",
+        "2024-02-12"
+      ],
+      "reviewed_at": "2026-10-14",
+      "note": "NRK 20.04.2025 omtaler 840 MW omsøkt / i kapasitetskø; Datacenter Forum 12.02.2024 oppgir 860 MW som tidligere oppgitt behov – uavklart avvik; uavklart om de 240 MW tildelt inngår eller kommer i tillegg; ingen utledet total eller neste byggetrinn; ikke verifisert som dagens Statnett-kø; én rad for campus",
       "nkomRegistered": false,
       "cryptoMining": false,
       "x": 131.81,
       "y": 554.038
+    },
+    {
+      "id": "nscale-gromstul",
+      "name": "Nscale Skien (nabotomt Gromstul)",
+      "operator": "Nscale / Løvenskiold-Fossum",
+      "operator_orgnr": "",
+      "kommune": "Skien",
+      "place": "Gromstul",
+      "lat": 59.288,
+      "lon": 9.571,
+      "precision": "place",
+      "status": "planned",
+      "mw_in_use": null,
+      "mw_reserved": null,
+      "mw_planned": null,
+      "mw_planned_basis": null,
+      "mw_queued": 96,
+      "power_status": "Ingen dokumentert tildeling; NRK 29.01.2026 oppgir 96 MW omsøkt nettkapasitet hos Statnett for Nscale og Løvenskiold-Fossums første Skien-prosjekt; søknad er ikke reservasjon",
+      "source_urls": [
+        "https://www.nrk.no/vestfoldogtelemark/vil-bygge-datasenter-i-skien-1.17747375",
+        "https://www.datacenterdynamics.com/en/news/aker-nscale-plans-96mw-data-center-in-skien-norway/",
+        "https://e24.no/naeringsliv/i/Ex5LnK/kommune-kan-faa-en-halv-milliard-for-datasentertomt"
+      ],
+      "source_dates": [
+        "2026-01-29",
+        "2026-01-30",
+        "2026-09-16"
+      ],
+      "reviewed_at": "2026-10-14",
+      "note": "Forskningsspor lagt til 14.10.2026: E24 16.09.2026 plasserer Nscales eksisterende Skien-plan på nabotomten til Googles anlegg på Gromstul; koblingen mellom 96 MW og denne tomta er redaksjonell tolkning av to kilder; eksakt tomt ikke dokumentert og posisjon deler Gromstul-punktet med Google; uavklart om 96 MW inngår i de 576 MW omtalt for Bolvik; ikke summert med Googles tall",
+      "nkomRegistered": false,
+      "cryptoMining": false,
+      "x": 131.81,
+      "y": 554.038
+    },
+    {
+      "id": "nscale-bolvik",
+      "name": "Nscale Skien (Bolvik)",
+      "operator": "Nscale / Løvenskiold-Fossum",
+      "operator_orgnr": "",
+      "kommune": "Skien",
+      "place": "Bolvik",
+      "lat": 59.12726,
+      "lon": 9.51006,
+      "precision": "place",
+      "status": "planned",
+      "mw_in_use": null,
+      "mw_reserved": null,
+      "mw_planned": null,
+      "mw_planned_basis": null,
+      "mw_queued": 576,
+      "power_status": "Ingen dokumentert tildeling; E24 16.09.2026 oppgir at Løvenskiold og Nscale har søkt Statnett om totalt 576 MW; søknad er ikke reservasjon og ikke campuskapasitet",
+      "source_urls": [
+        "https://e24.no/naeringsliv/i/Ex5LnK/kommune-kan-faa-en-halv-milliard-for-datasentertomt",
+        "https://www.ta.no/nscale-vil-etablere-nytt-stort-datasenter-for-ki-i-skien/s/5-50-2378598"
+      ],
+      "source_dates": [
+        "2026-09-16",
+        "2026-07-07"
+      ],
+      "reviewed_at": "2026-10-14",
+      "note": "Forskningsspor lagt til 14.10.2026: opsjonsavtale mellom Grenland Data Center (Løvenskiold-Fossum) og Skien Tomteselskap om ca. 500 mål kommunal tomt ved Bolvik nær Bjorstaddalen; regulering anslått til om lag to år; Grenland transformatorstasjon ligger ved tomta men er ikke kartfestet som anlegg; posisjon er Kartverkets stedspunkt for Bolvik; TA-artikkelen er bak betalingsmur og bare ingressen er kontrollert; uavklart om 96 MW fra januar 2026 inngår i 576 MW",
+      "nkomRegistered": false,
+      "cryptoMining": false,
+      "x": 129.918,
+      "y": 560.781
     },
     {
       "id": "bw-frier-vest",
@@ -860,11 +1053,16 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": 250,
+      "mw_planned_basis": "announced_total",
       "mw_queued": null,
-      "power_status": "Omtrent 250 MW planlagt kapasitet; nettkapasitet ikke verifisert som reservert",
+      "power_status": "Omtrent 250 MW planlagt kapasitet ifølge pressemelding uten oppgitt effektdefinisjon; nettkapasitet ikke verifisert som reservert",
       "source_urls": [
         "https://www.bw-velora.com/news-updates/frier-vest-and-bw-velora-sign-agreement-to-develop-data-centre"
       ],
+      "source_dates": [
+        "2026-05-29"
+      ],
+      "reviewed_at": "2026-10-14",
       "note": "Avtale annonsert 29.05.2026; omtrentlig stedsposisjon ved Rafnes; én rad for campus",
       "nkomRegistered": false,
       "cryptoMining": false,
@@ -885,13 +1083,19 @@
       "mw_in_use": null,
       "mw_reserved": 140,
       "mw_planned": 365,
+      "mw_planned_basis": "grid_connection",
       "mw_queued": 225,
       "power_status": "365 MW planlagt nettilknytning totalt; 140 MW tildelt og 225 MW i kapasitetskø inngår i totalen; ikke faktisk last",
       "source_urls": [
         "https://www.fyresdal.kommune.no/tenester/naering-natur-og-landbruk/hyperskala-datasenter-pa-molandsmoen",
         "https://www.digi.no/datasenter/datasenter-skal-oke-sysselsettingen-i-fyresdal-med-50-prosent/5706297"
       ],
-      "note": "Kommunens effekttall oppdatert 27.08.2026; køtallet er ikke verifisert som dagens Statnett-kø og skal ikke legges til totalen; bygging omtalt av Digi 24.09.2026; seks planlagte bygg samlet i én campus",
+      "source_dates": [
+        "2026-08-27",
+        "2026-09-24"
+      ],
+      "reviewed_at": "2026-10-14",
+      "note": "Kommunens effekttall oppdatert 27.08.2026; køtallet er ikke verifisert som dagens Statnett-kø og skal ikke legges til totalen; bygging omtalt av Digi 24.09.2026 (bak betalingsmur; ingress kontrollert); seks planlagte bygg samlet i én campus",
       "nkomRegistered": false,
       "cryptoMining": false,
       "x": 98.851,

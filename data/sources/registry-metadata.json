@@ -1,5 +1,7 @@
 {
-  "lastUpdated": "2026-10-14T12:52:44.929Z",
+  "registryFetchedAt": "2026-10-14T12:52:44.929Z",
   "registrySha256": "7f3370dd0c9e17ef67a508d4e89348e3a2e612cf57c816dae1d497dd14061bb4",
-  "sourceUrl": "https://stenonicprdnoea01.blob.core.windows.net/enonicpubliccontainer/prd/tildeling/datasenter/datasenter-operatorer.csv"
+  "sourceUrl": "https://stenonicprdnoea01.blob.core.windows.net/enonicpubliccontainer/prd/tildeling/datasenter/datasenter-operatorer.csv",
+  "inputsSha256": "658d4a9c13f1e1e84687a3e20daaa4562ae2182ed325a43bb856ccc633cc12c0",
+  "generatedAt": "2026-10-14T14:44:25.941Z"
 }
