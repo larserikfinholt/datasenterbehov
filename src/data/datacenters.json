@@ -458,6 +458,7 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": 25,
+      "mw_queued": null,
       "power_status": "Publisert total IT-kapasitet; ikke målt forbruk",
       "source_urls": [
         "https://greenmountain.no/data-center/svg-rennesoy/"
@@ -482,6 +483,7 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": 50,
+      "mw_queued": null,
       "power_status": "Potensiell anleggskapasitet; ikke målt forbruk",
       "source_urls": [
         "https://greenmountain.no/data-center/tel-rjukan/"
@@ -506,6 +508,7 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": 75,
+      "mw_queued": null,
       "power_status": "Publisert total IT-kapasitet; ikke målt forbruk",
       "source_urls": [
         "https://greenmountain.no/data-center/osl-enebakk/"
@@ -530,6 +533,7 @@
       "mw_in_use": null,
       "mw_reserved": 90,
       "mw_planned": 150,
+      "mw_queued": null,
       "power_status": "90 MW kontrahert IT-kapasitet; 150 MW med utvidelse",
       "source_urls": [
         "https://greenmountain.no/data-center/osl-hamar/"
@@ -554,6 +558,7 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": 100,
+      "mw_queued": null,
       "power_status": "100 MW anleggskapasitet; 80 MW IT-kapasitet",
       "source_urls": [
         "https://greenmountain.no/data-center/svg-undheim/"
@@ -578,6 +583,7 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": 200,
+      "mw_queued": null,
       "power_status": "Potensiell kapasitet opptil 200 MW; ikke målt forbruk",
       "source_urls": [
         "https://lefdalmine.com/"
@@ -602,6 +608,7 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": null,
+      "mw_queued": null,
       "power_status": "MW ikke dokumentert i dette utvalget",
       "source_urls": [
         "https://www.tydaldatacenter.com/"
@@ -626,6 +633,7 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": null,
+      "mw_queued": null,
       "power_status": "MW ikke dokumentert i dette utvalget",
       "source_urls": [
         "https://renroros.no/renere-sikrere-og-gronnere/"
@@ -650,6 +658,7 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": null,
+      "mw_queued": null,
       "power_status": "MW ikke verifisert i dette utvalget",
       "source_urls": [
         "https://bulkinfrastructure.com/data-centers/locations/n01/"
@@ -674,6 +683,7 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": null,
+      "mw_queued": null,
       "power_status": "MW ikke verifisert i dette utvalget",
       "source_urls": [
         "https://bulkinfrastructure.com/data-centers/locations/os-ix/"
@@ -698,6 +708,7 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": 60,
+      "mw_queued": null,
       "power_status": "30 MW operativ kapasitet; utvidbar til 60 MW; ikke målt last",
       "source_urls": [
         "https://www.nscale.com/ai-infrastructure/glomfjord/"
@@ -722,6 +733,7 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": 520,
+      "mw_queued": null,
       "power_status": "230 MW første fase og ytterligere 290 MW planlagt",
       "source_urls": [
         "https://www.nscale.com/ai-infrastructure#dc-narvik"
@@ -746,6 +758,7 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": 22,
+      "mw_queued": null,
       "power_status": "Publisert campuskapasitet; ikke målt forbruk",
       "source_urls": [
         "https://www.stackinfra.com/locations/emea/oslo/osl03/"
@@ -770,6 +783,7 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": 18,
+      "mw_queued": null,
       "power_status": "Publisert campuskapasitet; ikke målt forbruk",
       "source_urls": [
         "https://www.stackinfra.com/locations/emea/oslo/osl04/"
@@ -794,6 +808,7 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": 52,
+      "mw_queued": null,
       "power_status": "52 MW IT-last under utvikling; ikke målt forbruk",
       "source_urls": [
         "https://www.polardc.com/current-locations",
@@ -819,12 +834,13 @@
       "mw_in_use": null,
       "mw_reserved": 240,
       "mw_planned": null,
-      "power_status": "240 MW innvilget nettkapasitet; ikke dokumentert faktisk last",
+      "mw_queued": 840,
+      "power_status": "240 MW innvilget nettkapasitet; 840 MW historisk omtalt som omsøkt / i kapasitetskø; ikke dokumentert faktisk last",
       "source_urls": [
         "https://www.nrk.no/vestfoldogtelemark/frykter-datasentre-med-google-i-spissen-vil-sluke-all-strom-i-grenland-1.17374873",
         "https://www.datacenter-forum.com/google/google-started-building-240mw-data-center-in-norway"
       ],
-      "note": "NRK 20.04.2025 omtaler også 840 MW i kapasitetskø; ikke reservert og ikke lagt til 240 MW; én rad for campus",
+      "note": "NRK 20.04.2025 omtaler 840 MW omsøkt / i kapasitetskø; uavklart om de 240 MW tildelt inngår eller kommer i tillegg; ingen utledet total eller neste byggetrinn; ikke verifisert som dagens Statnett-kø; én rad for campus",
       "nkomRegistered": false,
       "cryptoMining": false,
       "x": 131.81,
@@ -844,6 +860,7 @@
       "mw_in_use": null,
       "mw_reserved": null,
       "mw_planned": 250,
+      "mw_queued": null,
       "power_status": "Omtrent 250 MW planlagt kapasitet; nettkapasitet ikke verifisert som reservert",
       "source_urls": [
         "https://www.bw-velora.com/news-updates/frier-vest-and-bw-velora-sign-agreement-to-develop-data-centre"
@@ -868,12 +885,13 @@
       "mw_in_use": null,
       "mw_reserved": 140,
       "mw_planned": 365,
-      "power_status": "365 MW planlagt nettilknytning totalt; 140 MW tildelt og 225 MW i kapasitetskø; ikke faktisk last",
+      "mw_queued": 225,
+      "power_status": "365 MW planlagt nettilknytning totalt; 140 MW tildelt og 225 MW i kapasitetskø inngår i totalen; ikke faktisk last",
       "source_urls": [
         "https://www.fyresdal.kommune.no/tenester/naering-natur-og-landbruk/hyperskala-datasenter-pa-molandsmoen",
         "https://www.digi.no/datasenter/datasenter-skal-oke-sysselsettingen-i-fyresdal-med-50-prosent/5706297"
       ],
-      "note": "Kommunens effekttall oppdatert 27.08.2026; bygging omtalt av Digi 24.09.2026; seks planlagte bygg samlet i én campus",
+      "note": "Kommunens effekttall oppdatert 27.08.2026; køtallet er ikke verifisert som dagens Statnett-kø og skal ikke legges til totalen; bygging omtalt av Digi 24.09.2026; seks planlagte bygg samlet i én campus",
       "nkomRegistered": false,
       "cryptoMining": false,
       "x": 98.851,

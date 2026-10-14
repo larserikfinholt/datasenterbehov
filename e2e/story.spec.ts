@@ -2,7 +2,7 @@ import { expect, test, type Page } from '@playwright/test'
 import occupations from '../public/data/occupations.json' with { type: 'json' }
 import { assessedFirstOrder } from '../src/model'
 import datacenters from '../src/data/datacenters.json' with { type: 'json' }
-import { byMwDesc, maxMw } from '../src/datacenters'
+import { byMwDesc, markerRadius, maxMw } from '../src/datacenters'
 
 async function expectNoOverflow(page: Page) {
   const dimensions = await page.evaluate(() => ({ viewport: document.documentElement.clientWidth, content: document.documentElement.scrollWidth }))
@@ -173,6 +173,26 @@ test('Norway map has proportional markers, linked focus, sorting and no data req
   await expect(map).toBeVisible()
   await expect(map.locator('.norway-outline circle[data-site]')).toHaveCount(datacenters.sites.length)
   await expect(map.locator('.site-list > li')).toHaveCount(datacenters.sites.length)
+  await expect(map.locator('.site-power dt', { hasText: 'Omsøkt / ikke tildelt' })).toHaveCount(datacenters.sites.length)
+  const gromstul = map.locator('#site-google-skien')
+  const fyresdal = map.locator('#site-edgeconnex-fyresdal')
+  await expect(gromstul.locator('.site-power dd')).toHaveText(['Ukjent', '240 MW', 'Ukjent', '840 MW'])
+  await expect(fyresdal.locator('.site-power dd')).toHaveText(['Ukjent', '140 MW', '365 MW', '225 MW'])
+  for (const campus of [gromstul, fyresdal]) await expect(campus.locator('.site-status')).toHaveText('Under bygging')
+  await expect(gromstul.locator('.site-note')).toContainText('NRK 20.04.2025')
+  await expect(gromstul.locator('.site-note')).toContainText('uavklart om de 240 MW tildelt inngår eller kommer i tillegg')
+  await expect(gromstul.locator('.site-note')).toContainText('ikke verifisert som dagens Statnett-kø')
+  await expect(fyresdal.locator('.site-definition')).toContainText('inngår i totalen')
+  await expect(map.locator('#map-note')).toContainText('inngår ikke i sirkelareal eller MW-sortering')
+  const maximum = Math.max(500, ...datacenters.sites.map(site => maxMw(site) ?? 0))
+  await expect(map.locator('circle[data-site="google-skien"]')).toHaveAttribute('r', String(markerRadius(240, maximum)))
+  await expect(map.locator('circle[data-site="edgeconnex-fyresdal"]')).toHaveAttribute('r', String(markerRadius(365, maximum)))
+  for (const site of datacenters.sites.filter(site => site.mw_queued === null)) {
+    await expect(map.locator(`#site-${site.id} .site-power div`).filter({ has: page.locator('dt', { hasText: 'Omsøkt / ikke tildelt' }) }).locator('dd')).toHaveText('Ukjent')
+  }
+  for (const label of await map.locator('.site-power dt, .site-power dd').all()) {
+    expect(await label.evaluate(element => element.scrollWidth <= element.clientWidth)).toBe(true)
+  }
   const unknownSites = datacenters.sites.filter(site => maxMw(site) === null)
   expect(unknownSites.length).toBeGreaterThan(0)
   await expect(map.locator('.norway-outline .unknown-mw')).toHaveCount(unknownSites.length)
@@ -205,6 +225,8 @@ test('Norway map has proportional markers, linked focus, sorting and no data req
   const names = await map.locator('.site-heading h3').allTextContents()
   expect(names).toEqual(datacenters.sites.map(site => site.name).sort((left, right) => left.localeCompare(right, 'nb-NO')))
   await page.getByLabel('Sorter etter').selectOption('mw')
+  await expect(gromstul.locator('.site-power dd').last()).toHaveText('840 MW')
+  expect(await map.locator('.site-list > li').evaluateAll(items => items.map(item => item.getAttribute('data-site')))).toEqual(byMwDesc(datacenters.sites).map(site => site.id))
   const planned = datacenters.sites.find(site => site.status === 'planned')!
   expect(await map.locator(`circle[data-site="${planned.id}"]`).evaluate(circle => getComputedStyle(circle).strokeDasharray)).not.toBe('none')
   const known = byMwDesc(datacenters.sites).filter(site => maxMw(site) !== null)
