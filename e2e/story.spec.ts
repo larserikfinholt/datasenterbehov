@@ -1,6 +1,8 @@
 import { expect, test, type Page } from '@playwright/test'
 import occupations from '../public/data/occupations.json' with { type: 'json' }
 import { assessedFirstOrder } from '../src/model'
+import datacenters from '../src/data/datacenters.json' with { type: 'json' }
+import { byMwDesc, maxMw } from '../src/datacenters'
 
 async function expectNoOverflow(page: Page) {
   const dimensions = await page.evaluate(() => ({ viewport: document.documentElement.clientWidth, content: document.documentElement.scrollWidth }))
@@ -136,12 +138,12 @@ test('native FAQ, skip link and source links are keyboard accessible', async ({ 
   await page.goto('./')
   await page.keyboard.press('Tab')
   await expect(page.getByRole('link', { name: 'Hopp til innhold' })).toBeFocused()
-  await expect(page.locator('details')).toHaveCount(8)
-  const question = page.locator('summary').first()
+  await expect(page.locator('#sporsmal details')).toHaveCount(8)
+  const question = page.locator('#sporsmal summary').first()
   await question.focus()
   await page.keyboard.press('Enter')
-  await expect(page.locator('details').first()).toHaveAttribute('open', '')
-  await expect(page.locator('details').first()).toContainText('309,80 MW')
+  await expect(page.locator('#sporsmal details').first()).toHaveAttribute('open', '')
+  await expect(page.locator('#sporsmal details').first()).toContainText('309,80 MW')
   await expect(page.locator('#metode a[href="https://github.com/larserikfinholt/datasenterbehov"]')).toBeVisible()
   await expect(page.locator('footer a[href="https://github.com/larserikfinholt/datasenterbehov"]')).toBeVisible()
   await expect(page.locator('a[href*="DatacenterNeed"]')).toHaveCount(0)
@@ -157,4 +159,65 @@ test('small mobile and tablet widths have no horizontal overflow', async ({ page
     await expect(page.locator('#full-table tbody tr')).toHaveCount(407)
     await expectNoOverflow(page)
   }
+})
+
+test('Norway map has proportional markers, linked focus, sorting and no data requests', async ({ page }, testInfo) => {
+  const requests: string[] = []
+  const errors: string[] = []
+  page.on('request', request => { if (['fetch', 'xhr'].includes(request.resourceType())) requests.push(request.url()) })
+  page.on('pageerror', error => errors.push(error.message))
+  await page.goto('./')
+  await page.evaluate(() => document.fonts.ready)
+  const map = page.locator('#kart')
+  await map.scrollIntoViewIfNeeded()
+  await expect(map).toBeVisible()
+  await expect(map.locator('.norway-outline circle[data-site]')).toHaveCount(datacenters.sites.length)
+  await expect(map.locator('.site-list > li')).toHaveCount(datacenters.sites.length)
+  const unknownSites = datacenters.sites.filter(site => maxMw(site) === null)
+  expect(unknownSites.length).toBeGreaterThan(0)
+  await expect(map.locator('.norway-outline .unknown-mw')).toHaveCount(unknownSites.length)
+  for (const site of unknownSites) {
+    const dot = map.locator(`circle[data-site="${site.id}"]`)
+    await expect(dot).toHaveAttribute('r', '3')
+    await expect(dot).toHaveCSS('fill', 'rgb(0, 0, 0)')
+    await expect(dot).toHaveCSS('stroke', 'rgb(0, 0, 0)')
+    await expect(dot).toHaveCSS('stroke-dasharray', 'none')
+    await expect(dot).toHaveAccessibleName(/Ukjent/)
+  }
+  await expect(map.locator('.map-size-legend .unknown-mw')).toHaveCSS('fill', 'rgb(0, 0, 0)')
+  expect(requests).toEqual([])
+  const largest = byMwDesc(datacenters.sites)[0]
+  const marker = map.locator(`circle[data-site="${largest.id}"]`)
+  const radii = await map.locator('.norway-outline circle').evaluateAll(circles => circles.map(circle => Number(circle.getAttribute('r'))))
+  expect(Number(await marker.getAttribute('r'))).toBe(Math.max(...radii))
+  const sortedIds = await map.locator('.site-list > li').evaluateAll(items => items.map(item => item.getAttribute('data-site')))
+  expect(sortedIds).toEqual(byMwDesc(datacenters.sites).map(site => site.id))
+  const item = map.locator(`li[data-site="${largest.id}"]`)
+  await item.hover()
+  await expect(marker).toHaveClass(/is-active/)
+  await page.locator('#map-title').hover()
+  await expect(marker).not.toHaveClass(/is-active/)
+  await marker.focus()
+  await expect(item).toHaveClass(/is-active/)
+  await page.keyboard.press('Enter')
+  await expect(item).toBeFocused()
+  await page.getByLabel('Sorter etter').selectOption('name')
+  const names = await map.locator('.site-heading h3').allTextContents()
+  expect(names).toEqual(datacenters.sites.map(site => site.name).sort((left, right) => left.localeCompare(right, 'nb-NO')))
+  await page.getByLabel('Sorter etter').selectOption('mw')
+  const planned = datacenters.sites.find(site => site.status === 'planned')!
+  expect(await map.locator(`circle[data-site="${planned.id}"]`).evaluate(circle => getComputedStyle(circle).strokeDasharray)).not.toBe('none')
+  const known = byMwDesc(datacenters.sites).filter(site => maxMw(site) !== null)
+  const smaller = known[known.length - 1]
+  const smallerRadius = Number(await map.locator(`circle[data-site="${smaller.id}"]`).getAttribute('r'))
+  expect(smallerRadius ** 2 / Number(await marker.getAttribute('r')) ** 2).toBeCloseTo(maxMw(smaller)! / maxMw(largest)!, 5)
+  await map.locator('.map-registry summary').click()
+  await expect(map.locator('.map-registry')).toContainText('117 registrerte datasentre')
+  await expect(map.locator('.map-registry')).toContainText('61 navngitte kommersielle operatører')
+  await map.locator('.map-registry summary').click()
+  await page.getByLabel('Sorter etter').focus()
+  await expectNoOverflow(page)
+  await map.screenshot({ path: `artifacts/${testInfo.project.name}-map.png` })
+  expect(errors).toEqual([])
+  expect(requests).toEqual([])
 })

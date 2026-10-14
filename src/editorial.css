@@ -56,6 +56,51 @@ nav a { text-decoration: none; }
 .text-link { color: var(--green); font-size: 15px; font-weight: 600; }
 .jump { display: inline-flex; align-items: center; gap: 10px; margin-top: 20px; }
 .band { background: var(--wash); border-block: 1px solid var(--rule); }
+.sr-only { position: absolute; width: 1px; height: 1px; clip-path: inset(50%); overflow: hidden; }
+.map { padding-block: 40px; background: #fff; border-bottom: 0; }
+.map-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 40px; margin-top: 28px; }
+.norway-outline { display: block; width: 100%; aspect-ratio: 520 / 640; background: #eef4f6; }
+.coastline { fill: #dde6da; stroke: #8b9e88; stroke-width: .7; }
+.marker { stroke: var(--green); stroke-width: 1.8; cursor: pointer; }
+.marker.operating { fill: var(--green); fill-opacity: .65; }
+.marker.construction { fill: white; fill-opacity: .7; }
+.marker.planned { fill: white; fill-opacity: .65; stroke-dasharray: 4 3; }
+.marker.unknown-mw, .map-size-legend .unknown-mw { fill: #000; fill-opacity: 1; stroke: #000; stroke-dasharray: none; }
+.marker.is-active, .marker:focus-visible { stroke: #a04429; stroke-width: 3; fill: #d68462; fill-opacity: .85; outline: none; }
+.map-selection { min-height: 48px; padding-top: 10px; font-size: 14px; font-weight: 600; }
+.map-size-legend { display: flex; justify-content: space-between; list-style: none; padding: 0; margin: 8px 0 12px; font-size: 12px; }
+.map-size-legend li { display: flex; flex-direction: column; align-items: center; }
+.map-size-legend svg { width: 58px; height: 58px; fill: none; stroke: var(--green); stroke-width: 1.5; }
+.map-status-legend { justify-content: flex-start; margin-block: 14px; gap: 10px 16px; }
+.map-status-legend svg { width: 20px; height: 20px; }
+.map-status-legend .marker { cursor: default; }
+.map-list-heading { display: flex; align-items: end; justify-content: space-between; gap: 16px; padding-bottom: 16px; }
+.map-list-heading h3 { font-size: 18px; }
+.map-list-heading label { font-size: 12px; margin-bottom: 4px; }
+.map-list-heading select { font-size: 14px; min-height: 38px; padding: 6px 26px 6px 8px; }
+.site-list { list-style: none; padding: 0 12px 0 0; margin: 0; max-height: 750px; overflow-y: auto; scrollbar-gutter: stable; overscroll-behavior-y: contain; }
+.site-list > li { padding: 18px 10px; border-top: 1px solid var(--rule); scroll-margin-block: 8px; }
+.site-list > li.is-active { background: #f6eee9; box-shadow: inset 3px 0 #a04429; }
+.site-list > li:focus-visible { outline: 2px solid #a04429; outline-offset: -2px; }
+.site-heading { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 12px; }
+.site-heading h3 { font-size: 19px; }
+.site-status { font-size: 11px; padding: 1px 6px; border: 1px solid var(--rule); }
+.site-status.operating { color: var(--green); background: #e5eee8; }
+.site-status.construction { background: #e5e9e1; }
+.site-status.planned { background: none; border-style: dashed; }
+.site-location { font-size: 14px; color: var(--muted); margin-top: 4px; }
+.site-power { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 13px 0 10px; font-variant-numeric: tabular-nums; }
+.site-power dt { font-size: 11px; color: var(--muted); }
+.site-power dd { margin: 2px 0 0; font-size: 16px; font-weight: 600; }
+.site-definition { font-size: 13px; }
+.site-note { font-size: 12px; color: var(--muted); margin-top: 6px; }
+.site-sources { display: flex; flex-wrap: wrap; gap: 8px; font-size: 12px; margin-top: 9px; }
+.site-sources a { color: var(--green); }
+.site-sources > span { color: var(--muted); }
+.map-registry { margin-top: 28px; }
+.unmapped-operators { columns: 2; padding-left: 18px; font-size: 14px; }
+.unmapped-operators li { break-inside: avoid; margin-bottom: 8px; }
+.unmapped-operators small { display: block; font-size: 12px; color: var(--muted); }
 .comparison { padding-block: 40px 34px; }
 .section-heading .eyebrow { margin-bottom: 13px; }
 .section-lead { color: var(--muted); margin-top: 13px; max-width: 76ch; }
@@ -172,6 +217,9 @@ footer .wordmark { font-size: 15px; }
   @keyframes arrive { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 }
 @media (max-width: 800px) {
+  .map-layout { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .norway-map { width: min(100%, 480px); margin-inline: auto; }
+  .site-list { max-height: 620px; }
   .wrap { width: calc(100% - 48px); }
   h1 { font-size: 40px; }
   h2 { font-size: 29px; }
@@ -185,6 +233,11 @@ footer .wordmark { font-size: 15px; }
   .occupation-comparison p { grid-row: 3; }
 }
 @media (max-width: 600px) {
+  .map { padding-block: 32px; }
+  .map-list-heading { align-items: start; flex-direction: column; gap: 10px; }
+  .map-list-heading > div { width: 100%; }
+  .map-status-legend { display: flex; }
+  .unmapped-operators { columns: 1; }
   body { font-size: 16px; }
   .wrap { width: calc(100% - 36px); }
   .masthead { min-height: 76px; gap: 12px; flex-wrap: wrap; padding-block: 15px; }
