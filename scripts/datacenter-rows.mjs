@@ -17,7 +17,8 @@ export function parseMw(value, label) {
 
 export function parseIsoDate(value, label) {
   if (value === '') return null
-  if (!isoDate.test(value) || new Date(`${value}T00:00:00Z`).toISOString().slice(0, 10) !== value) throw new Error(`Invalid ISO date in ${label}: "${value}"`)
+  const parsed = isoDate.test(value) ? new Date(`${value}T00:00:00Z`) : null
+  if (!parsed || Number.isNaN(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== value) throw new Error(`Invalid ISO date in ${label}: "${value}"`)
   return value
 }
 

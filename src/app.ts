@@ -103,7 +103,7 @@ get<HTMLDivElement>('#app').innerHTML = `
       <section class="wrap closing" aria-label="Avslutning"><p>Et norsk datasenter er ikke nødvendigvis<br>et datasenter for norske behov.</p><span>Skillet mellom innenlandsk bruk og eksport er avgjørende. Dette regnestykket belyser skillet, men dokumenterer ikke eksportandelen.</span></section>
     </article>
   </main>
-  <footer class="wrap"><div><a class="wordmark" href="#">Datakraftbehov / Norge</a><p>Åpent regnestykke. Synlige antakelser.</p></div><div><a href="${PROJECT_REPO}">Kilder og metode på GitHub <span data-icon="external"></span></a><p>SSB-grunnlag: 2025 · Kilderevisjon: ${summary.sourceCommit.slice(0, 7)}</p></div></footer>
+  <footer class="wrap"><div><a class="wordmark" href="#">Datakraftbehov / Norge</a><p>Åpent regnestykke. Synlige antakelser.</p><p><a class="text-link" href="${import.meta.env.BASE_URL}presentasjon/">Presentasjon: Klimacafé i Skien 15.10.2026</a></p></div><div><a href="${PROJECT_REPO}">Kilder og metode på GitHub <span data-icon="external"></span></a><p>SSB-grunnlag: 2025 · Kilderevisjon: ${summary.sourceCommit.slice(0, 7)}</p></div></footer>
 `
 
 initializeDatacenterMap()

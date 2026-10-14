@@ -1,0 +1,44 @@
+name: Feil eller manglende data
+description: Meld feil eller misbrukte tall, eller foreslå et nytt datasenter eller en ny kilde.
+title: "[Data] "
+labels: ["data"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Takk for hjelpen! Fyll ut det du vet. En lenke til en kilde er viktigst; resten kan være kort.
+        Dataene ligger i [data/datacenters.csv](../blob/main/data/datacenters.csv).
+  - type: dropdown
+    id: type
+    attributes:
+      label: Hva gjelder det?
+      options:
+        - Feil tall (MW, kapasitet, status)
+        - Tall brukt feil eller misvisende (f.eks. kapasitet vist som forbruk)
+        - Feil plassering eller operatør
+        - Nytt datasenter som mangler
+        - Ny eller bedre kilde til eksisterende datasenter
+        - Annet
+    validations:
+      required: true
+  - type: input
+    id: datacenter
+    attributes:
+      label: Datasenter
+      description: Navn eller id fra kartet. La stå tomt hvis det er et nytt datasenter eller gjelder noe generelt.
+      placeholder: "f.eks. gm-hamar / OSL-Hamar"
+  - type: textarea
+    id: description
+    attributes:
+      label: Hva er feil, eller hva bør legges til?
+      description: Hva står der nå, og hva mener du er riktig? Oppgi tall med enhet (MW) og hva tallet beskriver (IT-effekt, nettreservasjon, målt forbruk, planlagt).
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Kilde(r)
+      description: Lenke(r) til kilden, gjerne med publiseringsdato. Uten kilde kan vi ikke endre tallene.
+      placeholder: "https://…  (publisert 2026-09-01)"
+    validations:
+      required: true

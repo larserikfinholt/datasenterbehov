@@ -15,7 +15,10 @@ const cacheRoot = new URL('../data/sources/', import.meta.url)
 const csvPath = new URL('../data/datacenters.csv', import.meta.url)
 const outputPath = new URL('../src/data/datacenters.json', import.meta.url)
 const nkomUrl = 'https://stenonicprdnoea01.blob.core.windows.net/enonicpubliccontainer/prd/tildeling/datasenter/datasenter-operatorer.csv'
-const sha256 = text => createHash('sha256').update(text).digest('hex')
+// Line endings are normalised before hashing so that checkouts with core.autocrlf do not look stale.
+const normalizeEol = text => text.replace(/\r\n?/g, '\n')
+const sha256 = text => createHash('sha256').update(normalizeEol(text)).digest('hex')
+const fetched = new Set()
 await mkdir(cacheRoot, { recursive: true })
 
 async function fetchText(url) {
@@ -39,6 +42,7 @@ async function cached(name, url) {
   const text = new TextDecoder(encoding, { fatal: true }).decode(bytes)
   if (name.endsWith('.json')) JSON.parse(text)
   await writeFile(path, text)
+  fetched.add(name)
   return text
 }
 
@@ -109,7 +113,8 @@ try { metadata = JSON.parse(await readFile(metadataPath, 'utf8')) } catch (error
 const registrySha256 = inputs['data/sources/nkom-operatorer.csv']
 const now = new Date().toISOString()
 const next = {
-  registryFetchedAt: refresh || metadata.registrySha256 !== registrySha256 ? now : metadata.registryFetchedAt ?? metadata.lastUpdated,
+  // Only an actual download moves the Nkom fetch time; hash changes alone (edited cache, line endings) do not.
+  registryFetchedAt: fetched.has('nkom-operatorer.csv') ? now : metadata.registryFetchedAt ?? metadata.lastUpdated ?? now,
   registrySha256,
   sourceUrl: nkomUrl,
   inputsSha256,
@@ -136,7 +141,7 @@ const dataset = {
 const output = JSON.stringify(dataset, null, 2) + '\n'
 if (check) {
   const current = await readFile(outputPath, 'utf8').catch(() => '')
-  if (current !== output) throw new Error('Checked-in src/data/datacenters.json does not match its inputs. Run npm run data:datacenters')
+  if (normalizeEol(current) !== output) throw new Error('Checked-in src/data/datacenters.json does not match its inputs. Run npm run data:datacenters')
   console.log(`OK: src/data/datacenters.json matches ${Object.keys(inputs).length} inputs (${sites.length} sites)`)
 } else {
   await writeFile(outputPath, output)

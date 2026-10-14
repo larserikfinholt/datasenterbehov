@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-10-14T14:44:25.941Z",
+  "generatedAt": "2026-10-14T17:41:55.756Z",
   "provenance": {
-    "generatedAt": "2026-10-14T14:44:25.941Z",
+    "generatedAt": "2026-10-14T17:41:55.756Z",
     "nkomFetchedAt": "2026-10-14T12:52:44.929Z",
-    "inputsSha256": "658d4a9c13f1e1e84687a3e20daaa4562ae2182ed325a43bb856ccc633cc12c0",
+    "inputsSha256": "8c48a1aa3a7a986ac71230c82c38660cc57df475ae9ebbb1fde7d813f2ddf98c",
     "inputs": {
-      "data/datacenters.csv": "435b9bc369bf1ff41f836a68c047cf7d3349f77e236d5fb4a8b504e1c9b00ef6",
-      "data/sources/nkom-operatorer.csv": "7f3370dd0c9e17ef67a508d4e89348e3a2e612cf57c816dae1d497dd14061bb4",
+      "data/datacenters.csv": "b6645da0bdfcba43b43d8211146cd8767f633114be0008abb3b5ff8b601485bd",
+      "data/sources/nkom-operatorer.csv": "482c5e4b2476aa60cc26839258e27bac463a24829852a96362ca79a0aa0de2b1",
       "data/sources/brreg-enheter.json": "e63b09b7ddc6c5ea84e3aca8b5d26185f883381630ac34c43aee78f53c451517",
-      "data/sources/nkom-totals.json": "64caa413d2b534012016da00dcd66acc8a085223323fbad826aeb1720f711731",
+      "data/sources/nkom-totals.json": "5990c41b0ea1705e76cdb118e2d43b078b4a931f8641a1886cc3cee12fab8bac",
       "data/sources/geocode-cache.json": "f02a0de40cee71fcc656b1d738fc825c2a6cb81c5d3adef979e8890369be4241"
     },
     "note": "generatedAt er tidspunktet for siste endring i inndataene (CSV, Nkom-, Brønnøysund-, totals- og geokodecache). Den sier ikke at kapasitetstall er verifisert; se source_dates og reviewed_at per anlegg."
@@ -20,7 +20,7 @@
     "fetchedAt": "2026-10-14T12:52:44.929Z",
     "overviewUrl": "https://nkom.no/datasenter/oversikt",
     "sourceUrl": "https://stenonicprdnoea01.blob.core.windows.net/enonicpubliccontainer/prd/tildeling/datasenter/datasenter-operatorer.csv",
-    "registrySha256": "7f3370dd0c9e17ef67a508d4e89348e3a2e612cf57c816dae1d497dd14061bb4",
+    "registrySha256": "482c5e4b2476aa60cc26839258e27bac463a24829852a96362ca79a0aa0de2b1",
     "operators": [
       {
         "name": "ATEA AS",
