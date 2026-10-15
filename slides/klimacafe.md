@@ -104,7 +104,7 @@ Overgang: «Men trenger alle i arbeidslivet like mye KI som en utvikler?»
 <div class="trio">
   <div><div class="meter" data-occupation-meter data-value="100" data-marpit-fragment><p class="meter-number"><span class="meter-value">100</span>&nbsp;%<small>av utviklerens KI-datakraft</small></p><div class="meter-track" aria-hidden="true"><div class="meter-fill" style="height: 100%"></div></div></div>Utvikler<span>Flere KI-programmer i arbeid gjennom store deler av dagen</span></div>
   <div><div class="meter" data-occupation-meter data-value="3" data-marpit-fragment><p class="meter-number"><span class="meter-value">3</span>&nbsp;%<small>av utviklerens KI-datakraft</small></p><div class="meter-track" aria-hidden="true"><div class="meter-fill" style="height: 3%"></div></div></div>Gartner<span>Hjelp til planlegging og tilbud. Mye av dagen går til plantene</span></div>
-  <div><div class="meter" data-occupation-meter data-value="8" data-marpit-fragment><p class="meter-number"><span class="meter-value">8</span>&nbsp;%<small>av utviklerens KI-datakraft</small></p><div class="meter-track" aria-hidden="true"><div class="meter-fill" style="height: 8%"></div></div></div>Barnehagelærer<span>Arbeider først og fremst med barna</span></div>
+  <div><div class="meter" data-occupation-meter data-value="8" data-fragment-follows-previous><p class="meter-number"><span class="meter-value">8</span>&nbsp;%<small>av utviklerens KI-datakraft</small></p><div class="meter-track" aria-hidden="true"><div class="meter-fill" style="height: 8%"></div></div></div>Barnehagelærer<span>Arbeider først og fremst med barna</span></div>
 </div>
 
 <p class="note">Alle kan ha nytte av KI. Det betyr ikke at alle trenger like mye datakraft. <small>Prosent: modellens basisfaktor for yrket, med utvikleren som referanse. En antakelse, ikke en måling.</small><small>Kilde til årsverk: SSB, tabell 11658 (2025). KI-faktorene er modellantakelser, ikke SSB-statistikk over KI-eksponering.</small></p>
@@ -112,10 +112,10 @@ Overgang: «Men trenger alle i arbeidslivet like mye KI som en utvikler?»
 <script src="occupation-meters.js" defer></script>
 
 <!--
-Tid: 2 minutter. Hvert trykk viser ett yrke: utvikler, gartner, barnehagelærer. Tallet teller opp og stolpen fylles.
+Tid: 2 minutter. Første trykk viser utvikleren. Andre trykk viser gartner og barnehagelærer samtidig. Tallene teller opp og stolpene fylles.
 
 - «En utvikler kan ha flere KI-programmer i arbeid gjennom store deler av dagen, for eksempel til å skrive og teste kode.» (trykk: 100 %)
-- «En gartner kan få hjelp med planlegging og tilbud, men bruker også mye av dagen på å stelle planter.» (trykk: 3 %) «En barnehagelærer arbeider først og fremst med barna.» (trykk: 8 %)
+- (trykk: 3 % og 8 %) «En gartner kan få hjelp med planlegging og tilbud, men bruker også mye av dagen på å stelle planter.» «En barnehagelærer arbeider først og fremst med barna.»
 - «Alle kan ha nytte av KI. Det betyr ikke at alle trenger like mye datakraft.»
 - «Vi bruker SSBs kartlegging av arbeidsoppgaver til å anslå forskjellene mellom yrkene. Det er ikke en strømmåling, men en antakelse vi kan undersøke og diskutere.»
 
@@ -136,7 +136,7 @@ Overgang: «Hva blir summen hvis vi regner som om hele norsk arbeidsliv tar KI i
     <p class="label">Anslått KI-behov i norsk arbeidsliv<small>GPU-effekt når arbeidslivet er aktivt</small></p>
     <div class="track"><div class="bar" style="width: 8.57%"></div><span class="value" style="left: calc(8.57% + 18px)">300 MW</span></div>
   </div>
-  <div>
+  <div class="grow" data-marpit-fragment>
     <p class="label">Reservert nettkapasitet til nye datasentre<small>Per mars 2026</small></p>
     <div class="track"><div class="bar capacity" style="width: 100%"></div><span class="value inside">3 500 MW</span></div>
   </div>
@@ -146,11 +146,11 @@ Overgang: «Hva blir summen hvis vi regner som om hele norsk arbeidsliv tar KI i
 <p class="note">Regnet på KI-kortene i arbeid. Resten av serverne, kjøling, modelltrening og privat bruk kommer i tillegg. Reservert kapasitet er ikke ferdigbygde anlegg.</p>
 
 <!--
-Tid: 2,5 minutter.
+Tid: 2,5 minutter. Begge tekstene og stolpen for 300 MW vises med en gang. Ett trykk får stolpen for 3 500 MW til å vokse fram.
 
 - «Vi regner som om hele arbeidslivet tar KI i bruk. Vi bruker den KI-intensive utvikleren som referanse, justerer for yrkene og runder opp.»
 - «Da kommer vi til omtrent 300 megawatt når arbeidslivet er aktivt. Megawatt er et mål på hvor mye strøm som brukes på én gang.»
-- «Til sammenligning var 3 500 megawatt reservert til nye datasentre per mars 2026. Det reserverte tallet er over ti ganger større.»
+- «Til sammenligning var 3 500 megawatt reservert til nye datasentre per mars 2026. Det reserverte tallet er over ti ganger større.» (trykk: stolpen vokser til 3 500 MW)
 - «Men husk hva vi har regnet på: KI-kortene i arbeid. Resten av serverne, kjøling, modelltrening og privat KI-bruk er ikke med. Og reservert kapasitet betyr ikke ferdigbygde anlegg.»
 - «Forskjellen betyr ikke at resten er unødvendig. Datasentre brukes også til andre tjenester og av utenlandske kunder. Men vårt regnestykke gir grunn til å spørre om norsk arbeidslivs KI-bruk kan forklare størrelsen.»
 

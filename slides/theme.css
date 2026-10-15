@@ -71,7 +71,7 @@ section.buildup-slide .note { font-size: 16px; max-width: none; }
 .formula { font-size: 50px; font-weight: 600; color: var(--green); margin-top: 6px; }
 .formula small { display: block; font-size: 22px; font-weight: 400; color: var(--muted); margin-top: 4px; }
 
-/* Lysbilde 4: tre yrker, hver med en måler som vises trinnvis (src/slides/occupation-meters.ts) */
+/* Lysbilde 4: tre yrker med målere. Utvikleren vises først, gartner og barnehagelærer sammen på neste trykk (src/slides/occupation-meters.ts) */
 .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; flex: 1; max-height: 380px; }
 .trio > div { background: var(--wash); border: 1px solid var(--rule); display: flex; flex-direction: column; justify-content: flex-end; padding: 28px 30px; font-size: 38px; font-family: var(--serif); position: relative; overflow: hidden; }
 .trio > div::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 10px; background: var(--green); }
@@ -92,6 +92,14 @@ section.buildup-slide .note { font-size: 16px; max-width: none; }
 .bars .bar.capacity { background: repeating-linear-gradient(135deg, var(--green) 0 10px, #4f8a75 10px 18px); }
 .bars .value { position: absolute; top: 50%; transform: translateY(-50%); font-size: 40px; font-weight: 600; white-space: nowrap; color: var(--green); }
 .bars .value.inside { color: #fff; right: 22px; }
+/* Raden .grow er et fragment. Teksten vises hele tiden; stolpen vokser fra 0 når fragmentet blir aktivt.
+   Inline-bredden er sluttbildet, så PDF og visning uten bespoke viser hele stolpen. */
+.bars > .grow[data-bespoke-marp-fragment] { visibility: visible; }
+.bars > .grow .bar { transition: width 1.6s cubic-bezier(.22, 1, .36, 1); }
+.bars > .grow .value { transition: opacity .4s ease 1.2s; }
+.bars > .grow[data-bespoke-marp-fragment=inactive] .bar { width: 0 !important; transition: none; }
+.bars > .grow[data-bespoke-marp-fragment=inactive] .value { opacity: 0; transition: none; }
+@media (prefers-reduced-motion: reduce) { .bars > .grow .bar, .bars > .grow .value { transition: none; } }
 .bars .scale { position: relative; height: 24px; margin-left: 350px; border-top: 1px solid var(--rule); font-size: 16px; color: var(--muted); }
 .bars .scale span { position: absolute; top: 2px; transform: translateX(-50%); }
 .bars .scale span:first-child { transform: none; }
