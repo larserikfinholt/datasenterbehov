@@ -32,6 +32,8 @@ Lysbilde 2 er et animert kart: anleggene i `data/datacenters.csv` dukker opp ett
 
 Lysbilde 4 viser tre yrker med hver sin måler: et stort tall og en loddrett stolpe. Hvert trykk viser én måler, som teller opp til yrkets basisfaktor i `data/workforce.csv` med utvikleren som referanse: programvareutvikler 100 %, gartner 3 % og barnehagelærer 8 %. Faktorene er scenarioantakelser, ikke SSB-estimater; det står på lysbildet. Endres faktorene, må tallene i `slides/klimacafe.md` oppdateres for hånd. E2E-testen sammenligner dem med `public/data/occupations.json`. Uten skript (PDF, redusert bevegelse) vises sluttverdiene.
 
+Fotnoten på yrkessliden viser til SSB tabell 11658 (årsverk, 2025), og presiserer at KI-faktorene ikke er SSB-statistikk over KI-eksponering. Siste lysbilde viser nettsiden i en iframe som fyller hele lysbildet, uten ramme eller sidetall. Denne sliden krever nettilgang og brukes i HTML-presentasjonen, ikke PDF.
+
 Stolpen er en visuell sum, ikke en kapasitetsoversikt. For hvert anlegg legges lagene oppå hverandre uten å telle samme MW to ganger: i bruk, nettreservasjon utover dette, omsøkt effekt og planlagt kapasitet utover reservert og omsøkt. Summen på tvers av anleggene blander likevel tall med ulike definisjoner, kan overlappe og dekker bare prosjektets kartutvalg. Den er derfor ikke det samme som 3 500 MW reservert nettkapasitet på lysbilde 5, og det står en merknad om dette på lysbildet.
 
 ## Kjør lokalt

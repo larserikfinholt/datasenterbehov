@@ -4,7 +4,7 @@ theme: datakraft
 paginate: true
 lang: nb
 title: Trenger vi datasentre? Ja. Men hvor mange? | Klimacafé i Skien 15.10.2026
-description: Seks lysbilder om datasentrene på kartet, KI-behovet i norsk arbeidsliv og nettkapasiteten som er reservert til nye datasentre. Lars Erik Finholt, Klimacafé i Skien 15. oktober 2026.
+description: Sju lysbilder om datasentrene på kartet, KI-behovet i norsk arbeidsliv og nettkapasiteten som er reservert til nye datasentre. Lars Erik Finholt, Klimacafé i Skien 15. oktober 2026.
 ---
 
 <!-- _class: lead -->
@@ -107,7 +107,7 @@ Overgang: «Men trenger alle i arbeidslivet like mye KI som en utvikler?»
   <div><div class="meter" data-occupation-meter data-value="8" data-marpit-fragment><p class="meter-number"><span class="meter-value">8</span>&nbsp;%<small>av utviklerens KI-datakraft</small></p><div class="meter-track" aria-hidden="true"><div class="meter-fill" style="height: 8%"></div></div></div>Barnehagelærer<span>Arbeider først og fremst med barna</span></div>
 </div>
 
-<p class="note">Alle kan ha nytte av KI. Det betyr ikke at alle trenger like mye datakraft. <small>Prosent: modellens basisfaktor for yrket, med utvikleren som referanse. En antakelse, ikke en måling.</small></p>
+<p class="note">Alle kan ha nytte av KI. Det betyr ikke at alle trenger like mye datakraft. <small>Prosent: modellens basisfaktor for yrket, med utvikleren som referanse. En antakelse, ikke en måling.</small><small>Kilde til årsverk: SSB, tabell 11658 (2025). KI-faktorene er modellantakelser, ikke SSB-statistikk over KI-eksponering.</small></p>
 
 <script src="occupation-meters.js" defer></script>
 
@@ -192,3 +192,10 @@ Avslutning, kort pause før spørsmålene:
 Ved spørsmål om Gromstul: Google oppgir 240 MW tildelt kraftkapasitet i første fase. Ikke direkte sammenlignbart med 300 MW: vårt tall gjelder bare KI-kortene, Googles tall gjelder kapasitet til hele anlegget.
 Kilde 240 MW: https://kommunikasjon.ntb.no/pressemelding/18046820/google-starter-bygging-av-et-nytt-datasenter-i-skien-investerer-600-millioner-euro?lang=no&publisherId=8930805
 -->
+
+---
+
+<!-- _class: website-slide -->
+<!-- _paginate: false -->
+
+<iframe src="https://larserikfinholt.github.io/datasenterbehov/" title="Datakraftbehov i Norge" loading="lazy"></iframe>
