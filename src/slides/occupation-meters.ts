@@ -1,4 +1,4 @@
-// Yrkesmålerne på lysbilde 4. Hver måler er et Marp-fragment: når fragmentet blir
+// Yrkesmålerne på lysbilde 5. Hver måler er et Marp-fragment: når fragmentet blir
 // aktivt teller tallet opp og stolpen fylles til målverdien. Markupen har sluttverdien,
 // så PDF og redusert bevegelse viser sluttbildet uten skript.
 // En måler med data-fragment-follows-previous er ikke et eget trinn. Den speiler

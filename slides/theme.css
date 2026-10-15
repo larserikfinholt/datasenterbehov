@@ -58,7 +58,55 @@ section.buildup-slide h2 { font-size: 44px; }
 section.buildup-slide .buildup { flex: 1; min-height: 0; font-size: 22px; }
 section.buildup-slide .note { font-size: 16px; max-width: none; }
 
-/* Lysbilde 3: maskin og 20 utviklere */
+/* Lysbilde 3: hvor KI-beregningen skjer. Skyforbindelsen vises først, den lokale serveren på første trykk,
+   og den lokale forbindelsen fremheves sammen med konklusjonen på andre trykk. Grunnstilen er sluttbildet,
+   så PDF og visning uten bespoke viser det; tidligere trinn styres av fragmentattributtene under. */
+section.compute-slide { gap: 22px; }
+.compute { display: grid; grid-template-columns: 250px 300px 1fr; grid-template-rows: 190px 190px; }
+.compute .chip { display: inline-block; padding: 3px 10px; border: 2px solid var(--ink); background: #fff; color: var(--ink); font-size: 15px; font-weight: 650; letter-spacing: .04em; line-height: 1.2; text-transform: uppercase; white-space: nowrap; }
+.compute .chip.model { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); border-color: var(--accent); background: var(--accent); color: #fff; font-size: 17px; padding: 5px 14px; }
+.compute .caption { font-size: 24px; line-height: 1.25; }
+.compute .caption small { display: block; font-size: 18px; color: var(--muted); margin-top: 6px; }
+.compute .dev { grid-column: 1; grid-row: 1 / 3; align-self: center; position: relative; height: 130px; display: flex; align-items: flex-end; gap: 14px; }
+.compute .dev .caption { position: absolute; left: 0; width: 380px; top: calc(100% + 34px); }
+.compute .person { flex: 0 0 36px; height: 36px; border-radius: 50%; background: var(--green); position: relative; margin-bottom: 12px; }
+.compute .person::after { content: ''; position: absolute; left: 4px; right: 4px; bottom: -12px; height: 12px; background: var(--green); border-radius: 10px 10px 0 0; }
+.compute .screen { position: relative; width: 200px; height: 130px; border: 3px solid var(--ink); border-radius: 6px; background: var(--wash); padding: 16px 14px; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.compute .screen::after { content: ''; position: absolute; left: 50%; top: calc(100% + 3px); width: 64px; height: 16px; transform: translateX(-50%); border-bottom: 3px solid var(--ink); background: linear-gradient(var(--ink), var(--ink)) center / 4px 100% no-repeat; }
+.compute .screen i { display: block; height: 7px; border-radius: 4px; background: #c5ccc4; width: 80%; }
+.compute .screen i:nth-child(2) { width: 55%; margin-left: 14px; }
+.compute .screen i:nth-child(3) { width: 65%; margin-left: 14px; }
+.compute .screen .chip { margin-top: auto; }
+.compute .links { grid-column: 2; grid-row: 1 / 3; width: 300px; height: 380px; overflow: visible; }
+.compute .links text { font-family: var(--sans); font-size: 15px; fill: var(--muted); }
+.compute .link { transition: opacity .5s ease; }
+.compute .lane { fill: none; stroke: var(--ink); stroke-width: 6; stroke-linecap: round; stroke-dasharray: 0 14; animation: compute-flow .9s linear infinite; transition: stroke .5s ease; }
+@keyframes compute-flow { to { stroke-dashoffset: -14; } }
+.compute .link.cloud { opacity: .3; }
+.compute .link.cloud .lane { animation: none; }
+.compute .link.local .lane { stroke: var(--green); }
+.compute .target { grid-column: 3; display: grid; grid-template-columns: 220px 1fr; gap: 26px; align-items: center; transition: opacity .5s ease; }
+.compute .target.cloud { grid-row: 1; opacity: .45; }
+.compute .target.local { grid-row: 2; }
+.compute .target.local .caption { color: var(--green); font-weight: 600; }
+.compute .dc { position: relative; width: 220px; height: 150px; border: 2px solid var(--muted); background: var(--wash); padding: 14px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.compute .dc i { display: block; border: 1px solid #9aa39b; background: repeating-linear-gradient(#9aa39b 0 5px, transparent 5px 10px); }
+.server.compact { width: 220px; position: relative; }
+.server.compact .box { gap: 5px; padding: 10px; box-shadow: 0 0 0 6px #17634c2e; transition: box-shadow .5s ease; }
+.server.compact .gpu { height: 13px; border-left-width: 8px; }
+.compute-takeaway { font-size: 36px; font-weight: 600; color: var(--green); }
+/* Før andre trykk: skyforbindelsen er aktiv, den lokale er et stiplet alternativ. */
+section:has(.compute-takeaway[data-bespoke-marp-fragment=inactive]) .compute .link.cloud { opacity: 1; }
+section:has(.compute-takeaway[data-bespoke-marp-fragment=inactive]) .compute .link.cloud .lane { animation: compute-flow .9s linear infinite; }
+section:has(.compute-takeaway[data-bespoke-marp-fragment=inactive]) .compute .target.cloud { opacity: 1; }
+section:has(.compute-takeaway[data-bespoke-marp-fragment=inactive]) .compute .link.local .lane { stroke: #9aa39b; stroke-width: 2; stroke-dasharray: 6 8; animation: none; }
+section:has(.compute-takeaway[data-bespoke-marp-fragment=inactive]) .compute .target.local .caption { color: var(--ink); font-weight: 400; }
+section:has(.compute-takeaway[data-bespoke-marp-fragment=inactive]) .server.compact .box { box-shadow: none; }
+/* Før første trykk: den lokale forbindelsen skjules sammen med serveren. */
+.compute:has(.target.local[data-bespoke-marp-fragment=inactive]) .link.local { visibility: hidden; }
+@media (prefers-reduced-motion: reduce) { .compute .lane, section .compute .link .lane { animation: none !important; } }
+
+/* Lysbilde 4: maskin og 20 utviklere */
 .machine { display: grid; grid-template-columns: 300px 1fr; gap: 56px; align-items: start; }
 .server { width: 300px; display: flex; flex-direction: column; gap: 8px; }
 .server .box { border: 2px solid var(--ink); display: flex; flex-direction: column; gap: 8px; padding: 14px; background: var(--wash); }
@@ -71,7 +119,7 @@ section.buildup-slide .note { font-size: 16px; max-width: none; }
 .formula { font-size: 50px; font-weight: 600; color: var(--green); margin-top: 6px; }
 .formula small { display: block; font-size: 22px; font-weight: 400; color: var(--muted); margin-top: 4px; }
 
-/* Lysbilde 4: tre yrker med målere. Utvikleren vises først, gartner og barnehagelærer sammen på neste trykk (src/slides/occupation-meters.ts) */
+/* Lysbilde 5: tre yrker med målere. Utvikleren vises først, gartner og barnehagelærer sammen på neste trykk (src/slides/occupation-meters.ts) */
 .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; flex: 1; max-height: 380px; }
 .trio > div { background: var(--wash); border: 1px solid var(--rule); display: flex; flex-direction: column; justify-content: flex-end; padding: 28px 30px; font-size: 38px; font-family: var(--serif); position: relative; overflow: hidden; }
 .trio > div::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 10px; background: var(--green); }
@@ -82,7 +130,7 @@ section.buildup-slide .note { font-size: 16px; max-width: none; }
 .trio .meter-track { position: relative; height: 100%; background: #e3e8e2; border-bottom: 2px solid var(--ink); }
 .trio .meter-fill { position: absolute; left: 0; right: 0; bottom: 0; background: var(--green); }
 
-/* Lysbilde 5: to vannrette stolper på samme skala */
+/* Lysbilde 6: to vannrette stolper på samme skala */
 .bars { display: grid; gap: 34px; margin-top: 10px; }
 .bars > div { display: grid; grid-template-columns: 320px 1fr; align-items: center; gap: 30px; }
 .bars .label { font-size: 24px; line-height: 1.3; text-align: right; }
@@ -105,7 +153,7 @@ section.buildup-slide .note { font-size: 16px; max-width: none; }
 .bars .scale span:first-child { transform: none; }
 .bars .scale span:last-child { transform: translateX(-100%); white-space: nowrap; }
 
-/* Lysbilde 6: rolig kart med Gromstul merket (src/datacenter-buildup-view.ts), tekst og QR-kode */
+/* Lysbilde 7: rolig kart med Gromstul merket (src/datacenter-buildup-view.ts), tekst og QR-kode */
 section.benefit-slide { padding-top: 48px; }
 .benefit { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); gap: 64px; height: 100%; min-height: 0; }
 .benefit-map { height: 100%; min-height: 0; }

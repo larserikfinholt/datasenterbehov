@@ -4,7 +4,7 @@ theme: datakraft
 paginate: true
 lang: nb
 title: Trenger vi datasentre? Ja. Men hvor mange? | Klimacafé i Skien 15.10.2026
-description: Sju lysbilder om datasentrene på kartet, KI-behovet i norsk arbeidsliv og nettkapasiteten som er reservert til nye datasentre. Lars Erik Finholt, Klimacafé i Skien 15. oktober 2026.
+description: Åtte lysbilder om datasentrene på kartet, KI-behovet i norsk arbeidsliv og nettkapasiteten som er reservert til nye datasentre. Lars Erik Finholt, Klimacafé i Skien 15. oktober 2026.
 ---
 
 <!-- _class: lead -->
@@ -53,12 +53,63 @@ Tid: 1,5 minutt. Animasjonen starter når lysbildet vises og tar rundt 20 sekund
 
 Talernotat: summen er ikke det samme som 3 500 MW reservert nettkapasitet på «Hele arbeidslivet»-lysbildet. Den blander reservasjon, søknader og planer for 21 anlegg. Ikke bruk summen som et presist tall.
 
-Overgang: «Så hvor mye av dette trenger vi selv? For å regne på hele arbeidslivet må vi begynne et sted. Vi begynner med én maskin.»
+Overgang: «Så hvor mye av dette trenger vi selv? For å regne på hele arbeidslivet må vi begynne et sted. Først: hvor skjer egentlig KI-beregningen?»
 -->
 
 ---
 
-<p class="eyebrow">2 / Utgangspunktet</p>
+<!-- _class: compute-slide -->
+
+<p class="eyebrow">2 / KI-beregningen</p>
+
+## Hvor skjer KI-beregningen?
+
+<div class="compute">
+  <div class="dev">
+    <span class="person" aria-hidden="true"></span>
+    <div class="screen" aria-hidden="true"><i></i><i></i><i></i><span class="chip agent">Kodeagent</span></div>
+    <p class="caption">Utvikler med kodeagent<small>Agenten sender forespørsler og mottar svar</small></p>
+  </div>
+  <svg class="links" viewBox="0 0 300 380" aria-hidden="true">
+    <g class="link cloud">
+      <path class="lane" d="M12 172 C150 172 150 89 288 89"/>
+      <path class="lane" d="M288 101 C150 101 150 184 12 184"/>
+      <text x="288" y="76" text-anchor="end">forespørsel →</text>
+      <text x="288" y="126" text-anchor="end">← svar</text>
+    </g>
+    <g class="link local">
+      <path class="lane" d="M12 196 C150 196 150 279 288 279"/>
+      <path class="lane" d="M288 291 C150 291 150 208 12 208"/>
+    </g>
+  </svg>
+  <div class="target cloud">
+    <div class="dc" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><span class="chip model">Modell</span></div>
+    <p class="caption">Skymodell, f.eks. i USA<small>API: betaling per token</small></p>
+  </div>
+  <div class="target local" data-marpit-fragment>
+    <div class="server compact" aria-hidden="true"><div class="box"><div class="gpu"></div><div class="gpu"></div><div class="gpu"></div><div class="gpu"></div><div class="gpu"></div><div class="gpu"></div><div class="gpu"></div><div class="gpu"></div></div><span class="chip model">Modell</span></div>
+    <p class="caption">Lokal server med lokal modell<small>Egen maskinvare og strømforbruk</small></p>
+  </div>
+</div>
+
+<p class="compute-takeaway" data-marpit-fragment>Vi kjører modellen lokalt. Derfor kan vi måle strømforbruket.</p>
+
+<!--
+Tid: 1,5 minutt. Utvikleren og forbindelsen til skymodellen vises med en gang. Første trykk viser den lokale serveren. Andre trykk fremhever den lokale forbindelsen og viser konklusjonen.
+
+- «Når en utvikler bruker en kodeagent, er det ikke PC-en som gjør KI-beregningen. Agenten sender forespørsler til en språkmodell og får svar tilbake.»
+- «Ofte kjører modellen i et stort datasenter, for eksempel i USA. Bruker man den via et API, betaler man gjerne per token. Strømforbruket ser man ikke.»
+- (trykk) «Alternativet er en egen server. Da trenger man både maskinvaren og en modell som kan kjøres der. Og man betaler strømmen selv.»
+- (trykk) «Vi kjører modellen lokalt. Derfor kan vi måle strømforbruket.»
+
+Talernotat: skill agenten, som bruker modellen, fra modellen, som utfører KI-beregningen. Skymodeller kan kjøre flere steder; USA er bare et eksempel. Ikke alle utviklerverktøy fakturerer brukeren per token; det gjelder API-bruk.
+
+Overgang: «Så la oss se på serveren vår.»
+-->
+
+---
+
+<p class="eyebrow">3 / Utgangspunktet</p>
 
 ## Vi begynner med én maskin og 20 utviklere
 
@@ -97,7 +148,7 @@ Overgang: «Men trenger alle i arbeidslivet like mye KI som en utvikler?»
 
 ---
 
-<p class="eyebrow">3 / Yrkene</p>
+<p class="eyebrow">4 / Yrkene</p>
 
 ## Trenger en gartner like mye KI som en utvikler?
 
@@ -127,7 +178,7 @@ Overgang: «Hva blir summen hvis vi regner som om hele norsk arbeidsliv tar KI i
 
 ---
 
-<p class="eyebrow">4 / Hele arbeidslivet</p>
+<p class="eyebrow">5 / Hele arbeidslivet</p>
 
 ## Hva blir det for hele norsk arbeidsliv?
 
@@ -167,7 +218,7 @@ Overgang: «Og hvor stort er egentlig 300 megawatt? Her i Skien har vi en lokal 
 <div class="benefit">
   <div class="benefit-map" data-datacenter-map data-highlight="google-skien" data-label="Gromstul, Skien"></div>
   <div class="benefit-text">
-    <p class="eyebrow">5 / Samfunnsnytten</p>
+    <p class="eyebrow">6 / Samfunnsnytten</p>
     <h2>Hva er samfunnsnytten?</h2>
     <ul class="claims"><li>«Digitalisering»</li><li>«Grønt skifte»</li><li>«KI for norske bedrifter»</li></ul>
     <p class="verdict">Dette er ikke tilstrekkelige begrunnelser. Vårt anslag for KI-behovet i norsk arbeidsliv forklarer ikke omfanget av utbyggingen.</p>

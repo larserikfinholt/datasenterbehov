@@ -34,7 +34,7 @@ export async function prepareSlideAssets() {
 }
 
 // Kartanimasjonen på lysbilde 2 gjenbruker komponenten fra nettsiden; yrkesmålerne på
-// lysbilde 4 er egne. Hvert skript pakkes for seg, siden IIFE-formatet krever én inngang.
+// lysbilde 5 er egne. Hvert skript pakkes for seg, siden IIFE-formatet krever én inngang.
 async function buildSlideScripts() {
   for (const script of SLIDE_SCRIPTS) {
     await build({
