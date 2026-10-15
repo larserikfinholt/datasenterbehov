@@ -294,12 +294,14 @@ test('the Klimacafé presentation is published next to the site and linked from 
   await link.click()
   await expect(page).toHaveURL(/\/datasenterbehov\/presentasjon\/$/)
   await expect(page).toHaveTitle(/Trenger vi datasentre\?/)
-  await expect(page.locator('svg[data-marpit-svg]')).toHaveCount(8)
+  await expect(page.locator('svg[data-marpit-svg]')).toHaveCount(9)
   await expect(page.locator('section').first()).toContainText('Trenger vi datasentre? Ja. Men hvor mye?')
   await expect(page.locator('section').nth(1).locator('[data-datacenter-buildup]')).toHaveAttribute('aria-label', /21 datasentre/)
-  await expect(page.locator('section').nth(5).locator('[role="img"]')).toHaveAttribute('aria-label', /300 MW.*3 500 MW/)
-  await expect(page.locator('section').nth(6).locator('img[src="qr.svg"]')).toHaveAttribute('alt', /QR-kode/)
-  const finalMap = page.locator('section').nth(6).locator('[data-datacenter-map]')
+  await expect(page.locator('section').nth(5).locator('.equation .term')).toHaveText([/^3 mill\./, /^220 W/, /^yrkesvekting/])
+  await expect(page.locator('section').nth(5).locator('.note')).toContainText('Forenklet')
+  await expect(page.locator('section').nth(6).locator('[role="img"]')).toHaveAttribute('aria-label', /300 MW.*3 500 MW/)
+  await expect(page.locator('section').nth(7).locator('img[src="qr.svg"]')).toHaveAttribute('alt', /QR-kode/)
+  const finalMap = page.locator('section').nth(7).locator('[data-datacenter-map]')
   await expect(finalMap).toHaveAttribute('aria-label', /21 datasentre.*Gromstul, Skien er merket/)
   await expect(finalMap.locator('.dc-marker')).toHaveCount(datacenters.sites.length)
   await expect(finalMap.locator('.dc-marker.is-highlight')).toHaveCount(1)
@@ -408,8 +410,8 @@ test('the occupations slide reveals the developer first, then gardener and kinde
 })
 
 test('the workforce slide shows both labels and the demand bar, then grows the reserved capacity bar on click', async ({ page }, testInfo) => {
-  await page.goto('presentasjon/#6')
-  const slide = page.locator('section').nth(5)
+  await page.goto('presentasjon/#7')
+  const slide = page.locator('section').nth(6)
   const demand = slide.locator('.bars > div').nth(0)
   const capacity = slide.locator('.bars > div').nth(1)
   await expect(demand.locator('.label')).toBeVisible()
@@ -432,7 +434,7 @@ test('the workforce slide shows both labels and the demand bar, then grows the r
 
 test('the last presentation slide embeds the website without a frame or inset', async ({ page }) => {
   await page.route('https://larserikfinholt.github.io/datasenterbehov/', route => route.fulfill({ contentType: 'text/html', body: '<h1>Datakraftbehov</h1>' }))
-  await page.goto('presentasjon/#8')
+  await page.goto('presentasjon/#9')
   const slide = page.locator('section').last()
   const iframe = slide.locator('iframe')
   await expect(iframe).toBeVisible()

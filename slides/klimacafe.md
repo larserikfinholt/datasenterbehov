@@ -4,7 +4,7 @@ theme: datakraft
 paginate: true
 lang: nb
 title: Trenger vi datasentre? Ja. Men hvor mange? | Klimacafé i Skien 15.10.2026
-description: Åtte lysbilder om datasentrene på kartet, KI-behovet i norsk arbeidsliv og nettkapasiteten som er reservert til nye datasentre. Lars Erik Finholt, Klimacafé i Skien 15. oktober 2026.
+description: Ni lysbilder om datasentrene på kartet, KI-behovet i norsk arbeidsliv og nettkapasiteten som er reservert til nye datasentre. Lars Erik Finholt, Klimacafé i Skien 15. oktober 2026.
 ---
 
 <!-- _class: lead -->
@@ -173,12 +173,39 @@ Tid: 2 minutter. Første trykk viser utvikleren. Andre trykk viser gartner og ba
 Talernotat: SSB kartlegger hvilke arbeidsoppgaver KI kan påvirke, ikke strømbruk. Koblingen er en sentral usikkerhet. Ulik type arbeid, ikke ulik verdi av arbeidet.
 Prosentene er basisfaktorene i data/workforce.csv (Programvareutviklere 1,00, Gartnere 0,03, Førskole-/barnehagelærere 0,08). Lav–høy: gartner 1–8 %, barnehagelærer 2–18 %. Faktorene er scenarioantakelser fra kilderepoet, ikke SSB-estimater; SSB-grunnlaget er årsverkene (tabell 11658).
 
+Overgang: «Da kan vi sette sammen regnestykket.»
+-->
+
+---
+
+<p class="eyebrow">5 / Regnestykket</p>
+
+## Fra én utvikler til hele arbeidslivet
+
+<div class="equation">
+  <p class="term">3 mill.<small>i arbeid i Norge</small></p>
+  <span class="times" aria-hidden="true">×</span>
+  <p class="term">220 W<small>per utvikler, målt</small></p>
+  <span class="times" aria-hidden="true">×</span>
+  <p class="term">yrkesvekting<small>fra 3 % til 100 % av utvikleren</small></p>
+</div>
+
+<p class="note">Forenklet regnestykke. Den fullstendige formelen, med alle forutsetninger, står på nettsiden: <strong>larserikfinholt.github.io/datasenterbehov</strong></p>
+
+<!--
+Tid: 1 minutt.
+
+- «Nå har vi det vi trenger for å regne. Rundt tre millioner mennesker i arbeid. 220 watt per utvikler, som vi målte. Og en vekting etter yrke: gartneren får 3 prosent, utvikleren 100.»
+- «Dette er en forenklet versjon. Hele formelen, med alle antakelsene, ligger på nettsiden.»
+
+Talernotat: forenklingen går ikke opp til 300 MW hvis man regner den ut. SSB-grunnlaget er rundt 2,5 millioner årsverk (tabell 11658, 2025), og årsverksvektet snitt av yrkesfaktorene er omtrent 0,25. Med 220 W gir det rundt 135–165 MW. 300 MW på neste lysbilde er nettsidens høyscenario: 640 W per aktiv referansebruker (hele H100-serveren delt på 10 brukere) og 80 % KI-adopsjon. Ved spørsmål: vis til nettsiden.
+
 Overgang: «Hva blir summen hvis vi regner som om hele norsk arbeidsliv tar KI i bruk?»
 -->
 
 ---
 
-<p class="eyebrow">5 / Hele arbeidslivet</p>
+<p class="eyebrow">6 / Hele arbeidslivet</p>
 
 ## Hva blir det for hele norsk arbeidsliv?
 
@@ -218,7 +245,7 @@ Overgang: «Og hvor stort er egentlig 300 megawatt? Her i Skien har vi en lokal 
 <div class="benefit">
   <div class="benefit-map" data-datacenter-map data-highlight="google-skien" data-label="Gromstul, Skien"></div>
   <div class="benefit-text">
-    <p class="eyebrow">6 / Samfunnsnytten</p>
+    <p class="eyebrow">7 / Samfunnsnytten</p>
     <h2>Hva er samfunnsnytten?</h2>
     <ul class="claims"><li>«Digitalisering»</li><li>«Grønt skifte»</li><li>«KI for norske bedrifter»</li></ul>
     <p class="verdict">Dette er ikke tilstrekkelige begrunnelser. Vårt anslag for KI-behovet i norsk arbeidsliv forklarer ikke omfanget av utbyggingen.</p>

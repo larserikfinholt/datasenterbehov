@@ -130,7 +130,13 @@ section:has(.compute-takeaway[data-bespoke-marp-fragment=inactive]) .server.comp
 .trio .meter-track { position: relative; height: 100%; background: #e3e8e2; border-bottom: 2px solid var(--ink); }
 .trio .meter-fill { position: absolute; left: 0; right: 0; bottom: 0; background: var(--green); }
 
-/* Lysbilde 6: to vannrette stolper på samme skala */
+/* Lysbilde 6: forenklet regnestykke som leder fram til 300 MW */
+.equation { display: flex; align-items: flex-start; gap: 28px; margin: 28px 0 12px; }
+.equation .term { flex: 0 1 auto; font-size: 72px; font-weight: 600; line-height: 1; color: var(--green); white-space: nowrap; border-top: 10px solid var(--green); padding-top: 22px; }
+.equation .term small { display: block; font-size: 20px; font-weight: 400; color: var(--muted); margin-top: 14px; white-space: normal; max-width: 15ch; text-wrap: pretty; }
+.equation .times { font-size: 64px; line-height: 1; color: var(--muted); padding-top: 34px; }
+
+/* Lysbilde 7: to vannrette stolper på samme skala */
 .bars { display: grid; gap: 34px; margin-top: 10px; }
 .bars > div { display: grid; grid-template-columns: 320px 1fr; align-items: center; gap: 30px; }
 .bars .label { font-size: 24px; line-height: 1.3; text-align: right; }
@@ -153,7 +159,7 @@ section:has(.compute-takeaway[data-bespoke-marp-fragment=inactive]) .server.comp
 .bars .scale span:first-child { transform: none; }
 .bars .scale span:last-child { transform: translateX(-100%); white-space: nowrap; }
 
-/* Lysbilde 7: rolig kart med Gromstul merket (src/datacenter-buildup-view.ts), tekst og QR-kode */
+/* Lysbilde 8: rolig kart med Gromstul merket (src/datacenter-buildup-view.ts), tekst og QR-kode */
 section.benefit-slide { padding-top: 48px; }
 .benefit { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); gap: 64px; height: 100%; min-height: 0; }
 .benefit-map { height: 100%; min-height: 0; }
