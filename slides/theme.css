@@ -97,16 +97,18 @@ section.buildup-slide .note { font-size: 16px; max-width: none; }
 .bars .scale span:first-child { transform: none; }
 .bars .scale span:last-child { transform: translateX(-100%); white-space: nowrap; }
 
-/* Lysbilde 6: Gromstul og sluttspørsmål */
-.compare { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 8px; }
-.compare > div { border-top: 3px solid var(--green); padding-top: 18px; }
-.compare .mw { display: flex; align-items: baseline; gap: 10px; font-size: 84px; font-weight: 600; line-height: 1; color: var(--green); white-space: nowrap; }
-.compare .mw small { font-size: 32px; font-weight: 500; }
-.compare p { font-size: 22px; margin-top: 12px; line-height: 1.35; }
-.compare p small { display: block; color: var(--muted); font-size: 18px; margin-top: 4px; }
-.question { font-family: var(--serif); font-size: 60px; line-height: 1.15; margin-top: auto; }
-.linkline { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; font-size: 18px; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 14px; }
-.linkline img { width: 96px; height: 96px; flex-shrink: 0; }
+/* Lysbilde 6: rolig kart med Gromstul merket (src/datacenter-buildup-view.ts), tekst og QR-kode */
+section.benefit-slide { padding-top: 48px; }
+.benefit { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); gap: 64px; height: 100%; min-height: 0; }
+.benefit-map { height: 100%; min-height: 0; }
+.benefit-text { display: flex; flex-direction: column; gap: 18px; min-width: 0; min-height: 0; }
+.benefit-text h2 { font-size: 54px; }
+.claims { list-style: none; padding: 0; display: grid; gap: 4px; font-family: var(--serif); font-size: 32px; line-height: 1.25; }
+.claims li { border-left: 4px solid var(--green); padding-left: 18px; }
+.verdict { font-size: 26px; line-height: 1.4; text-wrap: pretty; }
+.linkline { margin-top: auto; display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; font-size: 18px; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 14px; }
+.linkline strong { color: var(--ink); }
+.linkline img { width: 112px; height: 112px; flex-shrink: 0; }
 
 section.lead { justify-content: flex-start; padding-top: 110px; }
 section.lead h1 { margin-top: 18px; }

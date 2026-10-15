@@ -132,3 +132,23 @@ export function mountDatacenterBuildup(root: HTMLElement): DatacenterBuildup {
   showAll()
   return { play, reset, showAll }
 }
+
+/** Samme kart uten animasjon og stolpe: alle anleggene vises, og ett kan merkes med navn. */
+export function mountDatacenterMap(root: HTMLElement, highlight?: { id: string, label: string }) {
+  injectStyles()
+  const steps = buildupSteps(sites)
+  const largest = Math.max(...steps.map(step => step.siteTotal))
+  const marked = steps.find(step => step.site.id === highlight?.id)
+  // Det merkede anlegget tegnes sist, slik at det ligger over naboene på samme sted.
+  const ordered = marked ? [...steps.filter(step => step !== marked), marked] : steps
+  const radius = (siteTotal: number) => siteTotal === 0 ? 4 : markerRadius(siteTotal, largest, MAX_RADIUS)
+
+  root.classList.add('dc-static-map')
+  root.setAttribute('role', 'img')
+  root.setAttribute('aria-label', `Kart over ${steps.length} datasentre i Norge${marked ? `. ${highlight!.label} er merket` : ''}.`)
+  root.innerHTML = `<svg class="dc-map" viewBox="${dataset.map.viewBox}" aria-hidden="true">
+      <path class="dc-coast" d="${dataset.map.outlinePath}" />
+      ${ordered.map(step => `<circle class="dc-marker is-shown${step.siteTotal === 0 ? ' unknown' : ''}${step === marked ? ' is-highlight' : ''}" cx="${step.site.x}" cy="${step.site.y}" r="${radius(step.siteTotal)}" />`).join('')}
+      ${marked ? `<text class="dc-label" x="${marked.site.x + radius(marked.siteTotal) + 10}" y="${marked.site.y}" dy=".35em">${escapeHtml(highlight!.label)}</text>` : ''}
+    </svg>`
+}

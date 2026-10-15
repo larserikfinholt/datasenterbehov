@@ -162,29 +162,33 @@ Overgang: «Og hvor stort er egentlig 300 megawatt? Her i Skien har vi en lokal 
 
 ---
 
-<p class="eyebrow">5 / Gromstul, Skien</p>
+<!-- _class: benefit-slide -->
 
-## Hva skal kapasiteten brukes til?
-
-<div class="compare">
-  <div><p class="mw">240<small>MW</small></p><p>Tildelt kraftkapasitet, første fase på Gromstul<small>Google, pressemelding via NTB. Kapasitet til anlegget.</small></p></div>
-  <div><p class="mw">300<small>MW</small></p><p>Anslått GPU-effekt til KI i norsk arbeidsliv<small>Vårt høye scenario. Bare KI-kortene i arbeid.</small></p></div>
+<div class="benefit">
+  <div class="benefit-map" data-datacenter-map data-highlight="google-skien" data-label="Gromstul, Skien"></div>
+  <div class="benefit-text">
+    <p class="eyebrow">5 / Samfunnsnytten</p>
+    <h2>Hva er samfunnsnytten?</h2>
+    <ul class="claims"><li>«Digitalisering»</li><li>«Grønt skifte»</li><li>«KI for norske bedrifter»</li></ul>
+    <p class="verdict">Dette er ikke tilstrekkelige begrunnelser. Vårt anslag for KI-behovet i norsk arbeidsliv forklarer ikke omfanget av utbyggingen.</p>
+    <div class="linkline"><span>Regnestykket og forutsetningene:<br><strong>larserikfinholt.github.io/datasenterbehov</strong></span><img src="qr.svg" alt="QR-kode til larserikfinholt.github.io/datasenterbehov"></div>
+  </div>
 </div>
 
-<p class="question">Hva får Norge igjen?</p>
-
-<div class="linkline"><span>Regnestykket og forutsetningene: <strong>larserikfinholt.github.io/datasenterbehov</strong></span><img src="qr.svg" alt="QR-kode til larserikfinholt.github.io/datasenterbehov"></div>
+<script src="datacenter-buildup.js" defer></script>
 
 <!--
-Tid: 2 minutter.
+Tid: 2 minutter. Kartet er det samme som på første lysbilde, nå uten animasjon. Gromstul er merket.
 
-- «For å gjøre 300 megawatt litt mer konkret: Google oppgir 240 megawatt tildelt kraftkapasitet i første fase på Gromstul her i Skien.»
-- «Tallene er ikke direkte sammenlignbare. Vårt tall gjelder KI-kortene, mens Googles tall gjelder kapasitet til anlegget. Men de viser størrelsesordenen.»
-- «Hvis kapasiteten skal brukes til eksport av datakraft, må det sies tydelig. Da må vi også få vite hva Norge får igjen.»
+- «Her er kartet vi startet med. Gromstul her i Skien er merket.»
+- «Når utbyggingen skal begrunnes, hører vi ofte: digitalisering, grønt skifte, KI for norske bedrifter. Det er gode formål. Men de er ikke nok til å begrunne en utbygging i denne størrelsen.»
+- «Regnestykket vårt utfordrer begrunnelsen for størrelsen. KI-behovet i norsk arbeidsliv forklarer ikke omfanget av det som bygges og planlegges.»
+- «Det betyr ikke at sentrene er uten nytte for norske bedrifter. Det har vi ikke regnet på, og det er ikke det jeg sier.»
+- «Hvis mye av kapasiteten skal brukes til å eksportere datakraft, må samfunnsnytten vurderes ut fra verdien Norge får igjen. Den må veies opp mot kraften, nettet og naturen som brukes, og mot hva de ressursene ellers kunne gått til.»
 
 Avslutning, kort pause før spørsmålene:
 «Vi trenger datasentre. Men vi trenger også tydelige svar: Hvem skal bruke kapasiteten, og hva får Norge igjen for kraften, nettet og naturen vi stiller til disposisjon?»
 
+Ved spørsmål om Gromstul: Google oppgir 240 MW tildelt kraftkapasitet i første fase. Ikke direkte sammenlignbart med 300 MW: vårt tall gjelder bare KI-kortene, Googles tall gjelder kapasitet til hele anlegget.
 Kilde 240 MW: https://kommunikasjon.ntb.no/pressemelding/18046820/google-starter-bygging-av-et-nytt-datasenter-i-skien-investerer-600-millioner-euro?lang=no&publisherId=8930805
-Bilde fra Gromstul med kilde og dato kan legges til her når et bilde med bruksrett er på plass.
 -->
