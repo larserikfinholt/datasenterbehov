@@ -247,8 +247,12 @@ Overgang: «Og hvor stort er egentlig 300 megawatt? Her i Skien har vi en lokal 
   <div class="benefit-text">
     <p class="eyebrow">7 / Samfunnsnytten</p>
     <h2>Hva er samfunnsnytten?</h2>
-    <ul class="claims"><li>«Digitalisering»</li><li>«Grønt skifte»</li><li>«KI for norske bedrifter»</li></ul>
-    <p class="verdict">Dette er ikke tilstrekkelige begrunnelser. Vårt anslag for KI-behovet i norsk arbeidsliv forklarer ikke omfanget av utbyggingen.</p>
+    <p class="claims-heading">Begrunnelsene vi får høre</p>
+    <div class="claims-block">
+      <ul class="claims"><li>«Digitalisering»</li><li>«Grønt skifte»</li><li>«KI for norske bedrifter»</li></ul>
+      <p class="stamp" data-marpit-fragment>Forklarer ikke omfanget</p>
+    </div>
+    <p class="open-question" data-marpit-fragment>Hva er da begrunnelsen?</p>
     <div class="linkline"><span>Regnestykket og forutsetningene:<br><strong>larserikfinholt.github.io/datasenterbehov</strong></span><img src="qr.svg" alt="QR-kode til larserikfinholt.github.io/datasenterbehov"></div>
   </div>
 </div>
@@ -256,15 +260,15 @@ Overgang: «Og hvor stort er egentlig 300 megawatt? Her i Skien har vi en lokal 
 <script src="datacenter-buildup.js" defer></script>
 
 <!--
-Tid: 2 minutter. Kartet er det samme som på første lysbilde, nå uten animasjon. Gromstul er merket.
+Tid: 2 minutter. Kartet er det samme som på første lysbilde, nå uten animasjon. Gromstul er merket. De tre begrunnelsene vises med en gang. Første trykk setter stempelet over dem og toner dem ned. Andre trykk viser sluttspørsmålet.
 
 - «Her er kartet vi startet med. Gromstul her i Skien er merket.»
-- «Når utbyggingen skal begrunnes, hører vi ofte: digitalisering, grønt skifte, KI for norske bedrifter. Det er gode formål. Men de er ikke nok til å begrunne en utbygging i denne størrelsen.»
-- «Regnestykket vårt utfordrer begrunnelsen for størrelsen. KI-behovet i norsk arbeidsliv forklarer ikke omfanget av det som bygges og planlegges.»
+- «Når utbyggingen skal begrunnes, hører vi ofte: digitalisering, grønt skifte, KI for norske bedrifter. Det er gode formål.»
+- (trykk: stempelet) «Men de forklarer ikke omfanget. Vårt anslag for KI-behovet i norsk arbeidsliv forklarer ikke størrelsen på det som bygges og planlegges.»
 - «Det betyr ikke at sentrene er uten nytte for norske bedrifter. Det har vi ikke regnet på, og det er ikke det jeg sier.»
-- «Hvis mye av kapasiteten skal brukes til å eksportere datakraft, må samfunnsnytten vurderes ut fra verdien Norge får igjen. Den må veies opp mot kraften, nettet og naturen som brukes, og mot hva de ressursene ellers kunne gått til.»
+- (trykk: spørsmålet) «Hva er da begrunnelsen?»
 
-Avslutning, kort pause før spørsmålene:
+Avslutning, la spørsmålet stå og ta en kort pause før spørsmålene fra salen. Ikke svar på det selv. Hvis du vil si én setning til:
 «Vi trenger datasentre. Men vi trenger også tydelige svar: Hvem skal bruke kapasiteten, og hva får Norge igjen for kraften, nettet og naturen vi stiller til disposisjon?»
 
 Ved spørsmål om Gromstul: Google oppgir 240 MW tildelt kraftkapasitet i første fase. Ikke direkte sammenlignbart med 300 MW: vårt tall gjelder bare KI-kortene, Googles tall gjelder kapasitet til hele anlegget.
