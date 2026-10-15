@@ -7,7 +7,12 @@ import QRCode from 'qrcode'
 import { build } from 'vite'
 
 export const SITE_URL = 'https://larserikfinholt.github.io/datasenterbehov/'
-export const SLIDE_SCRIPT = 'datacenter-buildup.js'
+// Skript for lysbildene, bygget fra src/slides/<navn>.ts til slides/<navn>.js.
+export const SLIDE_SCRIPTS = ['datacenter-buildup', 'occupation-meters'].map(name => ({
+  entry: `src/slides/${name}.ts`,
+  file: `${name}.js`,
+  global: name.replace(/-(\w)/g, (_, c) => c.toUpperCase()),
+}))
 export const SLIDES_DIR = fileURLToPath(new URL('../slides/', import.meta.url))
 const ROOT = fileURLToPath(new URL('../', import.meta.url))
 
@@ -28,28 +33,31 @@ export async function prepareSlideAssets() {
   await buildSlideScripts()
 }
 
-// Kartanimasjonen på lysbilde 2 gjenbruker komponenten fra nettsiden, pakket som ett skript.
+// Kartanimasjonen på lysbilde 2 gjenbruker komponenten fra nettsiden; yrkesmålerne på
+// lysbilde 4 er egne. Hvert skript pakkes for seg, siden IIFE-formatet krever én inngang.
 async function buildSlideScripts() {
-  await build({
-    configFile: false,
-    root: ROOT,
-    logLevel: 'warn',
-    publicDir: false,
-    build: {
-      outDir: SLIDES_DIR,
-      emptyOutDir: false,
-      copyPublicDir: false,
-      lib: {
-        entry: path.join(ROOT, 'src/slides/datacenter-buildup.ts'),
-        formats: ['iife'],
-        name: 'datacenterBuildup',
-        fileName: () => SLIDE_SCRIPT,
+  for (const script of SLIDE_SCRIPTS) {
+    await build({
+      configFile: false,
+      root: ROOT,
+      logLevel: 'warn',
+      publicDir: false,
+      build: {
+        outDir: SLIDES_DIR,
+        emptyOutDir: false,
+        copyPublicDir: false,
+        lib: {
+          entry: path.join(ROOT, script.entry),
+          formats: ['iife'],
+          name: script.global,
+          fileName: () => script.file,
+        },
       },
-    },
-  })
+    })
+  }
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   await prepareSlideAssets()
-  console.log(`Presentasjonsressurser skrevet til slides/fonts, slides/qr.svg og slides/${SLIDE_SCRIPT}`)
+  console.log(`Presentasjonsressurser skrevet til slides/fonts, slides/qr.svg og ${SLIDE_SCRIPTS.map(script => `slides/${script.file}`).join(', ')}`)
 }

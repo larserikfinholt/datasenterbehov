@@ -1,0 +1,30 @@
+- generic [ref=e2]:
+  - img [aria-hidden]: "2"
+  - img [aria-hidden]: "3"
+  - img [ref=e3]:
+    - generic [ref=e5]:
+      - paragraph [ref=e6]: 3 / Yrkene
+      - heading "Trenger en gartner like mye KI som en utvikler?" [level=2] [ref=e7]
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - text: Utvikler
+          - generic [ref=e10]: Flere KI-programmer i arbeid gjennom store deler av dagen
+        - generic [ref=e11]:
+          - text: Gartner
+          - generic [ref=e12]: Hjelp til planlegging og tilbud. Mye av dagen går til plantene
+        - generic [ref=e13]:
+          - text: Barnehagelærer
+          - generic [ref=e14]: Arbeider først og fremst med barna
+      - paragraph [ref=e15]:
+        - text: Alle kan ha nytte av KI. Det betyr ikke at alle trenger like mye datakraft.
+        - generic [ref=e16]: "Prosent: modellens basisfaktor for yrket, med utvikleren som referanse. En antakelse, ikke en måling."
+      - text: "4"
+  - img [aria-hidden]: "5"
+  - img [aria-hidden]: "6"
+  - generic [ref=e17]:
+    - button "Previous slide" [ref=e18] [cursor=pointer]
+    - generic: Page 4 of 6
+    - button "Next slide" [ref=e19] [cursor=pointer]
+    - button "Toggle fullscreen" [ref=e20] [cursor=pointer]
+    - button "Toggle overview view" [ref=e21] [cursor=pointer]
+    - button "Open presenter view" [ref=e22] [cursor=pointer]

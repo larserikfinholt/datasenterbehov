@@ -42,6 +42,7 @@ h1 { font-size: 72px; max-width: 18ch; }
 h2 { font-size: 54px; }
 .sub { font-size: 30px; color: var(--muted); max-width: 48ch; }
 .note { font-size: 20px; color: var(--muted); line-height: 1.45; max-width: 64ch; }
+.note small { display: block; font-size: 16px; margin-top: 4px; white-space: nowrap; }
 .byline { margin-top: auto; display: flex; justify-content: space-between; align-items: baseline; gap: 24px; font-size: 20px; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 18px; }
 .byline strong { color: var(--ink); font-weight: 650; }
 .mark { display: inline-block; width: 16px; height: 22px; background: var(--green); border-top: 6px solid #a4b7a3; vertical-align: -3px; margin-right: 14px; }
@@ -70,11 +71,16 @@ section.buildup-slide .note { font-size: 16px; max-width: none; }
 .formula { font-size: 50px; font-weight: 600; color: var(--green); margin-top: 6px; }
 .formula small { display: block; font-size: 22px; font-weight: 400; color: var(--muted); margin-top: 4px; }
 
-/* Lysbilde 4: tre yrker */
+/* Lysbilde 4: tre yrker, hver med en måler som vises trinnvis (src/slides/occupation-meters.ts) */
 .trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; flex: 1; max-height: 380px; }
-.trio div { background: var(--wash); border: 1px solid var(--rule); display: flex; flex-direction: column; justify-content: flex-end; padding: 28px 30px; font-size: 38px; font-family: var(--serif); position: relative; overflow: hidden; }
-.trio div::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 10px; background: var(--green); }
-.trio div span { display: block; font-family: var(--sans); font-size: 18px; color: var(--muted); margin-top: 8px; min-height: 2.6em; text-wrap: pretty; }
+.trio > div { background: var(--wash); border: 1px solid var(--rule); display: flex; flex-direction: column; justify-content: flex-end; padding: 28px 30px; font-size: 38px; font-family: var(--serif); position: relative; overflow: hidden; }
+.trio > div::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 10px; background: var(--green); }
+.trio > div > span { display: block; font-family: var(--sans); font-size: 18px; color: var(--muted); margin-top: 8px; min-height: 2.8em; text-wrap: pretty; }
+.trio .meter { display: grid; grid-template-columns: 1fr 44px; gap: 20px; align-items: end; height: 150px; margin: 6px 0 auto; padding-bottom: 22px; box-sizing: content-box; font-family: var(--sans); }
+.trio .meter-number { font-size: 72px; font-weight: 600; line-height: 1; color: var(--green); white-space: nowrap; }
+.trio .meter-number small { display: block; font-size: 17px; font-weight: 400; color: var(--muted); margin-top: 10px; white-space: normal; }
+.trio .meter-track { position: relative; height: 100%; background: #e3e8e2; border-bottom: 2px solid var(--ink); }
+.trio .meter-fill { position: absolute; left: 0; right: 0; bottom: 0; background: var(--green); }
 
 /* Lysbilde 5: to vannrette stolper på samme skala */
 .bars { display: grid; gap: 34px; margin-top: 10px; }

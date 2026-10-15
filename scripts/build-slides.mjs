@@ -3,7 +3,7 @@ import { cp, mkdir } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import { marpCli } from '@marp-team/marp-cli'
-import { SLIDES_DIR, SLIDE_SCRIPT, prepareSlideAssets } from './slides-assets.mjs'
+import { SLIDES_DIR, SLIDE_SCRIPTS, prepareSlideAssets } from './slides-assets.mjs'
 
 const outDir = fileURLToPath(new URL('../dist/presentasjon/', import.meta.url))
 
@@ -13,5 +13,5 @@ const exitCode = await marpCli([path.join(SLIDES_DIR, 'klimacafe.md'), '-o', pat
 if (exitCode !== 0) process.exit(exitCode)
 await cp(path.join(SLIDES_DIR, 'fonts'), path.join(outDir, 'fonts'), { recursive: true })
 await cp(path.join(SLIDES_DIR, 'qr.svg'), path.join(outDir, 'qr.svg'))
-await cp(path.join(SLIDES_DIR, SLIDE_SCRIPT), path.join(outDir, SLIDE_SCRIPT))
+for (const { file } of SLIDE_SCRIPTS) await cp(path.join(SLIDES_DIR, file), path.join(outDir, file))
 console.log(`Presentasjon skrevet til ${path.relative(process.cwd(), outDir)}`)

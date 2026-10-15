@@ -102,22 +102,25 @@ Overgang: «Men trenger alle i arbeidslivet like mye KI som en utvikler?»
 ## Trenger en gartner like mye KI som en utvikler?
 
 <div class="trio">
-  <div>Utvikler<span>Flere KI-programmer i arbeid gjennom store deler av dagen</span></div>
-  <div>Gartner<span>Hjelp til planlegging og tilbud. Mye av dagen går til plantene</span></div>
-  <div>Barnehagelærer<span>Arbeider først og fremst med barna</span></div>
+  <div><div class="meter" data-occupation-meter data-value="100" data-marpit-fragment><p class="meter-number"><span class="meter-value">100</span>&nbsp;%<small>av utviklerens KI-datakraft</small></p><div class="meter-track" aria-hidden="true"><div class="meter-fill" style="height: 100%"></div></div></div>Utvikler<span>Flere KI-programmer i arbeid gjennom store deler av dagen</span></div>
+  <div><div class="meter" data-occupation-meter data-value="3" data-marpit-fragment><p class="meter-number"><span class="meter-value">3</span>&nbsp;%<small>av utviklerens KI-datakraft</small></p><div class="meter-track" aria-hidden="true"><div class="meter-fill" style="height: 3%"></div></div></div>Gartner<span>Hjelp til planlegging og tilbud. Mye av dagen går til plantene</span></div>
+  <div><div class="meter" data-occupation-meter data-value="8" data-marpit-fragment><p class="meter-number"><span class="meter-value">8</span>&nbsp;%<small>av utviklerens KI-datakraft</small></p><div class="meter-track" aria-hidden="true"><div class="meter-fill" style="height: 8%"></div></div></div>Barnehagelærer<span>Arbeider først og fremst med barna</span></div>
 </div>
 
-<p class="note">Alle kan ha nytte av KI. Det betyr ikke at alle trenger like mye datakraft.</p>
+<p class="note">Alle kan ha nytte av KI. Det betyr ikke at alle trenger like mye datakraft. <small>Prosent: modellens basisfaktor for yrket, med utvikleren som referanse. En antakelse, ikke en måling.</small></p>
+
+<script src="occupation-meters.js" defer></script>
 
 <!--
-Tid: 2 minutter.
+Tid: 2 minutter. Hvert trykk viser ett yrke: utvikler, gartner, barnehagelærer. Tallet teller opp og stolpen fylles.
 
-- «En utvikler kan ha flere KI-programmer i arbeid gjennom store deler av dagen, for eksempel til å skrive og teste kode.»
-- «En gartner kan få hjelp med planlegging og tilbud, men bruker også mye av dagen på å stelle planter. En barnehagelærer arbeider først og fremst med barna.»
+- «En utvikler kan ha flere KI-programmer i arbeid gjennom store deler av dagen, for eksempel til å skrive og teste kode.» (trykk: 100 %)
+- «En gartner kan få hjelp med planlegging og tilbud, men bruker også mye av dagen på å stelle planter.» (trykk: 3 %) «En barnehagelærer arbeider først og fremst med barna.» (trykk: 8 %)
 - «Alle kan ha nytte av KI. Det betyr ikke at alle trenger like mye datakraft.»
 - «Vi bruker SSBs kartlegging av arbeidsoppgaver til å anslå forskjellene mellom yrkene. Det er ikke en strømmåling, men en antakelse vi kan undersøke og diskutere.»
 
 Talernotat: SSB kartlegger hvilke arbeidsoppgaver KI kan påvirke, ikke strømbruk. Koblingen er en sentral usikkerhet. Ulik type arbeid, ikke ulik verdi av arbeidet.
+Prosentene er basisfaktorene i data/workforce.csv (Programvareutviklere 1,00, Gartnere 0,03, Førskole-/barnehagelærere 0,08). Lav–høy: gartner 1–8 %, barnehagelærer 2–18 %. Faktorene er scenarioantakelser fra kilderepoet, ikke SSB-estimater; SSB-grunnlaget er årsverkene (tabell 11658).
 
 Overgang: «Hva blir summen hvis vi regner som om hele norsk arbeidsliv tar KI i bruk?»
 -->

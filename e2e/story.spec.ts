@@ -326,3 +326,24 @@ test('the Norway map buildup slide adds data centers one by one until the summed
   await expect(count).toHaveText('0')
   expect(errors).toEqual([])
 })
+test('the occupations slide reveals one meter per step with the model factors from the dataset', async ({ page }, testInfo) => {
+  const errors: string[] = []
+  page.on('pageerror', error => errors.push(error.message))
+  const factor = (code: string) => Math.round(occupations.find(row => row.code === code)!.factor! * 100)
+  const expected = [factor('2512'), factor('6113'), factor('2342')]
+  expect(expected[0]).toBe(100)
+  await page.goto('presentasjon/#4')
+  const meters = page.locator('section').nth(3).locator('[data-occupation-meter]')
+  await expect(meters).toHaveCount(3)
+  for (let i = 0; i < 3; i++) await expect(meters.nth(i)).toHaveAttribute('data-value', String(expected[i]))
+  for (let i = 0; i < 3; i++) await expect(meters.nth(i)).toBeHidden()
+  for (let step = 0; step < 3; step++) {
+    await page.keyboard.press('ArrowRight')
+    await expect(meters.nth(step)).toBeVisible()
+    await expect(meters.nth(step).locator('.meter-value')).toHaveText(String(expected[step]))
+    for (let i = step + 1; i < 3; i++) await expect(meters.nth(i)).toBeHidden()
+  }
+  await expect(meters.last().locator('.meter-fill')).toHaveAttribute('style', new RegExp(`height: ${expected[2]}%`))
+  await page.screenshot({ path: `artifacts/${testInfo.project.name}-slide-occupations.png` })
+  expect(errors).toEqual([])
+})
