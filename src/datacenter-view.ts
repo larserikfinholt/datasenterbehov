@@ -1,5 +1,6 @@
 import dataset from './data/datacenters.json'
 import { byMwDesc, formatIsoDate, markerRadius, maxMw, plannedBasisLabels, statusLabels, type DataCenter } from './datacenters'
+import { reportNewSiteUrl, reportSiteUrl } from './report-links'
 
 const sites = dataset.sites as DataCenter[]
 const maximum = Math.max(500, ...sites.map(site => maxMw(site) ?? 0))
@@ -27,6 +28,7 @@ function listMarkup(rows: readonly DataCenter[]) {
     <p class="site-definition">${escapeHtml(site.power_status)}</p>
     <p class="site-note">${escapeHtml(site.note)} · ${site.precision === 'site' ? 'Anleggsposisjon' : site.precision === 'place' ? 'Omtrentlig stedsposisjon' : 'Omtrentlig kommuneposisjon'}</p>
     <div class="site-sources">${sourceMarkup(site)}</div>
+    <p class="site-report"><a href="${escapeHtml(reportSiteUrl(site))}" title="Åpner et innmeldingsskjema på GitHub (krever GitHub-konto)">Meld feil eller manglende data<span class="sr-only">: ${escapeHtml(site.name)}</span></a></p>
   </li>`).join('')
 }
 
@@ -51,7 +53,8 @@ export function datacenterMapMarkup() {
         <ul class="legend map-status-legend" aria-label="Anleggsstatus">${Object.entries(statusLabels).map(([status, label]) => `<li><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="marker ${status}" cx="12" cy="12" r="8" /></svg>${label}</li>`).join('')}</ul>
         <figcaption id="map-note">Sirkelareal og MW-sortering følger det største dokumenterte tallet av i bruk, nettreservasjon og planlagt / kapasitet per anlegg, ikke summen. Omsøkt / ikke tildelt er rapportert omsøkt effekt eller kapasitetskø og inngår ikke i sirkelareal eller MW-sortering. I bruk er dokumentert last. Nettreservasjon er tildelt eller reservert nettkapasitet, ikke kundekontrakter. Planlagt / kapasitet har oppgitt grunnlag per anlegg: IT-kapasitet, anleggskapasitet, utbyggingspotensial, annonsert kapasitet uten definisjon eller planlagt nettilknytning. Anleggsstatus beskriver campus, ikke tildeling av kraft. Tallene kan overlappe, er ikke direkte sammenlignbare og summeres ikke. Hver kilde vises med publiseringsdato eller som udatert, og hvert anlegg viser når prosjektet sist gjennomgikk kildene; historiske køtall er ikke verifisert som dagens Statnett-kø. Små svarte prikker betyr ukjent MW for sirkelarealet, selv om omsøkt effekt er oppgitt. Gromstul i Skien har to overlappende punkter: Googles anlegg og Nscales nabotomt. Posisjoner er merket med presisjon i listen. Kart: ${dataset.map.attribution}.</figcaption>
       </figure>
-      <div class="map-directory"><div class="map-list-heading"><h3>Anlegg og prosjekter</h3><div><label for="site-sort">Sorter etter</label><select id="site-sort"><option value="mw">Største oppgitte MW</option><option value="name">Navn</option><option value="status">Status</option></select></div></div><ol class="site-list" aria-label="Datasentre">${listMarkup(byMwDesc(sites))}</ol></div>
+      <div class="map-directory"><div class="map-list-heading"><h3>Anlegg og prosjekter</h3><div><label for="site-sort">Sorter etter</label><select id="site-sort"><option value="mw">Største oppgitte MW</option><option value="name">Navn</option><option value="status">Status</option></select></div></div><ol class="site-list" aria-label="Datasentre">${listMarkup(byMwDesc(sites))}</ol>
+        <p class="map-report">Har du informasjon om flere datasentre? <a href="${escapeHtml(reportNewSiteUrl())}">Meld inn her</a>. <small>Innmelding skjer som en sak på GitHub og krever en GitHub-konto. Opplysningene kvalitetssikres mot kildene før de publiseres.</small></p></div>
     </div>
     <details class="map-registry"><summary>Nkom-registeret og operatører uten kartfestet anlegg</summary>
       <p><a href="${dataset.nkom.overviewUrl}">Nkoms oversikt</a>: ${dataset.nkom.registered} registrerte datasentre, inkludert virksomhetsinterne, og ${dataset.nkom.commercialOperators} navngitte kommersielle operatører. Nkom oppgir sist oppdatert ${new Intl.DateTimeFormat('nb-NO', { dateStyle: 'medium', timeZone: 'UTC' }).format(new Date(dataset.nkom.lastUpdated))}. Datasentre og operatører er ulike enheter og skal ikke trekkes fra hverandre. ${dataset.unmappedOperators.length} operatører er ikke koblet til et anlegg i dette utvalget. Forretningsadresser fra Brønnøysund brukes ikke som anleggsposisjoner.</p>

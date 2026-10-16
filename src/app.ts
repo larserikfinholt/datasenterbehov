@@ -5,9 +5,9 @@ import { createElement, ArrowDown, ArrowUpRight, ChevronDown, ChevronUp } from '
 import './editorial.css'
 import summary from './data/summary.json'
 import { datacenterMapMarkup, initializeDatacenterMap } from './datacenter-view'
+import { PROJECT_REPO } from './report-links'
 import { CAPACITY_SCENARIO, HIGH_SCENARIO, assessedFirstOrder, factorDisplay, occupationEstimate, referenceWatts, type Occupation, type ReferenceMethod } from './model'
 
-const PROJECT_REPO = 'https://github.com/larserikfinholt/datasenterbehov'
 const format = (value: number, decimals = 0) => new Intl.NumberFormat('nb-NO', { minimumFractionDigits: decimals, maximumFractionDigits: decimals }).format(value)
 const highMw = summary.equivalentsBeforeAdoption * HIGH_SCENARIO.adoption * referenceWatts('h100') / 1e6
 const capacityTotal = CAPACITY_SCENARIO.existing + CAPACITY_SCENARIO.committed + CAPACITY_SCENARIO.planned

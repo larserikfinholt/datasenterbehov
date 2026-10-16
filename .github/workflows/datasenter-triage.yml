@@ -1,0 +1,53 @@
+name: Datasenter – vurder innmelding
+
+# Første, automatiske vurdering av innmeldinger fra skjemaet «Feil eller manglende data».
+# Billig og rask: ingen bygg, bare parsing av saken, sjekk av inntil tre kilder og oppdatering av én kommentar.
+# Saksteksten er upålitelig input. Den leses bare av scripts/issue-bot.mjs og settes aldri inn i shell-kommandoer.
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+  workflow_dispatch:
+    inputs:
+      issue:
+        description: Saksnummer som skal vurderes på nytt. Tomt oppretter bare etikettene.
+        required: false
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: datasenter-issue-${{ github.event.issue.number || inputs.issue || 'labels' }}
+  cancel-in-progress: false
+
+jobs:
+  triage:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (!github.event.issue.pull_request &&
+       (contains(github.event.issue.body, '### Hva gjelder innmeldingen?') || contains(github.event.issue.labels.*.name, 'data')))
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+      PR_TOKEN: ${{ secrets.DATA_BOT_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Opprett etiketter
+        if: github.event_name == 'workflow_dispatch' && inputs.issue == ''
+        run: node scripts/issue-bot.mjs labels
+      - name: Vurder innmeldingen
+        if: github.event_name != 'workflow_dispatch' || inputs.issue != ''
+        env:
+          ISSUE_NUMBER: ${{ inputs.issue }}
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && '1' || '' }}
+        run: node scripts/issue-bot.mjs triage

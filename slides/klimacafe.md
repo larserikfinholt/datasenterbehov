@@ -39,7 +39,7 @@ Overgang: «Først: hvor mye kraft er det egentlig snakk om? La oss se på karte
 
 <div class="buildup" data-datacenter-buildup></div>
 
-<p class="note">Sum av oppgitte tall for 21 anlegg i prosjektets kartutvalg: nettreservasjon, omsøkt effekt og planlagt kapasitet utover dette. Tallene har ulike definisjoner, kan overlappe og er ikke en nasjonal oversikt.</p>
+<p class="note">Sum av oppgitte tall for 27 anlegg i prosjektets kartutvalg: nettreservasjon, omsøkt effekt og planlagt kapasitet utover dette. Tallene har ulike definisjoner, kan overlappe og er ikke en nasjonal oversikt.</p>
 
 <script src="datacenter-buildup.js" defer></script>
 
@@ -51,7 +51,7 @@ Tid: 1,5 minutt. Animasjonen starter når lysbildet vises og tar rundt 20 sekund
 - «Det blir flere tusen megawatt. Men tallene betyr ulike ting, og noen kan overlappe. Dette er ikke en offisiell oversikt, bare det vi har funnet kilder til.»
 - «Noen anlegg har vi ikke tall for i det hele tatt. De vises som små prikker.»
 
-Talernotat: summen er ikke det samme som 3 500 MW reservert nettkapasitet på «Hele arbeidslivet»-lysbildet. Den blander reservasjon, søknader og planer for 21 anlegg. Ikke bruk summen som et presist tall.
+Talernotat: summen er ikke det samme som 3 500 MW reservert nettkapasitet på «Hele arbeidslivet»-lysbildet. Den blander reservasjon, søknader og planer for 27 anlegg. Ikke bruk summen som et presist tall.
 
 Overgang: «Så hvor mye av dette trenger vi selv? For å regne på hele arbeidslivet må vi begynne et sted. Først: hvor skjer egentlig KI-beregningen?»
 -->

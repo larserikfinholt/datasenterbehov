@@ -96,7 +96,7 @@ Beregningsprinsippene er videreført, men ingen dashboardkode er portert. Mac-ve
 
 ## Datasenterkart
 
-Kartet under introduksjonen viser et kildebelagt utvalg av 21 anlegg og prosjekter i Fastlands-Norge, ikke et fullstendig register. SVG-kystlinjen og anleggsposisjonene beregnes ved bygging; siden laster verken kartbibliotek eller kartdata over nettverket. Listen kan sorteres etter største oppgitte MW, navn eller status. Kart og liste deler markering ved peker og tastaturfokus; Enter eller mellomrom på en kartmarkør åpner den tilhørende listeposisjonen. Markører med radius under 8 enheter får et usynlig treffområde (`circle.marker-hit`, radius 10) bak den synlige sirkelen, slik at små prikker kan treffes med peker uten at sirkelarealet endres. Treffområdet er ikke fokuserbart; tastaturfokus går alltid til den synlige markøren.
+Kartet under introduksjonen viser et kildebelagt utvalg av 27 anlegg og prosjekter i Fastlands-Norge, ikke et fullstendig register. SVG-kystlinjen og anleggsposisjonene beregnes ved bygging; siden laster verken kartbibliotek eller kartdata over nettverket. Listen kan sorteres etter største oppgitte MW, navn eller status. Kart og liste deler markering ved peker og tastaturfokus; Enter eller mellomrom på en kartmarkør åpner den tilhørende listeposisjonen. Markører med radius under 8 enheter får et usynlig treffområde (`circle.marker-hit`, radius 10) bak den synlige sirkelen, slik at små prikker kan treffes med peker uten at sirkelarealet endres. Treffområdet er ikke fokuserbart; tastaturfokus går alltid til den synlige markøren.
 
 ```sh
 npm run data:datacenters          # regenerer fra cacher; nett bare ved nye steder eller manglende cache
@@ -109,14 +109,14 @@ npm run data:datacenters:refresh  # henter Nkom, Brønnøysund og geokoder på n
 `id,name,operator,operator_orgnr,kommune,place,lat,lon,precision,status,mw_in_use,mw_reserved,mw_planned,mw_planned_basis,mw_queued,power_status,source_urls,source_dates,reviewed_at,note`
 
 - Én rad per fysisk anlegg eller campus; ikke én rad per bygg eller operatør. `id` er unik og bruker små ASCII-bokstaver, tall og bindestrek.
-- `precision` er `site`, `place` eller `kommune`. Utvalget bruker omtrentlige stedsposisjoner, ikke verifiserte anleggskoordinater. `status` er `operating`, `construction` eller `planned` og beskriver campus; utvidelser kan fortsatt være planlagt ved et anlegg i drift.
+- `precision` er `site`, `place` eller `kommune`. Utvalget bruker i hovedsak omtrentlige stedsposisjoner, ikke verifiserte anleggskoordinater; `site` brukes bare der operatøren oppgir anleggsadressen og posisjonen er Kartverkets adressepunkt. `status` er `operating`, `construction` eller `planned` og beskriver campus; utvidelser kan fortsatt være planlagt ved et anlegg i drift.
 - `mw_in_use` er dokumentert faktisk last. `mw_reserved` er strengt nettreservasjon eller tildelt nettkapasitet fra nettselskap eller Statnett; kundekontrakter og kontrahert IT-kapasitet føres ikke her. `mw_planned` er annonsert kapasitet eller potensial og krever `mw_planned_basis`: `it_capacity` (IT-effekt), `facility_capacity` (total anleggseffekt), `development_potential` (utbyggingspotensial), `announced_total` (annonsert tall uten oppgitt definisjon) eller `grid_connection` (planlagt nettilknytning). Basis uten `mw_planned`, eller omvendt, avvises. `mw_queued` er rapportert omsøkt effekt / kapasitetskø og vises separat som «Omsøkt / ikke tildelt». Tomme MW-felt blir `null` i JSON og betyr ukjent, ikke null MW; UI viser «Ukjent». Publisert operativ kapasitet er ikke målt forbruk og fylles ikke automatisk inn som «i bruk».
 - `source_urls` er `|`-separert. `source_dates` har én ISO-dato per URL i samme rekkefølge; tom oppføring betyr udatert side og vises som «udatert». `reviewed_at` er ISO-datoen for prosjektets siste manuelle gjennomgang av raden mot kildene; tom betyr «Ikke gjennomgått mot kilde». Begge vises per anlegg i listen.
 - `power_status` beskriver effektdefinisjonen for hvert anlegg, særlig forskjellen mellom IT-effekt, total anleggseffekt og utbyggingspotensial. Alle tall må støttes av `source_urls`. Sirkelareal og eksisterende maksimum-MW-sortering bruker bare maksimum av `mw_in_use`, `mw_reserved` og `mw_planned`; `mw_queued` holdes utenfor begge. Tall kan overlappe og summeres ikke. Ukjent MW i de tre størrelsesfeltene vises med en liten svart prikk med fast størrelse, også om køtall er oppgitt. Bare anlegg med kildebelagt plassering kartfestes. Campusstatus (`status`) holdes atskilt fra krafttildeling (`power_status` og MW-feltene).
 - Google Gromstul i Skien har 240 MW innvilget nettkapasitet ifølge Datacenter Forum (12.02.2024) og NRK (20.04.2025), ikke dokumentert faktisk last. `mw_queued: 840` er historisk rapportert av NRK 20.04.2025; Datacenter Forum oppga 860 MW som tidligere behov, og avviket er ikke avklart. Det er uavklart om de tildelte 240 MW inngår i 840 MW eller kommer i tillegg. Ingen total utledes, og hele køtallet beskrives ikke som neste byggetrinn. Kildedato og overlappsforbehold beholdes i merknaden; dette er ikke verifisert som dagens Statnett-kø. Campus er fortsatt under bygging i dette utvalget; planlagt oppstart er ikke dokumentasjon på faktisk drift.
 - Frier Vest i Bamble: BW Veloras pressemelding 29.05.2026 oppgir omtrent 250 MW planlagt kapasitet (`announced_total`), ikke en verifisert reservasjon. Molandsmoen i Fyresdal: kommunen oppgir 365 MW planlagt nettilknytning totalt (`grid_connection`), hvorav 140 MW tildelt og 225 MW i kø (`mw_queued`, oppdatert 27.08.2026). Digi omtaler påbegynt bygging 24.09.2026. Både reservasjonen og køtallet inngår i 365 MW og skal ikke legges til totalen. Køtallet er ikke verifisert som dagens Statnett-kø. Posisjonene er Kartverkets omtrentlige stedsposisjoner ved Rafnes og Molandsmoen, ikke verifiserte bygningstomter.
 - Forskningsspor Telemark (lagt til 14.10.2026, alle `planned`): HER01 Herøya i Porsgrunn (Polar, 40 MW `it_capacity` fra pressemelding 12.05.2026; lokasjonssiden oppgir 41 MW IT og 100 MW energi), Nscale/Løvenskiold-Fossum ved Bolvik i Skien (ingen tildeling, 576 MW omsøkt ifølge E24 16.09.2026) og Nscales nabotomt til Google på Gromstul (96 MW omsøkt ifølge NRK 29.01.2026). De to Skien-radene har ukjent kapasitet og vises som svarte prikker; køtallene er søknader, ikke reservasjoner, og summeres ikke med Googles tall. Nabotomten deler Gromstul-punktet med Google, så kartet har to overlappende punkter der. Grenland transformatorstasjon er bevisst ikke kartfestet.
-- MW for Bulk, Tydal og Røros står som ukjent fremfor å bruke ubekreftede tall. Bulk N01, OS-IX og Tydal kunne ikke leses maskinelt 14.10.2026 (samtykkevegg / uleselig side) og har tom `reviewed_at`. Utvalget utelater fortsatt andre prosjekter; manglende rad betyr ikke at et prosjekt ikke finnes.
+- MW for Bulk N01, Vaultica OSL02, Tydal og Røros står som ukjent fremfor å bruke ubekreftede tall. Tydal kunne ikke leses maskinelt 14.10. eller 16.10.2026 og har tom `reviewed_at`; Bulk-sidene ble lest 16.10.2026. Utvalget utelater fortsatt andre prosjekter; manglende rad betyr ikke at et prosjekt ikke finnes.
 
 ### Kildekontroll 14.10.2026
 
@@ -145,6 +145,60 @@ Kilder lagres under [data/sources](data/sources). Vanlige kjøringer gjenbruker 
 [data/sources/nkom-totals.json](data/sources/nkom-totals.json) er en manuelt verifisert snapshot av Nkoms oversikt, datert 14.10.2026: **117 registrerte datasentre og 61 kommersielle operatører**. Dette er ulike enheter; differansen 56 er ikke dokumentasjon på antall virksomhetsinterne datasentre. Oppdater snapshot bevisst mot oversiktssiden ved kilderevisjon; `:refresh` oppdaterer ikke disse manuelt kuraterte totalene. Endret operatørantall stanser byggingen til snapshot er gjennomgått.
 
 `npm run build` regenererer og validerer datasentergrunnlaget før TypeScript/Vite. Valideringen ligger i [scripts/datacenter-rows.mjs](scripts/datacenter-rows.mjs): manglende eller ukjente kolonner, duplikate id-er, manglende kilder, ukjent status eller presisjon, negative eller ikke-numeriske MW (også `mw_queued`), `mw_planned` uten basis eller basis uten `mw_planned`, feil antall `source_dates`, ugyldige ISO-datoer, halve koordinatpar og koordinater utenfor Fastlands-Norges bounding box avvises. Fokuserte kontroller: `npm test -- src/datacenters.test.ts src/datacenter-rows.test.ts` og `npm run test:e2e -- --grep "Norway map"` etter bygging. Enhetstestene dekker parseren med malformet inndata, CSV/JSON-samsvar, overlapp (Fyresdal 140 + 225 ⊂ 365, aldri 730), kvadratrotsskala og sortering uten køtall, datainvarianter (datoer, basis, gjennomgang), registerkoblinger og en stale-test som hasher hver inndatafil på disk mot `provenance.inputs` og kjører `--check`. Karttestene kjører på desktop og mobil og kontrollerer også køfeltets tekst og plass, treffområdene for små prikker, tastatur-Enter på en ukjent-MW-prikk, kildedatoer, gjennomgangsmarkører og de to tidsstemplene. Skjermbilder: [artifacts/desktop-map.png](artifacts/desktop-map.png) og [artifacts/mobile-map.png](artifacts/mobile-map.png).
+
+### Kildekontroll 16.10.2026
+
+Søk etter anlegg som manglet i utvalget, med utgangspunkt i Nkom-operatører uten kartfestet anlegg. Seks rader er lagt til, og de to Bulk-radene er gjennomgått. Alle nye rader har `announced_total` eller `it_capacity`, ingen nettreservasjon og ingen kø.
+
+- **Bulk OS-IX:** siden kunne leses. `mw_planned` 14 (`announced_total`). Samme side oppgir også 14.4 MW, og både 5.3 km fra Oslo S og 7 km fra sentrum. Laveste tall er ført, og konflikten er ikke løst.
+- **Bulk N01:** siden kunne leses, men oppgir ikke kapasitet; MW er fortsatt ukjent. Posisjonen er flyttet fra Vennesla sentrum til Kartverkets punkt for Støleheia (Estate Nyheter 13.10.2020, Bulk 03.11.2025). «Opptil 1GW» (2020) og et 2 GW varslet behov gjengitt i et blogginnlegg 10.11.2025 er ikke ført; primærkilde mangler.
+- **Nye rader:**
+  - **Vaultica OSL01 Økern:** 7.5 MW IT-last (vaultica.com, endret 04.08.2026), SI OSL 01 AS.
+  - **Vaultica OSL02 Rosenholm, Nordre Follo:** MW ukjent, SI OSL 02 AS. Begge er tidligere STACK/DigiPlex. Adressene på operatørsiden er de samme som forretningsadressene i Brønnøysund.
+  - **Skygard OSL1 Hovinbyen** (20 MW), **OSL3 Grorud** (3.6 MW) og **OSL5 Lørenskog** (7.2 MW): skygard.no, udatert.
+  - **Terakraft i Sauda:** 10 MW (terakraft.no, udatert; DCD 08.08.2025).
+- **Uløst:**
+  - **Vaultica OSL02:** avsnittet oppgir 3.8 MW, men merker tallet «OSL01», så det er ikke ført.
+  - **Skygard:** Nkom har både SKYGARD AS og SKYGARD 2 AS, men kildene sier ikke hvilket selskap som driver hvilket anlegg. Derfor er orgnr tomt.
+  - **Terakraft:** DCD omtaler mulig utvidelse på 60 MW, som ikke er ført.
+- **Ikke lagt til:**
+  - **Intrahouse i Kirkenes:** bare «kan bli datasenter» (SVA 29.06.2026).
+  - **Andre Nkom-operatører:** Bitdeer, Datafjellet, Net Zero Compute, Odin Green DC, Datacity, Troll Housing og andre er ikke kontrollert. Søket ble strupet, og ingen kilde med plassering ble lest.
+  - **Tydal:** siden svarte ikke.
+  - **datacentermap.com:** avviste forespørslene (429).
+- 27 rader er fortsatt et utvalg; Statnett-listene er ikke importert.
+
+## Innmeldinger fra leserne
+
+Hvert anlegg i listen har lenken «Meld feil eller manglende data», og under listen står «Har du informasjon om flere datasentre? Meld inn her». Begge åpner skjemaet [.github/ISSUE_TEMPLATE/data-korreksjon.yml](.github/ISSUE_TEMPLATE/data-korreksjon.yml) som en GitHub-sak. Det krever en GitHub-konto, og det står ved lenkene. Fra et anlegg fylles id, navn og lenke ut på forhånd. Skjemaet dekker nye datasentre, rettelser og tilleggsinformasjon, og har ett felt per CSV-kolonne. MW-feltene tar bare effekt. Tomt felt betyr «ingen endring», og `ukjent` fjerner et tall.
+
+Lenkene bygges i `src/report-links.ts`. Feltetikettene og valgene i skjemaet må stemme med `FORM_FIELDS`, `TYPE_OPTIONS`, `STATUS_OPTIONS` og `BASIS_OPTIONS` i `scripts/datacenter-issue.mjs`. Enhetstesten sjekker det.
+
+### Flyt og etiketter
+
+| Steg | Hva skjer | Etiketter |
+| --- | --- | --- |
+| Ny eller redigert sak | `datasenter-triage.yml` legger én takkekommentar (bare første gang) og én vurderingskommentar som oppdateres på stedet. Vurderingen finner anlegget eller ser at det er nytt, sjekker at skjemaet er komplett, prøver inntil 3 nye kilder, ser etter mulige duplikater i kartet og i andre åpne saker, og viser foreslått endring som før/etter-tabell. | `data`, `type: datakorrigering` eller `type: nytt-datasenter`, `status: trenger-info` eller `status: til-vurdering` |
+| Moderator godkjenner | Moderator kontrollerer kildene og setter `status: godkjent` manuelt. Automatikken setter den aldri. `datasenter-approve.yml` sjekker at personen har skrivetilgang (ellers fjernes etiketten), oppdaterer `data/datacenters.csv` på grenen `data/issue-<nr>`, kjører datapipeline, `:check`, enhetstester, bygg og e2e for kartet, og åpner eller oppdaterer én PR. PR-en har begrunnelse, kilder, usikkerhet og før/etter-tabell. Skjermbilder av kartet ligger som artefakt `kart-forhandsvisning`. Feiler et steg, forklares det i saken, og etiketten går tilbake til `status: til-vurdering`. | `status: pr-opprettet` |
+| Merge | Gjøres manuelt etter gjennomgang av PR-en. Merge alene gir ingen melding til innsenderen. | uendret |
+| Publisert | `datasenter-published.yml` kjører når «Deploy GitHub Pages» er fullført. Bare hvis publiseringen lyktes og den publiserte versjonen inneholder merge-commiten, får saken en kommentar med lenke til anlegget (`#site-<id>`). Saken får da etiketten `status: publisert` og lukkes. | `status: publisert` |
+
+- **Ingen gjetting.** Tomme felt endrer ingenting. Energitall (kWh, GWh, TWh) avvises i MW-feltene. Planlagt kapasitet krever grunnlag. Rader valideres med `parseSiteRows`, samme regler som pipelinen. En ny rad får `precision: place` og merknaden «Innmeldt via GitHub-sak #N.». Posisjonen slås opp i Kartverket ved bygging, med mindre innsenderen oppgir koordinater.
+- **`reviewed_at`** settes til godkjenningsdatoen, fordi moderatoren har gått gjennom raden mot kildene.
+- **Upålitelig input.** Saksteksten og hentede nettsider er upålitelige. De leses bare av `scripts/datacenter-issue.mjs`, settes aldri inn i shell-kommandoer, og vises bare escapet i kommentarer. Det gjelder også om en AI-modell senere brukes i vurderingen. Kildesjekken følger bare http(s), avviser interne adresser, venter maks 8 sekunder og leser maks 1 MB. Den leser sideteksten og ser etter navn og tall. Den kan ikke bekrefte at kilden faktisk støtter påstanden. En kilde som ikke svarer, regnes som usikkerhet, ikke som feil.
+- **Idempotent.** Botens kommentarer kjennes igjen på skjulte markører og oppdateres i stedet for å legges til på nytt. Det finnes én gren og én PR per sak. Vurderingen kjøres ikke på nytt når innholdet er uendret.
+- **Ny godkjenning ved endring.** Redigeres saken etter godkjenning, lukkes PR-en, etiketten settes tilbake til vurdering, og det endrede innholdet må godkjennes på nytt. Godkjenning avvises også hvis saken er endret etter siste vurdering.
+- **Manuelt:** Lukkes en PR uten merge, står saken igjen med `status: pr-opprettet` til moderatoren svarer eller lukker den. Feiler geokodingen for et nytt sted (for eksempel ved tvetydig stedsnavn), legger moderatoren inn koordinater i saken eller retter raden i PR-en. Kildekonflikter noteres i `note` og under «Kildekontroll», som før.
+- **Kjør vurderingen på nytt:** «Run workflow» på *Datasenter – vurder innmelding* med saksnummer. Tomt saksnummer oppretter bare etikettene.
+
+### Oppsett i GitHub
+
+1. *Settings → General → Features:* Issues er slått på.
+2. *Settings → Actions → General → Workflow permissions:* «Read and write permissions», og «Allow GitHub Actions to create and approve pull requests» er krysset av. Uten dette kan ikke `GITHUB_TOKEN` lage PR-en, og da trengs `DATA_BOT_TOKEN` (punkt 4).
+3. *Settings → Pages:* kilden er GitHub Actions, som før. Pages-bygget utløses av merge til `main`, fordi merge gjøres av et menneske. Hendelser fra `GITHUB_TOKEN` starter ikke nye workflows, men det har ingen betydning her.
+4. Valgfritt: hemmeligheten `DATA_BOT_TOKEN` (*Settings → Secrets and variables → Actions*). Bruk en fine-grained PAT eller et GitHub App-token for dette repoet med *Contents*, *Pull requests* og *Issues*: Read and write. Den trengs bare hvis Actions ikke får lage PR-er, eller hvis du vil at sjekker skal kjøre på bot-PR-ene. PR-er og pusher fra `GITHUB_TOKEN` starter ingen workflows.
+5. Etikettene opprettes automatisk ved første innmelding, eller med «Run workflow» uten saksnummer.
+6. Moderatorer er alle med skriv-, maintain- eller admintilgang til repoet.
 
 ## Avgrensning
 

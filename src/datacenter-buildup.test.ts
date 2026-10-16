@@ -26,6 +26,6 @@ describe('datacenter buildup', () => {
   it('includes every site in the published dataset', () => {
     const steps = buildupSteps(dataset.sites)
     expect(steps).toHaveLength(dataset.sites.length)
-    expect(steps.at(-1)!.total).toBe(steps.reduce((sum, step) => sum + step.siteTotal, 0))
+    expect(steps.at(-1)!.total).toBeCloseTo(steps.reduce((sum, step) => sum + step.siteTotal, 0), 6)
   })
 })

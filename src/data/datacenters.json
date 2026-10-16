@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-10-14T17:41:55.756Z",
+  "generatedAt": "2026-10-16T09:03:44.404Z",
   "provenance": {
-    "generatedAt": "2026-10-14T17:41:55.756Z",
+    "generatedAt": "2026-10-16T09:03:44.404Z",
     "nkomFetchedAt": "2026-10-14T12:52:44.929Z",
-    "inputsSha256": "8c48a1aa3a7a986ac71230c82c38660cc57df475ae9ebbb1fde7d813f2ddf98c",
+    "inputsSha256": "8e3e9a5afeca7b1656ec3b343330cbce54a688d6b7a43e5f88faace1ec4fe69e",
     "inputs": {
-      "data/datacenters.csv": "b6645da0bdfcba43b43d8211146cd8767f633114be0008abb3b5ff8b601485bd",
+      "data/datacenters.csv": "eeacf301f2db0a9b4b0069229c95e43859e59b25017bcc68a4a31cdc8485c177",
       "data/sources/nkom-operatorer.csv": "482c5e4b2476aa60cc26839258e27bac463a24829852a96362ca79a0aa0de2b1",
       "data/sources/brreg-enheter.json": "e63b09b7ddc6c5ea84e3aca8b5d26185f883381630ac34c43aee78f53c451517",
       "data/sources/nkom-totals.json": "5990c41b0ea1705e76cdb118e2d43b078b4a931f8641a1886cc3cee12fab8bac",
@@ -703,9 +703,9 @@
       "operator": "Bulk Data Centers",
       "operator_orgnr": "916871376",
       "kommune": "Vennesla",
-      "place": "Vennesla",
-      "lat": 58.269,
-      "lon": 7.973,
+      "place": "Støleheia",
+      "lat": 58.2501,
+      "lon": 7.89751,
       "precision": "place",
       "status": "operating",
       "mw_in_use": null,
@@ -713,19 +713,23 @@
       "mw_planned": null,
       "mw_planned_basis": null,
       "mw_queued": null,
-      "power_status": "MW ikke verifisert i dette utvalget",
+      "power_status": "MW ikke verifisert i dette utvalget; operatøren oppgir ikke campuskapasitet",
       "source_urls": [
-        "https://bulkinfrastructure.com/data-centers/locations/n01/"
+        "https://bulkinfrastructure.com/data-centers/locations/n01/",
+        "https://bulkinfrastructure.com/newsroom/bulk-infrastructure-secures-410-million-for-n01-data-center-campus-expansion",
+        "https://www.estatenyheter.no/bulk-utvider-datasenter/274337"
       ],
       "source_dates": [
-        null
+        null,
+        "2025-11-03",
+        "2020-10-13"
       ],
-      "reviewed_at": null,
-      "note": "Campus ved Kristiansand; omtrentlig stedsposisjon; kilden kunne ikke leses maskinelt 14.10.2026 (samtykkevegg) og raden er ikke gjennomgått mot kilde",
+      "reviewed_at": "2026-10-16",
+      "note": "Campus på Støleheia i Vennesla utenfor Kristiansand; posisjon flyttet 16.10.2026 fra Vennesla sentrum til Kartverkets punkt for heia Støleheia og er ikke anleggstomt; Estate Nyheter 13.10.2020 omtaler en utvidelse på 3 MW og «opptil 1GW» som vagt potensial – ingen av delene føres som campuskapasitet; et sekundært blogginnlegg 10.11.2025 gjengir et varslet behov på 2 GW på 2040-tallet uten primærkilde – ikke ført",
       "nkomRegistered": true,
       "cryptoMining": false,
-      "x": 92.475,
-      "y": 594.152
+      "x": 90.7,
+      "y": 594.779
     },
     {
       "id": "bulk-osix",
@@ -740,18 +744,18 @@
       "status": "operating",
       "mw_in_use": null,
       "mw_reserved": null,
-      "mw_planned": null,
-      "mw_planned_basis": null,
+      "mw_planned": 14,
+      "mw_planned_basis": "announced_total",
       "mw_queued": null,
-      "power_status": "MW ikke verifisert i dette utvalget",
+      "power_status": "Operatøren oppgir 14 MW og andre steder på samme side 14.4 MW «2N redundant» kraft uten å skille IT- og anleggseffekt; ikke nettreservasjon; ikke målt forbruk",
       "source_urls": [
         "https://bulkinfrastructure.com/data-centers/locations/os-ix/"
       ],
       "source_dates": [
         null
       ],
-      "reviewed_at": null,
-      "note": "Omtrentlig plassering i Oslo; kilden kunne ikke leses maskinelt 14.10.2026 (samtykkevegg) og raden er ikke gjennomgått mot kilde",
+      "reviewed_at": "2026-10-16",
+      "note": "Åpnet 2014 i et tidligere trykkeri; samme operatørside oppgir både 14 og 14.4 MW og både 5.3 km fra Oslo S og 7 km fra sentrum – uavklart; laveste tall er ført; omtrentlig plassering i Oslo; operatørsiden er udatert",
       "nkomRegistered": true,
       "cryptoMining": false,
       "x": 160.935,
@@ -1100,6 +1104,188 @@
       "cryptoMining": false,
       "x": 98.851,
       "y": 554.618
+    },
+    {
+      "id": "vaultica-osl01",
+      "name": "OSL01 Økern",
+      "operator": "Vaultica",
+      "operator_orgnr": "981663322",
+      "kommune": "Oslo",
+      "place": "Økern",
+      "lat": 59.92498,
+      "lon": 10.80889,
+      "precision": "site",
+      "status": "operating",
+      "mw_in_use": null,
+      "mw_reserved": null,
+      "mw_planned": 7.5,
+      "mw_planned_basis": "it_capacity",
+      "mw_queued": null,
+      "power_status": "Publisert total IT-last 7.5 MW; ikke nettreservasjon; ikke målt forbruk",
+      "source_urls": [
+        "https://www.vaultica.com/norway/"
+      ],
+      "source_dates": [
+        "2026-08-04"
+      ],
+      "reviewed_at": "2026-10-16",
+      "note": "Forskningsspor lagt til 16.10.2026: tidligere STACK/DigiPlex OSL01 Ulven; operatøren oppgir adressen Selma Ellefsens vei 1 som også er forretningsadressen til SI OSL 01 AS i Brønnøysund; posisjon er Kartverkets adressepunkt; kildedato er sidens sist endret-dato",
+      "nkomRegistered": true,
+      "cryptoMining": false,
+      "x": 160.488,
+      "y": 528.815
+    },
+    {
+      "id": "vaultica-osl02",
+      "name": "OSL02 Rosenholm",
+      "operator": "Vaultica",
+      "operator_orgnr": "994817477",
+      "kommune": "Nordre Follo",
+      "place": "Trollåsen",
+      "lat": 59.82209,
+      "lon": 10.78817,
+      "precision": "site",
+      "status": "operating",
+      "mw_in_use": null,
+      "mw_reserved": null,
+      "mw_planned": null,
+      "mw_planned_basis": null,
+      "mw_queued": null,
+      "power_status": "MW ikke verifisert: operatørsidens OSL02-avsnitt oppgir 3.8 MW IT-last men merker tallet «OSL01» – ikke ført",
+      "source_urls": [
+        "https://www.vaultica.com/norway/"
+      ],
+      "source_dates": [
+        "2026-08-04"
+      ],
+      "reviewed_at": "2026-10-16",
+      "note": "Forskningsspor lagt til 16.10.2026: tidligere STACK/DigiPlex OSL02 under Rosenholm Business Center; operatøren oppgir adressen Rosenholmveien 25 som også er forretningsadressen til SI OSL 02 AS; posisjon er Kartverkets adressepunkt; 3.8 MW holdes utenfor til merkingen er avklart; kildedato er sidens sist endret-dato",
+      "nkomRegistered": true,
+      "cryptoMining": false,
+      "x": 159.766,
+      "y": 533.176
+    },
+    {
+      "id": "skygard-osl1",
+      "name": "OSL1 Hovinbyen",
+      "operator": "Skygard",
+      "operator_orgnr": "",
+      "kommune": "Oslo",
+      "place": "Hovinbyen",
+      "lat": 59.9322,
+      "lon": 10.80516,
+      "precision": "place",
+      "status": "operating",
+      "mw_in_use": null,
+      "mw_reserved": null,
+      "mw_planned": 20,
+      "mw_planned_basis": "announced_total",
+      "mw_queued": null,
+      "power_status": "Operatøren oppgir 20 MW kapasitet uten effektdefinisjon; ikke nettreservasjon; ikke målt forbruk",
+      "source_urls": [
+        "https://www.skygard.no/osl1-eng"
+      ],
+      "source_dates": [
+        null
+      ],
+      "reviewed_at": "2026-10-16",
+      "note": "Forskningsspor lagt til 16.10.2026: operatøren oppgir byggeår 2025 og 25 000 m2 og status bygger på dette; Hovinbyen finnes ikke i Kartverkets stedsnavn og posisjonen er Kartverkets punkt for Økern som omtrentlig område – ikke anleggstomt; Nkom har både SKYGARD AS og SKYGARD 2 AS men kilden sier ikke hvilket selskap som driver anlegget og orgnr er derfor tomt; operatørsiden er udatert",
+      "nkomRegistered": false,
+      "cryptoMining": false,
+      "x": 160.428,
+      "y": 528.502
+    },
+    {
+      "id": "skygard-osl3",
+      "name": "OSL3 Grorud",
+      "operator": "Skygard",
+      "operator_orgnr": "",
+      "kommune": "Oslo",
+      "place": "Grorud",
+      "lat": 59.95886,
+      "lon": 10.87042,
+      "precision": "place",
+      "status": "operating",
+      "mw_in_use": null,
+      "mw_reserved": null,
+      "mw_planned": 3.6,
+      "mw_planned_basis": "announced_total",
+      "mw_queued": null,
+      "power_status": "Operatøren oppgir 3.6 MW kapasitet uten effektdefinisjon; ikke nettreservasjon; ikke målt forbruk",
+      "source_urls": [
+        "https://www.skygard.no/osl3-eng"
+      ],
+      "source_dates": [
+        null
+      ],
+      "reviewed_at": "2026-10-16",
+      "note": "Forskningsspor lagt til 16.10.2026: beskrevet som tvillinganlegg til OSL5 Lørenskog for georedundant drift; posisjon er Kartverkets punkt for bydelen Grorud – ikke anleggstomt; orgnr tomt av samme grunn som OSL1; operatørsiden er udatert",
+      "nkomRegistered": false,
+      "cryptoMining": false,
+      "x": 161.894,
+      "y": 527.452
+    },
+    {
+      "id": "skygard-osl5",
+      "name": "OSL5 Lørenskog",
+      "operator": "Skygard",
+      "operator_orgnr": "",
+      "kommune": "Lørenskog",
+      "place": "Lørenskog",
+      "lat": 59.9452,
+      "lon": 10.94345,
+      "precision": "kommune",
+      "status": "operating",
+      "mw_in_use": null,
+      "mw_reserved": null,
+      "mw_planned": 7.2,
+      "mw_planned_basis": "announced_total",
+      "mw_queued": null,
+      "power_status": "Operatøren oppgir 7.2 MW kapasitet uten effektdefinisjon; ikke nettreservasjon; ikke målt forbruk",
+      "source_urls": [
+        "https://www.skygard.no/osl5-eng"
+      ],
+      "source_dates": [
+        null
+      ],
+      "reviewed_at": "2026-10-16",
+      "note": "Forskningsspor lagt til 16.10.2026: operatøren oppgir bare kommunen; posisjon er Kartverkets punkt for Lørenskog stasjon brukt som omtrentlig kommuneposisjon; orgnr tomt av samme grunn som OSL1; operatørsiden er udatert",
+      "nkomRegistered": false,
+      "cryptoMining": false,
+      "x": 163.418,
+      "y": 528.132
+    },
+    {
+      "id": "terakraft-sauda",
+      "name": "Terakraft Sauda",
+      "operator": "Terakraft",
+      "operator_orgnr": "926970208",
+      "kommune": "Sauda",
+      "place": "Hellandsbygd",
+      "lat": 59.69173,
+      "lon": 6.51184,
+      "precision": "place",
+      "status": "operating",
+      "mw_in_use": null,
+      "mw_reserved": null,
+      "mw_planned": 10,
+      "mw_planned_basis": "announced_total",
+      "mw_queued": null,
+      "power_status": "Operatøren oppgir 10 MW uten effektdefinisjon; DCD 08.08.2025 omtaler 10 MW etter en pågående oppgradering; ikke nettreservasjon; ikke målt forbruk",
+      "source_urls": [
+        "https://www.terakraft.no/",
+        "https://www.datacenterdynamics.com/en/news/vesper-infrastructure-acquires-norwegian-data-center-firm-terakraft/"
+      ],
+      "source_dates": [
+        null,
+        "2025-08-08"
+      ],
+      "reviewed_at": "2026-10-16",
+      "note": "Forskningsspor lagt til 16.10.2026: anlegg i det tidligere kraftverket Sauda I (1919–2008) utenfor Hellandsbygd ifølge DCD; posisjon er Kartverkets punkt for bygda Hellandsbygd – ikke anleggstomt; DCD omtaler mulig utvidelse på ytterligere 60 MW i nærheten som ikke er ført og ikke summeres; operatørsiden er udatert",
+      "nkomRegistered": true,
+      "cryptoMining": false,
+      "x": 67.517,
+      "y": 529.906
     }
   ],
   "unmappedOperators": [
@@ -1265,13 +1451,6 @@
       "kommunenummer": "0301"
     },
     {
-      "name": "SI OSL 02 AS",
-      "orgnr": "994817477",
-      "cryptoMining": false,
-      "businessKommune": "NORDRE FOLLO",
-      "kommunenummer": "3207"
-    },
-    {
       "name": "YFOSS AS",
       "orgnr": "933664295",
       "cryptoMining": false,
@@ -1284,13 +1463,6 @@
       "cryptoMining": true,
       "businessKommune": "TROMSØ",
       "kommunenummer": "5501"
-    },
-    {
-      "name": "SI OSL 01 AS",
-      "orgnr": "981663322",
-      "cryptoMining": false,
-      "businessKommune": "OSLO",
-      "kommunenummer": "0301"
     },
     {
       "name": "TAFJORD CONNECT AS",
@@ -1375,13 +1547,6 @@
       "cryptoMining": false,
       "businessKommune": "BÆRUM",
       "kommunenummer": "3201"
-    },
-    {
-      "name": "TERAKRAFT AS",
-      "orgnr": "926970208",
-      "cryptoMining": false,
-      "businessKommune": "SAUDA",
-      "kommunenummer": "1135"
     },
     {
       "name": "ODIN GREEN DC AS",

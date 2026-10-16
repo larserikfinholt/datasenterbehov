@@ -117,7 +117,8 @@ describe('curated CSV and generated dataset', () => {
       if (site.mw_planned_basis !== null) expect(PLANNED_BASES).toContain(site.mw_planned_basis)
     }
     expect(sites.find(site => site.id === 'gm-hamar')).toMatchObject({ mw_reserved: null, mw_planned: 150, mw_planned_basis: 'it_capacity', reviewed_at: '2026-10-14' })
-    for (const id of ['tydal', 'bulk-n01', 'bulk-osix']) expect(sites.find(site => site.id === id)?.reviewed_at).toBeNull()
+    expect(sites.find(site => site.id === 'tydal')?.reviewed_at).toBeNull()
+    for (const id of ['bulk-n01', 'bulk-osix']) expect(sites.find(site => site.id === id)?.reviewed_at).toBe('2026-10-16')
     expect(sites.filter(site => site.reviewed_at === '2026-10-14').length).toBeGreaterThanOrEqual(15)
     expect(sites.find(site => site.id === 'polar-heroya')).toMatchObject({ source_dates: ['2026-05-12', null], mw_planned: 40, mw_planned_basis: 'it_capacity' })
   })

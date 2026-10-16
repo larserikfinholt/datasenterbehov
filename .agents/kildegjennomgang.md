@@ -2,7 +2,7 @@
 
 Bruk: start en ny agentøkt i repo-roten og lim inn teksten under streken. Les først [AGENTS.md](../AGENTS.md).
 
-Sist kjørt: 14.10.2026 (se README «### Kildekontroll 14.10.2026»).
+Sist kjørt: 16.10.2026 (se README «### Kildekontroll 16.10.2026»).
 
 ---
 

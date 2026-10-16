@@ -1,0 +1,38 @@
+name: Datasenter – meld fra om publisering
+
+# Kjører etter hver fullført «Deploy GitHub Pages». Bare når publiseringen lyktes, og PR-en for en innmelding er
+# med i den publiserte versjonen, får saken beskjed med lenke, etiketten «status: publisert» og lukkes.
+# Merge alene utløser ingen melding.
+
+on:
+  workflow_run:
+    workflows: ["Deploy GitHub Pages"]
+    types: [completed]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+concurrency:
+  group: datasenter-published
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: node scripts/issue-bot.mjs published

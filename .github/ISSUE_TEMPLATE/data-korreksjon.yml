@@ -1,44 +1,153 @@
 name: Feil eller manglende data
-description: Meld feil eller misbrukte tall, eller foreslå et nytt datasenter eller en ny kilde.
+description: Meld inn et nytt datasenter, en rettelse eller tilleggsinformasjon til datasenterkartet.
 title: "[Data] "
 labels: ["data"]
 body:
   - type: markdown
     attributes:
       value: |
-        Takk for hjelpen! Fyll ut det du vet. En lenke til en kilde er viktigst; resten kan være kort.
-        Dataene ligger i [data/datacenters.csv](../blob/main/data/datacenters.csv).
+        Takk for at du bidrar! Alle opplysninger kontrolleres mot kildene før de publiseres, og vi svarer i denne saken.
+
+        **Effekt, ikke energi.** Kartet viser effekt i **MW**. Energi i GWh eller TWh per år hører ikke hjemme i MW-feltene.
+        **Skill mellom typene tall.** *I bruk* er dokumentert last. *Nettreservasjon* er tildelt eller reservert nettkapasitet hos nettselskap eller Statnett, ikke kundekontrakter. *Planlagt / kapasitet* er annonsert eller planlagt kapasitet. *Omsøkt / ikke tildelt* er søknad eller kø.
+        **Ikke gjett.** La et felt stå tomt hvis du ikke har en kilde for det. Et tomt felt betyr «ingen endring».
+
   - type: dropdown
     id: type
     attributes:
-      label: Hva gjelder det?
+      label: Hva gjelder innmeldingen?
       options:
-        - Feil tall (MW, kapasitet, status)
-        - Tall brukt feil eller misvisende (f.eks. kapasitet vist som forbruk)
-        - Feil plassering eller operatør
+        - Rettelse av eksisterende datasenter
+        - Tilleggsinformasjon til eksisterende datasenter
         - Nytt datasenter som mangler
-        - Ny eller bedre kilde til eksisterende datasenter
         - Annet
     validations:
       required: true
+
   - type: input
     id: datacenter
     attributes:
-      label: Datasenter
-      description: Navn eller id fra kartet. La stå tomt hvis det er et nytt datasenter eller gjelder noe generelt.
-      placeholder: "f.eks. gm-hamar / OSL-Hamar"
+      label: Datasenter i kartet
+      description: Id og navn fra kartet. Fylles ut automatisk når du bruker lenken på et anlegg. La stå tomt for et nytt datasenter.
+      placeholder: "gm-hamar · OSL-Hamar"
+
+  - type: input
+    id: page_url
+    attributes:
+      label: Lenke til anlegget på nettsiden
+      description: Fylles ut automatisk når du bruker lenken på et anlegg.
+
   - type: textarea
     id: description
     attributes:
-      label: Hva er feil, eller hva bør legges til?
-      description: Hva står der nå, og hva mener du er riktig? Oppgi tall med enhet (MW) og hva tallet beskriver (IT-effekt, nettreservasjon, målt forbruk, planlagt).
+      label: Hva bør endres, og hvorfor?
+      description: Beskriv kort hva som er feil, mangler eller nytt. Skriv hva kilden faktisk sier, og hvor i kilden det står.
     validations:
       required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ### Foreslåtte opplysninger
+        Fyll bare ut feltene som skal endres eller legges til. For et nytt datasenter trengs minst navn, operatør, kommune, sted og status.
+        MW-felt: skriv et tall i MW (for eksempel `12,5`). Skriv `ukjent` for å fjerne et tall som ikke lenger har kilde.
+
+  - type: input
+    id: name
+    attributes:
+      label: Navn på anlegg eller prosjekt
+
+  - type: input
+    id: operator
+    attributes:
+      label: Operatør eller utbygger
+
+  - type: input
+    id: operator_orgnr
+    attributes:
+      label: Organisasjonsnummer for operatøren
+      placeholder: "9 siffer"
+
+  - type: input
+    id: kommune
+    attributes:
+      label: Kommune
+
+  - type: input
+    id: place
+    attributes:
+      label: Sted
+      description: Stedsnavn som kan slås opp i Kartverkets stedsnavnregister, for eksempel tettsted eller industriområde.
+
+  - type: input
+    id: coordinates
+    attributes:
+      label: Koordinater (valgfritt)
+      description: Breddegrad og lengdegrad i desimalgrader, bare hvis anleggets plassering er kjent.
+      placeholder: "60.79, 11.07"
+
+  - type: dropdown
+    id: status
+    attributes:
+      label: Status for anlegget
+      options:
+        - I drift
+        - Under bygging
+        - Planlagt
+
+  - type: input
+    id: mw_in_use
+    attributes:
+      label: I bruk (MW)
+      description: Dokumentert last eller forbruk i MW. Ikke installert kapasitet, og ikke GWh.
+
+  - type: input
+    id: mw_reserved
+    attributes:
+      label: Nettreservasjon (MW)
+      description: Tildelt eller reservert nettkapasitet. Ikke kundekontrakter.
+
+  - type: input
+    id: mw_planned
+    attributes:
+      label: Planlagt / kapasitet (MW)
+
+  - type: dropdown
+    id: mw_planned_basis
+    attributes:
+      label: Hva det planlagte tallet beskriver
+      description: Påkrevd hvis du oppgir planlagt / kapasitet.
+      options:
+        - IT-kapasitet
+        - Anleggskapasitet
+        - Utbyggingspotensial
+        - Annonsert kapasitet, udefinert
+        - Planlagt nettilknytning
+
+  - type: input
+    id: mw_queued
+    attributes:
+      label: Omsøkt / ikke tildelt (MW)
+      description: Omsøkt effekt eller plass i kapasitetskø.
+
+  - type: textarea
+    id: power_status
+    attributes:
+      label: Hva tallene betyr
+      description: Én eller to setninger om hva tallene viser, slik kilden beskriver dem. Påkrevd for nytt datasenter.
+
   - type: textarea
     id: sources
     attributes:
-      label: Kilde(r)
-      description: Lenke(r) til kilden, gjerne med publiseringsdato. Uten kilde kan vi ikke endre tallene.
-      placeholder: "https://…  (publisert 2026-09-01)"
+      label: Kilder
+      description: Én lenke per linje. Legg til publiseringsdato etter lenken hvis den er kjent, for eksempel `https://eksempel.no/sak 2026-05-12`.
     validations:
       required: true
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Bekreftelse
+      options:
+        - label: Opplysningene er offentlig tilgjengelige og kan publiseres sammen med kildene.
+          required: true

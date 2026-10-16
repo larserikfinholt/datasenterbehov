@@ -53,3 +53,4 @@ Ferdige prompter ligger i [`.agents/`](.agents/):
 - `scripts/prepare-data.mjs` og `data/workforce.csv`: SSB-grunnlaget for beregningen. Se README «Kilder og reproduksjon».
 - `slides/` og `scripts/build-slides.mjs`: Marp-presentasjon. Bygges av `npm run build`.
 - `.github/workflows/pages.yml`: publisering til GitHub Pages.
+- Innmeldinger fra leserne: `src/report-links.ts` (lenkene på siden), `.github/ISSUE_TEMPLATE/data-korreksjon.yml`, `scripts/datacenter-issue.mjs` (rene hjelpere, testet i `scripts/datacenter-issue.test.mjs`), `scripts/issue-bot.mjs` og `.github/workflows/datasenter-*.yml`. Skjemaets overskrifter og valg må stemme med `FORM_FIELDS`/`*_OPTIONS`; testene sjekker det. Etiketten `status: godkjent` settes bare av en moderator. Se README «Innmeldinger fra leserne».
