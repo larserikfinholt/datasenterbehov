@@ -34,7 +34,7 @@ Lysbilde 3 skiller kodeagenten, som bruker modellen, fra modellen, som gjør KI-
 
 Lysbilde 5 viser tre yrker med hver sin måler: et stort tall og en loddrett stolpe. Hvert trykk viser én måler, som teller opp til yrkets basisfaktor i `data/workforce.csv` med utvikleren som referanse: programvareutvikler 100 %, gartner 3 % og barnehagelærer 8 %. Faktorene er scenarioantakelser, ikke SSB-estimater; det står på lysbildet. Endres faktorene, må tallene i `slides/klimacafe.md` oppdateres for hånd. E2E-testen sammenligner dem med `public/data/occupations.json`. Uten skript (PDF, redusert bevegelse) vises sluttverdiene.
 
-Fotnoten på yrkessliden viser til SSB tabell 11658 (årsverk, 2025), og presiserer at KI-faktorene ikke er SSB-statistikk over KI-eksponering. Siste lysbilde viser nettsiden i en iframe som fyller hele lysbildet, uten ramme eller sidetall. Denne sliden krever nettilgang og brukes i HTML-presentasjonen, ikke PDF.
+Fotnoten på yrkessliden viser til SSB tabell 11658 (årsverk, 2025), og presiserer at KI-faktorene ikke er SSB-statistikk over KI-eksponering. Presentasjonen avsluttes med spørsmålet «Hva er da begrunnelsen?» og lenke og QR-kode til nettsiden. Nettsiden er ikke innebygd i presentasjonen.
 
 Stolpen er en visuell sum, ikke en kapasitetsoversikt. For hvert anlegg legges lagene oppå hverandre uten å telle samme MW to ganger: i bruk, nettreservasjon utover dette, omsøkt effekt og planlagt kapasitet utover reservert og omsøkt. Summen på tvers av anleggene blander likevel tall med ulike definisjoner, kan overlappe og dekker bare prosjektets kartutvalg. Den er derfor ikke det samme som 3 500 MW reservert nettkapasitet på lysbilde 6, og det står en merknad om dette på lysbildet.
 
@@ -170,33 +170,32 @@ Søk etter anlegg som manglet i utvalget, med utgangspunkt i Nkom-operatører ut
 
 ## Innmeldinger fra leserne
 
-Hvert anlegg i listen har lenken «Meld feil eller manglende data», og under listen står «Har du informasjon om flere datasentre? Meld inn her». Begge åpner skjemaet [.github/ISSUE_TEMPLATE/data-korreksjon.yml](.github/ISSUE_TEMPLATE/data-korreksjon.yml) som en GitHub-sak. Det krever en GitHub-konto, og det står ved lenkene. Fra et anlegg fylles id, navn og lenke ut på forhånd. Skjemaet dekker nye datasentre, rettelser og tilleggsinformasjon, og har ett felt per CSV-kolonne. MW-feltene tar bare effekt. Tomt felt betyr «ingen endring», og `ukjent` fjerner et tall.
+Et banner over kartet gjør det tydelig at datasenterlisten er en felles dugnad og inviterer leseren til å bidra. Hvert anlegg har «Meld feil eller manglende data», og under listen står «Meld inn her». Alle innmeldingslenkene åpner skjemaet [.github/ISSUE_TEMPLATE/data-korreksjon.yml](.github/ISSUE_TEMPLATE/data-korreksjon.yml) i en ny fane. GitHub-konto kreves. Fra et anlegg fylles navn og type inn på forhånd. Skjemaet har bare fire felt: hva innmeldingen gjelder, navn på datasenteret, lenke til en kilde og beskrivelse. Beskrivelsen kan inneholde endringsforslag, flere kildelenker og bilder.
 
-Lenkene bygges i `src/report-links.ts`. Feltetikettene og valgene i skjemaet må stemme med `FORM_FIELDS`, `TYPE_OPTIONS`, `STATUS_OPTIONS` og `BASIS_OPTIONS` i `scripts/datacenter-issue.mjs`. Enhetstesten sjekker det.
+Lenkene bygges i `src/report-links.ts`. Feltetikettene og valgene i skjemaet må stemme med `FORM_FIELDS` og `TYPE_OPTIONS` i `scripts/datacenter-issue.mjs`. Enhetstesten sjekker det. Det er ingen eldre saker som krever støtte for det tidligere skjemaet.
 
 ### Flyt og etiketter
 
 | Steg | Hva skjer | Etiketter |
 | --- | --- | --- |
-| Ny eller redigert sak | `datasenter-triage.yml` legger én takkekommentar (bare første gang) og én vurderingskommentar som oppdateres på stedet. Vurderingen finner anlegget eller ser at det er nytt, sjekker at skjemaet er komplett, prøver inntil 3 nye kilder, ser etter mulige duplikater i kartet og i andre åpne saker, og viser foreslått endring som før/etter-tabell. | `data`, `type: datakorrigering` eller `type: nytt-datasenter`, `status: trenger-info` eller `status: til-vurdering` |
-| Moderator godkjenner | Moderator kontrollerer kildene og setter `status: godkjent` manuelt. Automatikken setter den aldri. `datasenter-approve.yml` sjekker at personen har skrivetilgang (ellers fjernes etiketten), oppdaterer `data/datacenters.csv` på grenen `data/issue-<nr>`, kjører datapipeline, `:check`, enhetstester, bygg og e2e for kartet, og åpner eller oppdaterer én PR. PR-en har begrunnelse, kilder, usikkerhet og før/etter-tabell. Skjermbilder av kartet ligger som artefakt `kart-forhandsvisning`. Feiler et steg, forklares det i saken, og etiketten går tilbake til `status: til-vurdering`. | `status: pr-opprettet` |
+| Ny eller redigert sak | `datasenter-triage.yml` legger én takkekommentar (bare første gang) og én vurderingskommentar som oppdateres på stedet. Den sjekker de fire feltene, prøver inntil 3 kildelenker og ser etter mulige duplikater i kartet og i andre åpne saker. Ingen dataendringer utledes fra fritekst. | `data`, eventuelt typeetikett, `status: trenger-info` eller `status: til-vurdering` |
+| Moderator behandler | Moderator kontrollerer beskrivelsen og kildene, oppdaterer `data/datacenters.csv` manuelt og oppretter en PR med henvisning til saken. Kjør verifiseringen beskrevet ovenfor. Ikke bruk `status: godkjent`: den automatiske PR-flyten avviser fritekstinnmeldinger. | `status: til-vurdering` |
 | Merge | Gjøres manuelt etter gjennomgang av PR-en. Merge alene gir ingen melding til innsenderen. | uendret |
-| Publisert | `datasenter-published.yml` kjører når «Deploy GitHub Pages» er fullført. Bare hvis publiseringen lyktes og den publiserte versjonen inneholder merge-commiten, får saken en kommentar med lenke til anlegget (`#site-<id>`). Saken får da etiketten `status: publisert` og lukkes. | `status: publisert` |
+| Publisert | Moderator svarer i saken med lenke til anlegget (`#site-<id>`) etter vellykket publisering og lukker saken. | `status: publisert` |
 
-- **Ingen gjetting.** Tomme felt endrer ingenting. Energitall (kWh, GWh, TWh) avvises i MW-feltene. Planlagt kapasitet krever grunnlag. Rader valideres med `parseSiteRows`, samme regler som pipelinen. En ny rad får `precision: place` og merknaden «Innmeldt via GitHub-sak #N.». Posisjonen slås opp i Kartverket ved bygging, med mindre innsenderen oppgir koordinater.
-- **`reviewed_at`** settes til godkjenningsdatoen, fordi moderatoren har gått gjennom raden mot kildene.
+- **Ingen gjetting.** Moderator fyller bare inn kildebelagte opplysninger. Planlagt kapasitet krever grunnlag. Rader valideres med `parseSiteRows`, samme regler som pipelinen. Kildekonflikter noteres i `note` og under «Kildekontroll».
+- **`reviewed_at`** settes manuelt til datoen moderatoren gjennomgår raden mot kildene.
 - **Upålitelig input.** Saksteksten og hentede nettsider er upålitelige. De leses bare av `scripts/datacenter-issue.mjs`, settes aldri inn i shell-kommandoer, og vises bare escapet i kommentarer. Det gjelder også om en AI-modell senere brukes i vurderingen. Kildesjekken følger bare http(s), avviser interne adresser, venter maks 8 sekunder og leser maks 1 MB. Den leser sideteksten og ser etter navn og tall. Den kan ikke bekrefte at kilden faktisk støtter påstanden. En kilde som ikke svarer, regnes som usikkerhet, ikke som feil.
-- **Idempotent.** Botens kommentarer kjennes igjen på skjulte markører og oppdateres i stedet for å legges til på nytt. Det finnes én gren og én PR per sak. Vurderingen kjøres ikke på nytt når innholdet er uendret.
-- **Ny godkjenning ved endring.** Redigeres saken etter godkjenning, lukkes PR-en, etiketten settes tilbake til vurdering, og det endrede innholdet må godkjennes på nytt. Godkjenning avvises også hvis saken er endret etter siste vurdering.
-- **Manuelt:** Lukkes en PR uten merge, står saken igjen med `status: pr-opprettet` til moderatoren svarer eller lukker den. Feiler geokodingen for et nytt sted (for eksempel ved tvetydig stedsnavn), legger moderatoren inn koordinater i saken eller retter raden i PR-en. Kildekonflikter noteres i `note` og under «Kildekontroll», som før.
+- **Idempotent.** Botens kommentarer kjennes igjen på skjulte markører og oppdateres i stedet for å legges til på nytt. Vurderingen kjøres ikke på nytt når innholdet er uendret.
+- **Endrede saker:** Moderator kontrollerer siste versjon av beskrivelsen og kildene før publisering. Feiler geokodingen for et nytt sted, rettes posisjonen manuelt i CSV-en.
 - **Kjør vurderingen på nytt:** «Run workflow» på *Datasenter – vurder innmelding* med saksnummer. Tomt saksnummer oppretter bare etikettene.
 
 ### Oppsett i GitHub
 
 1. *Settings → General → Features:* Issues er slått på.
-2. *Settings → Actions → General → Workflow permissions:* «Read and write permissions», og «Allow GitHub Actions to create and approve pull requests» er krysset av. Uten dette kan ikke `GITHUB_TOKEN` lage PR-en, og da trengs `DATA_BOT_TOKEN` (punkt 4).
+2. *Settings → Actions → General → Workflow permissions:* Boten trenger skrivetilgang til Issues for kommentarer og etiketter. Den nye innmeldingsflyten lager ikke PR-er automatisk.
 3. *Settings → Pages:* kilden er GitHub Actions, som før. Pages-bygget utløses av merge til `main`, fordi merge gjøres av et menneske. Hendelser fra `GITHUB_TOKEN` starter ikke nye workflows, men det har ingen betydning her.
-4. Valgfritt: hemmeligheten `DATA_BOT_TOKEN` (*Settings → Secrets and variables → Actions*). Bruk en fine-grained PAT eller et GitHub App-token for dette repoet med *Contents*, *Pull requests* og *Issues*: Read and write. Den trengs bare hvis Actions ikke får lage PR-er, eller hvis du vil at sjekker skal kjøre på bot-PR-ene. PR-er og pusher fra `GITHUB_TOKEN` starter ingen workflows.
+4. `DATA_BOT_TOKEN` er ikke nødvendig for den manuelle PR-flyten.
 5. Etikettene opprettes automatisk ved første innmelding, eller med «Run workflow» uten saksnummer.
 6. Moderatorer er alle med skriv-, maintain- eller admintilgang til repoet.
 

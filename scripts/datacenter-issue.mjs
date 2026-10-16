@@ -47,24 +47,9 @@ export const MARKERS = {
 /** Field ids and labels in .github/ISSUE_TEMPLATE/data-korreksjon.yml. The labels become `### headings` in the issue body. */
 export const FORM_FIELDS = {
   type: 'Hva gjelder innmeldingen?',
-  datacenter: 'Datasenter i kartet',
-  page_url: 'Lenke til anlegget på nettsiden',
-  description: 'Hva bør endres, og hvorfor?',
-  name: 'Navn på anlegg eller prosjekt',
-  operator: 'Operatør eller utbygger',
-  operator_orgnr: 'Organisasjonsnummer for operatøren',
-  kommune: 'Kommune',
-  place: 'Sted',
-  coordinates: 'Koordinater (valgfritt)',
-  status: 'Status for anlegget',
-  mw_in_use: 'I bruk (MW)',
-  mw_reserved: 'Nettreservasjon (MW)',
-  mw_planned: 'Planlagt / kapasitet (MW)',
-  mw_planned_basis: 'Hva det planlagte tallet beskriver',
-  mw_queued: 'Omsøkt / ikke tildelt (MW)',
-  power_status: 'Hva tallene betyr',
-  sources: 'Kilder',
-  confirm: 'Bekreftelse',
+  datacenter: 'Navn på datasenteret',
+  sources: 'Lenke til en kilde',
+  description: 'Beskrivelse',
 }
 export const TYPE_OPTIONS = {
   correction: 'Rettelse av eksisterende datasenter',
@@ -88,8 +73,6 @@ export const COLUMN_LABELS = {
   source_urls: 'Kilder', source_dates: 'Kildedatoer', reviewed_at: 'Gjennomgått', note: 'Merknad',
 }
 const MW_FIELDS = ['mw_in_use', 'mw_reserved', 'mw_planned', 'mw_queued']
-const TEXT_FIELDS = { name: 120, operator: 120, kommune: 60, place: 80, power_status: 600 }
-const REQUIRED_FOR_NEW = ['name', 'operator', 'kommune', 'place', 'status', 'power_status']
 const MAX_SOURCES = 10
 const ENERGY_UNIT = /\b(?:[kmgt]wh|kilowattimer|megawattimer|gigawattimer|terawattimer)\b/i
 
@@ -239,83 +222,29 @@ export function findDuplicates(proposal, rows) {
   return result
 }
 
-/** Turns parsed form fields into a validated change against the current rows. Nothing is guessed: empty means no change. */
+/** Validates reports for manual review without inferring data changes from free text. */
 export function buildProposal(form, rows) {
-  const { fields, duplicates } = form
-  const errors = []
-  const warnings = []
-  if (!form.isForm) errors.push('Innmeldingen følger ikke skjemaet. Bruk skjemaet «Feil eller manglende data».')
-  for (const field of duplicates) errors.push(`Feltet «${FORM_FIELDS[field]}» står flere ganger i innmeldingen.`)
-  const type = Object.entries(TYPE_OPTIONS).find(([, label]) => label === fields.type)?.[0] ?? (fields.type ? 'other' : null)
+  const { fields } = form
   const target = findTarget(fields.datacenter, rows)
-  let kind
-  if (target) kind = 'update'
-  else if (type === 'newSite') kind = 'new'
-  else kind = 'other'
-  if (type === 'newSite' && target) warnings.push(`Innmeldingen er merket som nytt datasenter, men viser til eksisterende «${target.id}». Den behandles som en endring av dette anlegget.`)
-  if (!target && fields.datacenter && type !== 'newSite') errors.push(`Fant ikke «${fields.datacenter.slice(0, 80)}» i kartet. Oppgi id fra kartet, eller velg «${TYPE_OPTIONS.newSite}».`)
-  if (kind === 'other' && !fields.datacenter) errors.push(`Oppgi hvilket datasenter innmeldingen gjelder, eller velg «${TYPE_OPTIONS.newSite}».`)
-
-  const changes = {}
-  for (const [field, max] of Object.entries(TEXT_FIELDS)) {
-    const value = String(fields[field] ?? '').replace(/\s+/g, ' ').trim()
-    if (!value) continue
-    if (value.length > max) errors.push(`«${FORM_FIELDS[field]}» er lengre enn ${max} tegn.`)
-    else changes[field] = value
-  }
-  const orgnr = String(fields.operator_orgnr ?? '').replace(/\s/g, '')
-  if (orgnr && !/^\d{9}$/.test(orgnr)) errors.push('Organisasjonsnummeret må ha 9 siffer.')
-  else if (orgnr) changes.operator_orgnr = orgnr
-  if (fields.status) {
-    if (STATUS_OPTIONS[fields.status]) changes.status = STATUS_OPTIONS[fields.status]
-    else errors.push(`Ukjent status «${fields.status.slice(0, 40)}».`)
-  }
-  for (const field of MW_FIELDS) {
-    const parsed = parseMwInput(fields[field])
-    if (parsed.error) errors.push(`${FORM_FIELDS[field]}: ${parsed.error}`)
-    else if (parsed.value !== undefined) changes[field] = parsed.value ?? ''
-  }
-  if (fields.mw_planned_basis) {
-    if (BASIS_OPTIONS[fields.mw_planned_basis]) changes.mw_planned_basis = BASIS_OPTIONS[fields.mw_planned_basis]
-    else errors.push(`Ukjent grunnlag for planlagt kapasitet «${fields.mw_planned_basis.slice(0, 40)}».`)
-  }
-  if (changes.mw_planned === '') changes.mw_planned_basis = ''
-  const planned = changes.mw_planned ?? target?.mw_planned ?? ''
-  const basis = changes.mw_planned_basis ?? target?.mw_planned_basis ?? ''
-  if (planned && !basis) errors.push(`Oppgi «${FORM_FIELDS.mw_planned_basis}» for det planlagte tallet.`)
-  if (!planned && changes.mw_planned_basis) errors.push(`«${FORM_FIELDS.mw_planned_basis}» krever et tall i «${FORM_FIELDS.mw_planned}».`)
-  const coordinates = parseCoordinates(fields.coordinates)
-  if (coordinates.error) errors.push(coordinates.error)
-  else if (coordinates.value) {
-    Object.assign(changes, coordinates.value, { precision: 'site' })
-    warnings.push('Koordinatene blir registrert som anleggsposisjon. Kontroller at de viser selve anlegget og ikke bare stedet.')
-  }
-
+  const type = Object.entries(TYPE_OPTIONS).find(([, label]) => label === fields.type)?.[0] ?? 'other'
   const parsedSources = parseSources(fields.sources)
-  warnings.push(...parsedSources.warnings)
-  if (!parsedSources.sources.length) errors.push('Mangler kilde. Legg inn minst én lenke til en offentlig kilde.')
-  if (!/\[x\]/i.test(fields.confirm ?? '')) errors.push('Bekreftelsen om at opplysningene kan publiseres er ikke krysset av.')
-  if (ENERGY_UNIT.test(fields.description ?? '')) warnings.push('Beskrivelsen nevner energi (kWh/GWh/TWh). Kartet viser bare effekt i MW; energitall kan ikke regnes om til MW uten flere opplysninger.')
-
-  let newSources = parsedSources.sources
-  if (kind === 'new') {
-    const missing = REQUIRED_FOR_NEW.filter(field => !changes[field])
-    if (missing.length) errors.push(`For et nytt datasenter mangler: ${missing.map(field => `«${FORM_FIELDS[field]}»`).join(', ')}.`)
-    if (!coordinates.value && changes.place) warnings.push('Posisjonen blir slått opp i Kartverkets stedsnavnregister og vist som omtrentlig stedsposisjon.')
-  } else if (target) {
-    for (const [column, value] of Object.entries(changes)) if (target[column] === value) delete changes[column]
-    const existing = new Set(target.source_urls.split('|'))
-    newSources = parsedSources.sources.filter(source => !existing.has(source.url))
-    if (!newSources.length && parsedSources.sources.length) warnings.push('Alle kildene er allerede registrert på anlegget.')
-    if (!Object.keys(changes).length && !newSources.length && !errors.length) errors.push('Innmeldingen gir ingen endring i dataene: ingen nye verdier og ingen nye kilder.')
+  const errors = []
+  if (!form.isForm) errors.push('Bruk skjemaet «Feil eller manglende data».')
+  if (!Object.values(TYPE_OPTIONS).includes(fields.type)) errors.push('Velg hva innmeldingen gjelder.')
+  if (!fields.datacenter?.trim()) errors.push('Oppgi navn på datasenteret.')
+  if (!parsedSources.sources.length) errors.push('Legg inn en lenke til en kilde.')
+  if (!fields.description?.trim()) errors.push('Legg inn en kort beskrivelse.')
+  for (const field of form.duplicates) errors.push(`Feltet «${FORM_FIELDS[field]}» står flere ganger i innmeldingen.`)
+  return {
+    kind: target ? 'update' : type === 'newSite' ? 'new' : 'other', type, target, targetId: target?.id ?? null,
+    changes: target ? {} : { name: fields.datacenter ?? '' }, sources: parsedSources.sources,
+    description: fields.description ?? '', errors, warnings: parsedSources.warnings, manualReview: true,
   }
-  const description = String(fields.description ?? '').trim()
-  if (description.length < 10) errors.push('Beskriv kort hva som bør endres og hvorfor.')
-  return { kind, type, target, targetId: target?.id ?? null, changes, sources: newSources, description, errors, warnings }
 }
 
 /** Applies a proposal to the CSV text. Throws when the result breaks the data model (parseSiteRows). */
 export function applyProposal(csvText, proposal, { issueNumber, today }) {
+  if (proposal.manualReview) throw new Error('Denne innmeldingen må behandles manuelt. Oppdater CSV og opprett en PR med henvisning til saken; fritekst blir ikke automatisk oversatt til dataendringer.')
   if (proposal.errors.length) throw new Error(`Innmeldingen har uløste mangler:\n- ${proposal.errors.join('\n- ')}`)
   if (proposal.kind === 'other') throw new Error('Innmeldingen viser ikke til et datasenter og kan ikke oversettes til en dataendring.')
   const { eol, trailing, header, lines, rows } = readCsv(csvText)
@@ -450,7 +379,9 @@ export function assessmentBody({ proposal, preview, previewError, duplicates = [
   if (uncertainty.length) sections.push(`#### Usikkerhet\n${uncertainty.map(item => `- ${safeInline(item, 300)}`).join('\n')}`)
   const related = [...duplicates.map(item => `- Mulig duplikat i kartet: \`${item.id}\` (${safeInline(item.name, 80)}): ${item.reasons.join(', ')}`), ...relatedIssues.map(issue => `- Annen åpen innmelding om samme anlegg: #${Number(issue.number)}`)]
   if (related.length) sections.push(`#### Mulige duplikater\n${related.join('\n')}`)
-  sections.push(`<sub>Moderator: kontroller kildene, rett eventuelt feltene i innmeldingen, og sett etiketten \`${LABELS.approved}\` for å lage en PR. Sist vurdert ${checkedAt}.</sub>`)
+  sections.push(proposal.manualReview
+    ? `<sub>Moderator: kontroller beskrivelsen og kildene, oppdater CSV manuelt og opprett en PR med henvisning til saken. Etiketten \`${LABELS.approved}\` skal ikke brukes for dette skjemaet. Sist vurdert ${checkedAt}.</sub>`
+    : `<sub>Moderator: kontroller kildene, rett eventuelt feltene i innmeldingen, og sett etiketten \`${LABELS.approved}\` for å lage en PR. Sist vurdert ${checkedAt}.</sub>`)
   return sections.join('\n\n')
 }
 

@@ -15,9 +15,9 @@ function issueUrl(fields: Record<string, string>) {
   return `${PROJECT_REPO}/issues/new?${new URLSearchParams({ template: REPORT_TEMPLATE, ...fields })}`
 }
 
-/** Prefilled issue form for an existing data center. The `datacenter` field starts with the stable id. */
+/** Prefilled issue form for an existing data center. */
 export function reportSiteUrl(site: { id: string, name: string }) {
-  return issueUrl({ title: `[Data] ${site.name}`, datacenter: `${site.id} · ${site.name}`, page_url: siteUrl(site.id) })
+  return issueUrl({ title: `[Data] ${site.name}`, type: REPORT_TYPES.correction, datacenter: site.name })
 }
 
 export function reportNewSiteUrl() {

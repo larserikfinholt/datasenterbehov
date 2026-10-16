@@ -181,7 +181,8 @@ async function relatedIssues(issue, proposal, rows) {
     const form = parseIssueForm(item.body)
     const target = findTarget(form.fields.datacenter, rows)
     if (proposal.targetId) return target?.id === proposal.targetId
-    return proposal.kind === 'new' && fold(form.fields.name) && fold(form.fields.name) === fold(proposal.changes.name)
+    const name = form.fields.datacenter
+    return proposal.kind === 'new' && fold(name) && fold(name) === fold(proposal.changes.name)
   }).slice(0, 5)
 }
 
@@ -212,7 +213,7 @@ async function triage() {
   const proposal = buildProposal(form, csv.rows)
   let preview = null
   let previewError = null
-  if (!proposal.errors.length && proposal.kind !== 'other') {
+  if (!proposal.manualReview && !proposal.errors.length && proposal.kind !== 'other') {
     try { preview = applyProposal(csv.text, proposal, { issueNumber: number, today: today() }) } catch (error) { previewError = error.message }
   }
   const sources = proposal.sources.slice(0, MAX_SOURCE_CHECKS)

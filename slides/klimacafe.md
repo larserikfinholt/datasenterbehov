@@ -274,10 +274,3 @@ Avslutning, la spørsmålet stå og ta en kort pause før spørsmålene fra sale
 Ved spørsmål om Gromstul: Google oppgir 240 MW tildelt kraftkapasitet i første fase. Ikke direkte sammenlignbart med 300 MW: vårt tall gjelder bare KI-kortene, Googles tall gjelder kapasitet til hele anlegget.
 Kilde 240 MW: https://kommunikasjon.ntb.no/pressemelding/18046820/google-starter-bygging-av-et-nytt-datasenter-i-skien-investerer-600-millioner-euro?lang=no&publisherId=8930805
 -->
-
----
-
-<!-- _class: website-slide -->
-<!-- _paginate: false -->
-
-<iframe src="https://larserikfinholt.github.io/datasenterbehov/" title="Datakraftbehov i Norge" loading="lazy"></iframe>

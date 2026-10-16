@@ -198,7 +198,14 @@ test('Norway map has proportional markers, linked focus, sorting and no data req
   const hamarReport = new URL(await hamar.locator('.site-report a').getAttribute('href') ?? '')
   expect(hamarReport.pathname).toBe('/larserikfinholt/datasenterbehov/issues/new')
   expect(hamarReport.searchParams.get('template')).toBe('data-korreksjon.yml')
-  expect(hamarReport.searchParams.get('datacenter')).toBe('gm-hamar · OSL-Hamar')
+  expect(hamarReport.searchParams.get('datacenter')).toBe('OSL-Hamar')
+  expect(hamarReport.searchParams.has('page_url')).toBe(false)
+  await expect(map.locator('.map-contribute')).toContainText('Datasenterlisten er en felles dugnad. Du kan bidra.')
+  await expect(map.locator('.map-contribute')).toBeVisible()
+  for (const link of await map.locator('.site-report a, .map-report a, .map-contribute a').all()) {
+    await expect(link).toHaveAttribute('target', '_blank')
+    await expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+  }
   await expect(map.locator('.map-report')).toContainText('krever en GitHub-konto')
   const newSiteReport = new URL(await map.locator('.map-report a').getAttribute('href') ?? '')
   expect(newSiteReport.searchParams.get('template')).toBe('data-korreksjon.yml')
@@ -484,18 +491,10 @@ test('the benefit slide shows the claims, then stamps them and greys them out, t
   expect(errors).toEqual([])
 })
 
-test('the last presentation slide embeds the website without a frame or inset', async ({ page }) => {
-  await page.route('https://larserikfinholt.github.io/datasenterbehov/', route => route.fulfill({ contentType: 'text/html', body: '<h1>Datakraftbehov</h1>' }))
-  await page.goto('presentasjon/#9')
+test('the presentation ends with the closing question and no embedded website', async ({ page }) => {
+  await page.goto('presentasjon/#8')
   const slide = page.locator('section').last()
-  const iframe = slide.locator('iframe')
-  await expect(iframe).toBeVisible()
-  await expect(iframe).toHaveAttribute('src', 'https://larserikfinholt.github.io/datasenterbehov/')
-  await expect(iframe).toHaveAttribute('title', 'Datakraftbehov i Norge')
-  await expect(slide).toHaveCSS('padding', '0px')
-  await expect(iframe).toHaveCSS('border-width', '0px')
-  const slideBounds = (await slide.boundingBox())!
-  const iframeBounds = (await iframe.boundingBox())!
-  for (const dimension of ['x', 'y', 'width', 'height'] as const) expect(iframeBounds[dimension]).toBeCloseTo(slideBounds[dimension], 1)
-  await expect(page.frameLocator('section.website-slide iframe').getByRole('heading')).toHaveText('Datakraftbehov')
+  await expect(slide).toHaveClass(/benefit/)
+  await expect(slide.locator('.open-question')).toHaveText('Hva er da begrunnelsen?')
+  await expect(page.locator('iframe')).toHaveCount(0)
 })
