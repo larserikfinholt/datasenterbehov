@@ -76,7 +76,7 @@ describe('values', () => {
 })
 
 describe('proposals', () => {
-  it('changes only the line of the target row and keeps line endings', () => {
+  it.each(['\n', '\r\n'])('changes only the line of the target row and keeps line endings (%j)', eol => {
     const proposal = proposalFor({
       type: TYPE_OPTIONS.correction, datacenter: 'gm-hamar · OSL-Hamar', description: 'Ny kilde oppgir 40 MW i bruk.',
       mw_in_use: '40', sources: 'https://example.com/hamar 2026-09-01',
@@ -84,9 +84,11 @@ describe('proposals', () => {
     expect(proposal.errors).toEqual([])
     expect(proposal.kind).toBe('update')
     expect(proposal.changes).toEqual({ mw_in_use: '40' })
-    const applied = apply(proposal)
-    const before = csvText.split('\r\n')
-    const after = applied.csv.split('\r\n')
+    const inputCsv = csvText.replace(/\r?\n/g, eol)
+    const applied = applyProposal(inputCsv, proposal, { issueNumber: 42, today: '2026-10-16' })
+    const before = inputCsv.split(eol)
+    const after = applied.csv.split(eol)
+    expect(readCsv(applied.csv).eol).toBe(eol)
     expect(after).toHaveLength(before.length)
     expect(after.filter((line, index) => line !== before[index])).toHaveLength(1)
     expect(applied.after.source_urls.endsWith('|https://example.com/hamar')).toBe(true)
@@ -115,17 +117,19 @@ describe('proposals', () => {
     expect(proposal.errors.join(' ')).toMatch(/Bekreftelsen/)
   })
 
-  it('adds a new site as a valid row and flags likely duplicates', () => {
+  it.each(['\n', '\r\n'])('adds a new site as a valid row and flags likely duplicates (%j)', eol => {
     const proposal = proposalFor({
       type: TYPE_OPTIONS.newSite, name: 'Fjordsenter Øst', operator: 'Fjord Data AS', operator_orgnr: '123 456 789', kommune: 'Bergen', place: 'Bergen',
       status: 'Planlagt', mw_planned: '20', mw_planned_basis: 'IT-kapasitet', power_status: 'Annonsert IT-kapasitet 20 MW.',
       description: 'Nytt anlegg omtalt i lokalavisen.', sources: 'https://example.com/fjord 2026-08-01',
     })
     expect(proposal.errors).toEqual([])
-    const applied = apply(proposal)
+    const inputCsv = csvText.replace(/\r?\n/g, eol)
+    const applied = applyProposal(inputCsv, proposal, { issueNumber: 42, today: '2026-10-16' })
     expect(applied.id).toBe('fjordsenter-ost')
     expect(applied.after).toMatchObject({ precision: 'place', operator_orgnr: '123456789', mw_planned_basis: 'it_capacity', note: 'Innmeldt via GitHub-sak #42.' })
-    expect(applied.csv.split('\r\n')).toHaveLength(csvText.split('\r\n').length + 1)
+    expect(readCsv(applied.csv).eol).toBe(eol)
+    expect(applied.csv.split(eol)).toHaveLength(inputCsv.split(eol).length + 1)
     const existing = rows.find(row => row.id === 'lefdal')
     expect(findDuplicates({ kind: 'new', changes: { name: existing.name, kommune: existing.kommune } }, rows).map(item => item.id)).toContain('lefdal')
   })
