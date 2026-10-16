@@ -310,7 +310,7 @@ test('the Klimacafé presentation is published next to the site and linked from 
   await link.click()
   await expect(page).toHaveURL(/\/datasenterbehov\/presentasjon\/$/)
   await expect(page).toHaveTitle(/Trenger vi datasentre\?/)
-  await expect(page.locator('svg[data-marpit-svg]')).toHaveCount(9)
+  await expect(page.locator('svg[data-marpit-svg]')).toHaveCount(8)
   await expect(page.locator('section').first()).toContainText('Trenger vi datasentre? Ja. Men hvor mye?')
   await expect(page.locator('section').nth(1).locator('[data-datacenter-buildup]')).toHaveAttribute('aria-label', /27 datasentre/)
   await expect(page.locator('section').nth(5).locator('.equation .term')).toHaveText([/^3 mill\./, /^220 W/, /^yrkesvekting/])
