@@ -164,6 +164,11 @@ describe('issue form', () => {
     expect(body).toContain('Kontrolleres manuelt')
     expect(body).toContain('<details>')
     expect(body).toContain('Innmelding: #2')
+    expect(body).toContain('Tildel saken til Copilot under Assignees')
+    expect(body).toContain('ikke en godkjenning av opplysningene')
+    expect(body).toContain('Ingen godkjenningsetikett trengs')
+    expect(body).toContain('utenfor kodeblokk')
+    expect(body).toContain('@copilot i PR-en')
     expect(body).not.toContain('fant ikke')
   })
 

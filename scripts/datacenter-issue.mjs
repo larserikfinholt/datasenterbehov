@@ -181,7 +181,9 @@ export function assessmentBody({ proposal, candidates = proposal.candidates, rel
     ...candidates.map(item => `- Mulig anlegg: ${safeInline(item.name, 80)}, ${safeUrl(siteLink(item.id))} (${item.reasons.join(', ')}).`),
     ...relatedIssues.map(issue => `- Mulig relatert innmelding: #${Number(issue.number)}.`),
     'Treff er forslag, ikke bekreftet identitet. Kildenes innhold og eventuelle tall må kontrolleres manuelt.',
-    `Oppdater CSV manuelt og opprett en PR med \`Innmelding: #${issueNumber}\` på en egen linje i PR-beskrivelsen. Legg eventuelt til \`Datasenter: <id>\` for direkte lenke etter publisering. Ikke bruk «Fixes» eller «Closes»; saken lukkes etter vellykket publisering.`,
+    'Vil du undersøke tipset videre? Tildel saken til Copilot under Assignees på GitHub, eller behandle den selv. Tildeling starter arbeidet, men er ikke en godkjenning av opplysningene. Ingen godkjenningsetikett trengs.',
+    `Dataendringer foreslås i en PR med \`Innmelding: #${issueNumber}\` på en egen linje utenfor kodeblokk i PR-beskrivelsen. Legg eventuelt til \`Datasenter: <id>\` for direkte lenke etter publisering. Ikke bruk «Fixes», «Closes» eller «Resolves»; saken lukkes etter vellykket publisering.`,
+    'Når Copilot har startet, gis videre instruksjoner med @copilot i PR-en. Nye kommentarer her oppdaterer kildeoversikten, men sendes ikke automatisk videre til skyagenten.',
     `Vurderingen inkluderer kommentarer fra personer. Kontroller siste opplysninger før merge. Sist vurdert ${checkedAt}.`,
   ]
   sections.push(`<details>\n<summary>For moderator</summary>\n\n${details.join('\n\n')}\n\n</details>`)

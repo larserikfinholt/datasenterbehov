@@ -180,12 +180,13 @@ Lenkene bygges i `src/report-links.ts`. Beskrivelsesfeltet samsvarer med `FORM_F
 | --- | --- | --- |
 | Ny, redigert eller gjenåpnet sak; etiketten `data` legges til | `datasenter-triage.yml` legger én takkekommentar og én kort vurdering som oppdateres på stedet. Boten finner lenker i tittel og beskrivelse og prøver inntil 3 av dem. Manglende navn eller kilder stopper ikke vurderingen. | `data`, `status: til-vurdering`; bare tom beskrivelse uten utfyllende kommentar gir `status: trenger-info` |
 | Kommentar opprettes, redigeres eller slettes | Kommentarer fra personer inngår i ny vurdering. Botkommentarer ignoreres. Nye opplysninger oppdaterer samme vurderingskommentar og lukker aldri PR-er. | Beholder eventuell `status: pr-opprettet` |
-| Moderator behandler | Moderator kontrollerer kildene, oppdaterer `data/datacenters.csv` manuelt og oppretter en vanlig PR med referansen beskrevet nedenfor. Kjør verifiseringen beskrevet ovenfor. Ingen automatisk CSV-endring eller PR-oppretting. | `status: til-vurdering` |
+| Moderator velger videre behandling | Tildel saken til Copilot under **Assignees** for videre kildeundersøkelse, forslag til dataendringer og PR. Du kan også behandle saken selv. Ingen godkjenningsetikett trengs; tildeling er ikke faktagodkjenning. | `status: til-vurdering` til en PR er knyttet til saken |
+| Copilot undersøker | Skyagenten følger `AGENTS.md`, kontrollerer kilder og relevante vedlegg, avklarer nytt eller eksisterende anlegg, foreslår kildebelagte endringer og kjører verifiseringen. Uten tilstrekkelig grunnlag forklares funn og mangler uten å gjette data. | uendret |
 | PR opprettes eller endres | `datasenter-pr.yml` knytter PR-en til innmeldingen. Avvises PR-en eller referansen fjernes, går saken tilbake til vurdering dersom ingen andre PR-er er knyttet til den. | `status: pr-opprettet` |
 | Merge | Gjøres manuelt etter gjennomgang av PR-en. Merge alene gir ingen melding til innsenderen. | uendret |
 | Publisert | `datasenter-published.yml` finner manuelt opprettede, flettede PR-er og kontrollerer at merge inngår i en vellykket Pages-publisering fra hovedgrenen. Boten svarer med lenke og lukker saken, også om PR-koblingskjøringen ikke rakk å kjøre. | `status: publisert` |
 
-I PR-beskrivelsen skriver moderator følgende på egne linjer:
+I PR-beskrivelsen skriver moderator eller Copilot følgende på egne linjer, utenfor kodeblokk:
 
 ```text
 Innmelding: #2
@@ -194,9 +195,19 @@ Datasenter: gm-hamar
 
 `Innmelding` er påkrevd for automatisk oppfølging. `Datasenter` er valgfritt og gir direkte lenke til et anlegg som finnes i den publiserte CSV-en; ellers lenkes det til kartet. Gjenta linjene ved flere saker eller anlegg. Referanser i kodeblokker ignoreres. Ikke bruk `Fixes #2` eller `Closes #2`: GitHub ville da lukket saken ved merge, før publiseringen er bekreftet.
 
+### Tildeling til Copilot
+
+Copilot-skyagenten må være aktivert for repoet og tilgjengelig for kontoen din. Velg **Assignees → Copilot** på innmeldingen. Det starter GitHubs egen agentflyt; det finnes ingen separat etikett eller lokal workflow som må startes først. Repoets `AGENTS.md` beskriver oppdraget, kildekravene og verifiseringen. En ekstra oppdragstekst er derfor normalt ikke nødvendig.
+
+Lokale editoragenter skal fortsatt ikke committe eller pushe. Bare skyagenten som er eksplisitt tildelt saken, kan pushe til sin egen PR-gren og opprette eller oppdatere PR-en. Moderator kontrollerer kilder, ukjente tall, mulige overlapp og PR-referansen før merge. Verken tildeling eller en ferdig PR betyr at dataene er godkjent.
+
+GitHub gir skyagenten tittel, beskrivelse og eksisterende kommentarer når den starter. Senere issue-kommentarer oppdaterer kildeoversikten, men videresendes ikke automatisk til agenten. Gi videre instruksjoner med `@copilot` i PR-en. GitHub Actions for Copilot-PR-er kan kreve **Approve and run workflows**; kontroller endringene før du godkjenner kjøring. Sjekk at PR-beskrivelsen har `Innmelding: #<nr>` og ingen lukkende referanse som `Fixes`, `Closes` eller `Resolves` med saksnummer.
+
+Den gamle etiketten `status: godkjent` er ikke en startknapp og skal fjernes fra repoet. Behold `data` på innmeldingen. En sak uten PR står til vurdering; etter PR-kobling og bekreftet publisering oppdaterer boten statusen.
+
 - **Ingen gjetting.** Moderator fyller bare inn kildebelagte opplysninger. Planlagt kapasitet krever grunnlag. Rader valideres med `parseSiteRows`, samme regler som pipelinen. Kildekonflikter noteres i `note` og under «Kildekontroll».
 - **`reviewed_at`** settes manuelt til datoen moderatoren gjennomgår raden mot kildene.
-- **Kildehjelp, ikke faktagodkjenning.** HTML leses med Cheerio for sidetittel, oppgitt dato og inntil fem PDF-lenker per kilde. Dokumentenes innhold hentes ikke automatisk. Datering er uverifisert metadata og overføres ikke til CSV. Mulige anleggstreff basert på navn, sted, kommune eller kildelenke vises bare som forslag i en sammenfoldet moderatordel. Ingen kapasitetstall utledes eller publiseres automatisk.
+- **Kildehjelp, ikke faktagodkjenning.** Kildeoversiktsboten leser HTML med Cheerio for sidetittel, oppgitt dato og inntil fem PDF-lenker per kilde. Den henter ikke dokumentenes innhold automatisk; videre dokumentgjennomgang gjøres av moderator eller en eksplisitt tildelt Copilot-skyagent. Datering er uverifisert metadata og overføres ikke til CSV. Mulige anleggstreff basert på navn, sted, kommune eller kildelenke vises bare som forslag i en sammenfoldet moderatordel. Publisering krever fortsatt moderatorens gjennomgang og merge.
 - **Upålitelig input.** Sakstekst, kommentarer, PR-beskrivelser og nettsider er upålitelige og settes aldri inn i shell-kommandoer. De vises escapet i botkommentarer. Kildesjekken følger bare http(s), avviser interne adresser og lenker med påloggingsinformasjon, venter maks 8 sekunder og leser maks 1 MB. En utilgjengelig kilde sendes til manuell kontroll, ikke tilbake som en mangel innsenderen må løse. Inntil 10 ulike lenker registreres, og inntil 3 hentes per vurdering.
 - **Idempotent.** Bare botens egne kommentarer med skjulte markører oppdateres. Fingeravtrykket omfatter tittel, beskrivelse og kommentarer fra personer; botens egne svar starter ingen ny vurdering. En vurdering som er blitt utdatert under kildehentingen, publiseres ikke.
 - **Endrede saker:** Moderator kontrollerer siste versjon av beskrivelsen og kildene før publisering. Feiler geokodingen for et nytt sted, rettes posisjonen manuelt i CSV-en.
@@ -205,7 +216,7 @@ Datasenter: gm-hamar
 ### Oppsett i GitHub
 
 1. *Settings → General → Features:* Issues er slått på.
-2. *Settings → Actions → General → Workflow permissions:* Boten trenger skrivetilgang til Issues for kommentarer og etiketter. PR-oppfølgingen trenger bare lesetilgang til PR-er. Ingen workflow skriver til kode eller oppretter PR-er.
+2. *Settings → Actions → General → Workflow permissions:* Kildeoversikts- og oppfølgingsboten trenger skrivetilgang til Issues for kommentarer og etiketter. PR-oppfølgingen trenger bare lesetilgang til PR-er. Disse workflowene skriver ikke til kode eller oppretter PR-er; Copilot-skyagenten er en separat GitHub-funksjon som startes ved tildeling.
 3. *Settings → Pages:* kilden er GitHub Actions, som før. Pages-bygget utløses av merge til `main`, fordi merge gjøres av et menneske. Hendelser fra `GITHUB_TOKEN` starter ikke nye workflows, men det har ingen betydning her.
 4. Ingen egen `DATA_BOT_TOKEN` trengs. `pull_request_target`-workflowen sjekker bare ut hovedgrenen med `persist-credentials: false`; PR-grenen sjekkes aldri ut og PR-tekst kjøres aldri som kode.
 5. Etikettene opprettes automatisk ved første innmelding, eller med «Run workflow» uten saksnummer.
