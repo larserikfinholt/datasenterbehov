@@ -170,32 +170,44 @@ Søk etter anlegg som manglet i utvalget, med utgangspunkt i Nkom-operatører ut
 
 ## Innmeldinger fra leserne
 
-Et banner over kartet gjør det tydelig at datasenterlisten er en felles dugnad og inviterer leseren til å bidra. Hvert anlegg har «Meld feil eller manglende data», og under listen står «Meld inn her». Alle innmeldingslenkene åpner skjemaet [.github/ISSUE_TEMPLATE/data-korreksjon.yml](.github/ISSUE_TEMPLATE/data-korreksjon.yml) i en ny fane. GitHub-konto kreves. Fra et anlegg fylles navn og type inn på forhånd. Skjemaet har bare fire felt: hva innmeldingen gjelder, navn på datasenteret, lenke til en kilde og beskrivelse. Beskrivelsen kan inneholde endringsforslag, flere kildelenker og bilder.
+Et banner over kartet inviterer leseren til å bidra med «Tips oss». Hvert anlegg har «Ny informasjon eller rettelse». Alle innmeldingslenkene åpner skjemaet [.github/ISSUE_TEMPLATE/data-korreksjon.yml](.github/ISSUE_TEMPLATE/data-korreksjon.yml) i en ny fane. GitHub-konto kreves. Skjemaet heter «Ny informasjon eller rettelse» og har bare GitHubs vanlige tittel og ett beskrivelsesfelt, uten prefiks eller kategorivalg. Beskrivelsen kan inneholde lenker og bilder. Navn og kildelenke er ikke påkrevd; også usikre tips er velkomne. Fra et anlegg fylles navnet inn i tittelen og en lenke til anlegget inn i beskrivelsen.
 
-Lenkene bygges i `src/report-links.ts`. Feltetikettene og valgene i skjemaet må stemme med `FORM_FIELDS` og `TYPE_OPTIONS` i `scripts/datacenter-issue.mjs`. Enhetstesten sjekker det. Det er ingen eldre saker som krever støtte for det tidligere skjemaet.
+Lenkene bygges i `src/report-links.ts`. Beskrivelsesfeltet samsvarer med `FORM_FIELDS` i `scripts/datacenter-issue.mjs`; testene sjekker skjemaet og lenkene. Tidligere skjemavarianter støttes ikke.
 
 ### Flyt og etiketter
 
 | Steg | Hva skjer | Etiketter |
 | --- | --- | --- |
-| Ny eller redigert sak | `datasenter-triage.yml` legger én takkekommentar (bare første gang) og én vurderingskommentar som oppdateres på stedet. Den sjekker de fire feltene, prøver inntil 3 kildelenker og ser etter mulige duplikater i kartet og i andre åpne saker. Ingen dataendringer utledes fra fritekst. | `data`, eventuelt typeetikett, `status: trenger-info` eller `status: til-vurdering` |
-| Moderator behandler | Moderator kontrollerer beskrivelsen og kildene, oppdaterer `data/datacenters.csv` manuelt og oppretter en PR med henvisning til saken. Kjør verifiseringen beskrevet ovenfor. Ikke bruk `status: godkjent`: den automatiske PR-flyten avviser fritekstinnmeldinger. | `status: til-vurdering` |
+| Ny, redigert eller gjenåpnet sak; etiketten `data` legges til | `datasenter-triage.yml` legger én takkekommentar og én kort vurdering som oppdateres på stedet. Boten finner lenker i tittel og beskrivelse og prøver inntil 3 av dem. Manglende navn eller kilder stopper ikke vurderingen. | `data`, `status: til-vurdering`; bare tom beskrivelse uten utfyllende kommentar gir `status: trenger-info` |
+| Kommentar opprettes, redigeres eller slettes | Kommentarer fra personer inngår i ny vurdering. Botkommentarer ignoreres. Nye opplysninger oppdaterer samme vurderingskommentar og lukker aldri PR-er. | Beholder eventuell `status: pr-opprettet` |
+| Moderator behandler | Moderator kontrollerer kildene, oppdaterer `data/datacenters.csv` manuelt og oppretter en vanlig PR med referansen beskrevet nedenfor. Kjør verifiseringen beskrevet ovenfor. Ingen automatisk CSV-endring eller PR-oppretting. | `status: til-vurdering` |
+| PR opprettes eller endres | `datasenter-pr.yml` knytter PR-en til innmeldingen. Avvises PR-en eller referansen fjernes, går saken tilbake til vurdering dersom ingen andre PR-er er knyttet til den. | `status: pr-opprettet` |
 | Merge | Gjøres manuelt etter gjennomgang av PR-en. Merge alene gir ingen melding til innsenderen. | uendret |
-| Publisert | Moderator svarer i saken med lenke til anlegget (`#site-<id>`) etter vellykket publisering og lukker saken. | `status: publisert` |
+| Publisert | `datasenter-published.yml` finner manuelt opprettede, flettede PR-er og kontrollerer at merge inngår i en vellykket Pages-publisering fra hovedgrenen. Boten svarer med lenke og lukker saken, også om PR-koblingskjøringen ikke rakk å kjøre. | `status: publisert` |
+
+I PR-beskrivelsen skriver moderator følgende på egne linjer:
+
+```text
+Innmelding: #2
+Datasenter: gm-hamar
+```
+
+`Innmelding` er påkrevd for automatisk oppfølging. `Datasenter` er valgfritt og gir direkte lenke til et anlegg som finnes i den publiserte CSV-en; ellers lenkes det til kartet. Gjenta linjene ved flere saker eller anlegg. Referanser i kodeblokker ignoreres. Ikke bruk `Fixes #2` eller `Closes #2`: GitHub ville da lukket saken ved merge, før publiseringen er bekreftet.
 
 - **Ingen gjetting.** Moderator fyller bare inn kildebelagte opplysninger. Planlagt kapasitet krever grunnlag. Rader valideres med `parseSiteRows`, samme regler som pipelinen. Kildekonflikter noteres i `note` og under «Kildekontroll».
 - **`reviewed_at`** settes manuelt til datoen moderatoren gjennomgår raden mot kildene.
-- **Upålitelig input.** Saksteksten og hentede nettsider er upålitelige. De leses bare av `scripts/datacenter-issue.mjs`, settes aldri inn i shell-kommandoer, og vises bare escapet i kommentarer. Det gjelder også om en AI-modell senere brukes i vurderingen. Kildesjekken følger bare http(s), avviser interne adresser, venter maks 8 sekunder og leser maks 1 MB. Den leser sideteksten og ser etter navn og tall. Den kan ikke bekrefte at kilden faktisk støtter påstanden. En kilde som ikke svarer, regnes som usikkerhet, ikke som feil.
-- **Idempotent.** Botens kommentarer kjennes igjen på skjulte markører og oppdateres i stedet for å legges til på nytt. Vurderingen kjøres ikke på nytt når innholdet er uendret.
+- **Kildehjelp, ikke faktagodkjenning.** HTML leses med Cheerio for sidetittel, oppgitt dato og inntil fem PDF-lenker per kilde. Dokumentenes innhold hentes ikke automatisk. Datering er uverifisert metadata og overføres ikke til CSV. Mulige anleggstreff basert på navn, sted, kommune eller kildelenke vises bare som forslag i en sammenfoldet moderatordel. Ingen kapasitetstall utledes eller publiseres automatisk.
+- **Upålitelig input.** Sakstekst, kommentarer, PR-beskrivelser og nettsider er upålitelige og settes aldri inn i shell-kommandoer. De vises escapet i botkommentarer. Kildesjekken følger bare http(s), avviser interne adresser og lenker med påloggingsinformasjon, venter maks 8 sekunder og leser maks 1 MB. En utilgjengelig kilde sendes til manuell kontroll, ikke tilbake som en mangel innsenderen må løse. Inntil 10 ulike lenker registreres, og inntil 3 hentes per vurdering.
+- **Idempotent.** Bare botens egne kommentarer med skjulte markører oppdateres. Fingeravtrykket omfatter tittel, beskrivelse og kommentarer fra personer; botens egne svar starter ingen ny vurdering. En vurdering som er blitt utdatert under kildehentingen, publiseres ikke.
 - **Endrede saker:** Moderator kontrollerer siste versjon av beskrivelsen og kildene før publisering. Feiler geokodingen for et nytt sted, rettes posisjonen manuelt i CSV-en.
 - **Kjør vurderingen på nytt:** «Run workflow» på *Datasenter – vurder innmelding* med saksnummer. Tomt saksnummer oppretter bare etikettene.
 
 ### Oppsett i GitHub
 
 1. *Settings → General → Features:* Issues er slått på.
-2. *Settings → Actions → General → Workflow permissions:* Boten trenger skrivetilgang til Issues for kommentarer og etiketter. Den nye innmeldingsflyten lager ikke PR-er automatisk.
+2. *Settings → Actions → General → Workflow permissions:* Boten trenger skrivetilgang til Issues for kommentarer og etiketter. PR-oppfølgingen trenger bare lesetilgang til PR-er. Ingen workflow skriver til kode eller oppretter PR-er.
 3. *Settings → Pages:* kilden er GitHub Actions, som før. Pages-bygget utløses av merge til `main`, fordi merge gjøres av et menneske. Hendelser fra `GITHUB_TOKEN` starter ikke nye workflows, men det har ingen betydning her.
-4. `DATA_BOT_TOKEN` er ikke nødvendig for den manuelle PR-flyten.
+4. Ingen egen `DATA_BOT_TOKEN` trengs. `pull_request_target`-workflowen sjekker bare ut hovedgrenen med `persist-credentials: false`; PR-grenen sjekkes aldri ut og PR-tekst kjøres aldri som kode.
 5. Etikettene opprettes automatisk ved første innmelding, eller med «Run workflow» uten saksnummer.
 6. Moderatorer er alle med skriv-, maintain- eller admintilgang til repoet.
 

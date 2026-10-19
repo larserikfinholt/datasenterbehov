@@ -1,35 +1,24 @@
-// Pure helpers for the datacenter issue flow: parse the issue form, turn it into a proposed CSV change,
-// apply it to data/datacenters.csv and render bot comments and PR bodies. No network or GitHub access here.
-// Everything that comes from an issue or a web page is untrusted: values are validated against the data model
-// and only rendered through the escaping helpers below.
 import { createHash } from 'node:crypto'
+import { load } from 'cheerio'
 import { parse } from 'csv-parse/sync'
-import { SITE_COLUMNS, parseIsoDate, parseSiteRows, withinNorway } from './datacenter-rows.mjs'
 
 export const SITE_URL = 'https://larserikfinholt.github.io/datasenterbehov/'
 export const BOT_LOGIN = 'github-actions[bot]'
-export const BRANCH_PREFIX = 'data/issue-'
 export const MAX_SOURCE_CHECKS = 3
 
 export const LABELS = {
   data: 'data',
-  newSite: 'type: nytt-datasenter',
-  correction: 'type: datakorrigering',
   needsInfo: 'status: trenger-info',
   review: 'status: til-vurdering',
-  approved: 'status: godkjent',
   prCreated: 'status: pr-opprettet',
   published: 'status: publisert',
 }
-export const STATUS_LABELS = [LABELS.needsInfo, LABELS.review, LABELS.approved, LABELS.prCreated, LABELS.published]
+export const STATUS_LABELS = [LABELS.needsInfo, LABELS.review, LABELS.prCreated, LABELS.published]
 export const LABEL_DEFINITIONS = [
   { name: LABELS.data, color: 'c5def5', description: 'Innmelding til datasenterkartet' },
-  { name: LABELS.newSite, color: '0e8a16', description: 'Forslag om nytt datasenter' },
-  { name: LABELS.correction, color: '1d76db', description: 'Rettelse eller tillegg til eksisterende datasenter' },
-  { name: LABELS.needsInfo, color: 'fbca04', description: 'Innmeldingen mangler opplysninger eller kilder' },
+  { name: LABELS.needsInfo, color: 'fbca04', description: 'Innmeldingen mangler en beskrivelse' },
   { name: LABELS.review, color: 'c2e0c6', description: 'Klar for manuell vurdering av moderator' },
-  { name: LABELS.approved, color: '5319e7', description: 'Godkjent av moderator; lager PR. Settes bare manuelt.' },
-  { name: LABELS.prCreated, color: 'bfd4f2', description: 'PR med dataendringen er opprettet' },
+  { name: LABELS.prCreated, color: 'bfd4f2', description: 'En PR er knyttet til innmeldingen; venter på publisering' },
   { name: LABELS.published, color: '006b75', description: 'Endringen er publisert på nettsiden' },
 ]
 
@@ -38,55 +27,24 @@ export const MARKERS = {
   ack: 'datasenter-bot:takk',
   assessment: 'datasenter-bot:vurdering',
   pr: 'datasenter-bot:pr',
-  error: 'datasenter-bot:feil',
   published: 'datasenter-bot:publisert',
-  issue: 'datasenter-bot:issue',
-  site: 'datasenter-bot:site',
 }
 
 /** Field ids and labels in .github/ISSUE_TEMPLATE/data-korreksjon.yml. The labels become `### headings` in the issue body. */
 export const FORM_FIELDS = {
-  type: 'Hva gjelder innmeldingen?',
-  datacenter: 'Navn på datasenteret',
-  sources: 'Lenke til en kilde',
   description: 'Beskrivelse',
 }
-export const TYPE_OPTIONS = {
-  correction: 'Rettelse av eksisterende datasenter',
-  supplement: 'Tilleggsinformasjon til eksisterende datasenter',
-  newSite: 'Nytt datasenter som mangler',
-  other: 'Annet',
-}
-export const STATUS_OPTIONS = { 'I drift': 'operating', 'Under bygging': 'construction', Planlagt: 'planned' }
-export const BASIS_OPTIONS = {
-  'IT-kapasitet': 'it_capacity',
-  Anleggskapasitet: 'facility_capacity',
-  Utbyggingspotensial: 'development_potential',
-  'Annonsert kapasitet, udefinert': 'announced_total',
-  'Planlagt nettilknytning': 'grid_connection',
-}
-export const COLUMN_LABELS = {
-  id: 'Id', name: 'Navn', operator: 'Operatør', operator_orgnr: 'Org.nr.', kommune: 'Kommune', place: 'Sted',
-  lat: 'Breddegrad', lon: 'Lengdegrad', precision: 'Posisjonspresisjon', status: 'Status',
-  mw_in_use: 'I bruk (MW)', mw_reserved: 'Nettreservasjon (MW)', mw_planned: 'Planlagt / kapasitet (MW)',
-  mw_planned_basis: 'Grunnlag for planlagt', mw_queued: 'Omsøkt / ikke tildelt (MW)', power_status: 'Hva tallene betyr',
-  source_urls: 'Kilder', source_dates: 'Kildedatoer', reviewed_at: 'Gjennomgått', note: 'Merknad',
-}
-const MW_FIELDS = ['mw_in_use', 'mw_reserved', 'mw_planned', 'mw_queued']
 const MAX_SOURCES = 10
-const ENERGY_UNIT = /\b(?:[kmgt]wh|kilowattimer|megawattimer|gigawattimer|terawattimer)\b/i
 
 export const normalizeEol = text => String(text ?? '').replace(/\r\n?/g, '\n')
 export const bodyHash = body => createHash('sha256').update(normalizeEol(body).trim()).digest('hex').slice(0, 16)
 export const siteLink = id => `${SITE_URL}#site-${id}`
-export const branchFor = issueNumber => `${BRANCH_PREFIX}${issueNumber}`
 
 /** Lowercase, ASCII-folded text for loose comparisons (æ→ae, ø→o, å→a). */
 export function fold(value) {
   return String(value ?? '').toLocaleLowerCase('nb-NO').replace(/æ/g, 'ae').replace(/ø/g, 'o').replace(/å/g, 'a')
     .normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, ' ').trim()
 }
-export const slugify = value => fold(value).replace(/ /g, '-').slice(0, 48).replace(/-+$/, '') || 'datasenter'
 
 /** Untrusted text as one escaped markdown line: no HTML, no mentions, no tables or links injected. */
 export function safeInline(value, max = 200) {
@@ -102,28 +60,10 @@ export function markerAttribute(body, name, key) {
   return match ? match[1] : null
 }
 
-/** Splits a rendered issue form into fields. Unknown headings stay part of the previous field; repeated headings are reported. */
 export function parseIssueForm(body) {
-  const ids = new Map(Object.entries(FORM_FIELDS).map(([id, label]) => [label, id]))
-  const fields = {}
-  const duplicates = []
-  let current = null
-  let lines = []
-  const flush = () => {
-    if (!current) return
-    if (current in fields) duplicates.push(current)
-    else fields[current] = cleanValue(lines.join('\n'))
-  }
-  for (const line of normalizeEol(body).split('\n')) {
-    const heading = /^###\s+(.+?)\s*$/.exec(line)
-    if (heading && ids.has(heading[1])) {
-      flush()
-      current = ids.get(heading[1])
-      lines = []
-    } else if (current) lines.push(line)
-  }
-  flush()
-  return { fields, duplicates, isForm: 'type' in fields && 'sources' in fields }
+  const text = normalizeEol(body).trim()
+  const isForm = /^### Beskrivelse\s*\n/.test(text)
+  return { fields: { description: cleanValue(isForm ? text.replace(/^### Beskrivelse\s*\n/, '') : text) }, isForm }
 }
 
 function cleanValue(value) {
@@ -133,34 +73,16 @@ function cleanValue(value) {
   return text === '_No response_' || text === 'None' ? '' : text
 }
 
-/** '' means no change, null means set to unknown, a string is a canonical MW number. */
-export function parseMwInput(value) {
-  const text = String(value ?? '').trim()
-  if (!text) return { value: undefined }
-  if (/^(ukjent|unknown|-)$/i.test(text)) return { value: null }
-  if (ENERGY_UNIT.test(text)) return { error: `«${text}» ser ut som energi. Feltet tar effekt i MW.` }
-  const number = text.replace(/\s*(mw|megawatt)$/i, '').replace(/\s/g, '').replace(',', '.')
-  if (!/^\d+(\.\d+)?$/.test(number)) return { error: `«${text}» er ikke et tall i MW. Bruk et tall eller «ukjent».` }
-  return { value: String(Number(number)) }
-}
-
 export function parseSources(text) {
   const sources = []
   const warnings = []
-  for (const line of normalizeEol(text).split('\n').map(line => line.trim()).filter(Boolean)) {
-    const match = /https?:\/\/[^\s<>"]+/i.exec(line)
-    if (!match) {
-      warnings.push(`Linjen «${line.slice(0, 80)}» i kildefeltet har ingen lenke og blir ikke brukt.`)
-      continue
-    }
+  for (const match of normalizeEol(text).matchAll(/https?:\/\/[^\s<>"`]+/gi)) {
+    let value = match[0].replace(/[.,;!?:\]>]+$/, '')
+    while (value.endsWith(')') && (value.match(/\)/g)?.length ?? 0) > (value.match(/\(/g)?.length ?? 0)) value = value.slice(0, -1)
     let url
-    try { url = new URL(match[0].replace(/[).,;>\]]+$/, '')) } catch { warnings.push(`Ugyldig lenke: ${line.slice(0, 80)}`); continue }
-    if (!/^https?:$/.test(url.protocol)) continue
-    const rest = line.slice(match.index + match[0].length)
-    const iso = /(\d{4}-\d{2}-\d{2})/.exec(rest)?.[1] ?? /(\d{1,2})\.(\d{1,2})\.(\d{4})/.exec(rest)?.slice(1).reverse().map(part => part.padStart(2, '0')).join('-') ?? ''
-    let date = ''
-    try { date = parseIsoDate(iso, url.href) ?? '' } catch { warnings.push(`Datoen ved ${url.href} er ugyldig og blir ikke brukt.`) }
-    if (!sources.some(source => source.url === url.href)) sources.push({ url: url.href, date })
+    try { url = new URL(value) } catch { warnings.push('En lenke kunne ikke leses. Moderator kan kontrollere den manuelt.'); continue }
+    if (url.username || url.password) { warnings.push('En lenke med påloggingsinformasjon blir ikke hentet.'); continue }
+    if (!sources.some(source => source.url === url.href)) sources.push({ url: url.href })
   }
   if (sources.length > MAX_SOURCES) {
     warnings.push(`Bare de ${MAX_SOURCES} første kildene blir brukt.`)
@@ -169,250 +91,119 @@ export function parseSources(text) {
   return { sources, warnings }
 }
 
-export function parseCoordinates(value) {
-  const text = String(value ?? '').trim()
-  if (!text) return { value: undefined }
-  const match = /^(-?\d+(?:[.,]\d+)?)\s*[,;\s]\s*(-?\d+(?:[.,]\d+)?)$/.exec(text)
-  const lat = match ? Number(match[1].replace(',', '.')) : NaN
-  const lon = match ? Number(match[2].replace(',', '.')) : NaN
-  if (!withinNorway(lat, lon)) return { error: `Koordinatene «${text}» er ikke breddegrad, lengdegrad i Fastlands-Norge.` }
-  return { value: { lat: String(lat), lon: String(lon) } }
-}
-
-/** Reads data/datacenters.csv as one record per line so a change only touches its own line. */
 export function readCsv(csvText) {
-  const eol = csvText.includes('\r\n') ? '\r\n' : '\n'
-  const trailing = /\r?\n$/.test(csvText)
-  const lines = normalizeEol(csvText).replace(/\n$/, '').split('\n')
-  const records = parse(csvText, { skip_empty_lines: true, relax_column_count: false })
-  if (records.length !== lines.length) throw new Error('data/datacenters.csv har felt over flere linjer; endringen må gjøres manuelt')
-  const header = records[0]
-  const rows = records.slice(1).map(values => Object.fromEntries(header.map((column, index) => [column, values[index]])))
-  return { eol, trailing, header, lines, rows }
+  return { rows: parse(csvText, { columns: true, skip_empty_lines: true }) }
 }
 
-export const csvField = value => /[",\r\n]/.test(value) || value !== value.trim() ? `"${value.replace(/"/g, '""')}"` : value
-export const csvLine = (header, row) => header.map(column => csvField(row[column] ?? '')).join(',')
-
-/** Finds the existing row an issue refers to: by the id at the start of the field, else by exact name. */
-export function findTarget(value, rows) {
-  const text = String(value ?? '').trim()
-  if (!text) return null
-  const id = /^([a-z0-9-]+)(?:\s|·|$)/.exec(text)?.[1]
-  return rows.find(row => row.id === id) ?? rows.find(row => fold(row.name) === fold(text) || fold(row.id) === fold(text)) ?? null
+export function humanComments(comments) {
+  return comments.filter(comment => comment.user?.type === 'User' && comment.user.login !== BOT_LOGIN && !comment.user.login.endsWith('[bot]'))
 }
 
-export function findDuplicates(proposal, rows) {
-  if (proposal.kind !== 'new') return []
-  const name = fold(proposal.changes.name)
-  const tokens = new Set(name.split(' ').filter(token => token.length >= 3))
-  const kommune = fold(proposal.changes.kommune)
-  const place = fold(proposal.changes.place)
-  const operator = fold(proposal.changes.operator)
-  const result = []
-  for (const row of rows) {
-    const rowTokens = new Set(fold(row.name).split(' ').filter(token => token.length >= 3))
-    const shared = [...tokens].filter(token => rowTokens.has(token)).length
+export function reportHash(issue, comments) {
+  return bodyHash(JSON.stringify([issue.title, normalizeEol(issue.body), humanComments(comments).map(comment => [comment.id, normalizeEol(comment.body)])]))
+}
+
+export function findCandidates(text, rows) {
+  const plain = ` ${fold(text)} `
+  const mentions = value => fold(value).length >= 4 && plain.includes(` ${fold(value)} `)
+  return rows.map(row => {
     const reasons = []
-    if (name && (fold(row.name) === name || (shared && shared / Math.min(tokens.size, rowTokens.size) >= 0.5))) reasons.push('likt navn')
-    if (kommune && fold(row.kommune) === kommune && place && fold(row.place) === place) reasons.push('samme sted og kommune')
-    else if (kommune && fold(row.kommune) === kommune && operator && fold(row.operator).includes(operator.split(' ')[0])) reasons.push('samme operatør i samme kommune')
-    if (reasons.length) result.push({ id: row.id, name: row.name, reasons })
-  }
-  return result
+    if (mentions(row.id) || mentions(row.name)) reasons.push('navn eller id er nevnt')
+    if (row.source_urls?.split('|').some(url => url && text.includes(url))) reasons.push('samme kildelenke')
+    if (mentions(row.place)) reasons.push('sted er nevnt')
+    if (mentions(row.kommune)) reasons.push('kommune er nevnt')
+    return { id: row.id, name: row.name, reasons }
+  }).filter(item => item.reasons.length).sort((left, right) => right.reasons.length - left.reasons.length).slice(0, 5)
 }
 
-/** Validates reports for manual review without inferring data changes from free text. */
-export function buildProposal(form, rows) {
-  const { fields } = form
-  const target = findTarget(fields.datacenter, rows)
-  const type = Object.entries(TYPE_OPTIONS).find(([, label]) => label === fields.type)?.[0] ?? 'other'
-  const parsedSources = parseSources(fields.sources)
+export function buildProposal(form, rows, { title = '', comments = [] } = {}) {
+  const description = form.fields.description ?? ''
+  const discussion = humanComments(comments).map(comment => comment.body ?? '')
+  const text = [title, description, ...discussion].join('\n\n')
+  const parsedSources = parseSources(text)
   const errors = []
-  if (!form.isForm) errors.push('Bruk skjemaet «Feil eller manglende data».')
-  if (!Object.values(TYPE_OPTIONS).includes(fields.type)) errors.push('Velg hva innmeldingen gjelder.')
-  if (!fields.datacenter?.trim()) errors.push('Oppgi navn på datasenteret.')
-  if (!parsedSources.sources.length) errors.push('Legg inn en lenke til en kilde.')
-  if (!fields.description?.trim()) errors.push('Legg inn en kort beskrivelse.')
-  for (const field of form.duplicates) errors.push(`Feltet «${FORM_FIELDS[field]}» står flere ganger i innmeldingen.`)
+  if (![description, ...discussion].some(value => value.trim())) errors.push('Legg inn en kort beskrivelse, her eller i en kommentar.')
   return {
-    kind: target ? 'update' : type === 'newSite' ? 'new' : 'other', type, target, targetId: target?.id ?? null,
-    changes: target ? {} : { name: fields.datacenter ?? '' }, sources: parsedSources.sources,
-    description: fields.description ?? '', errors, warnings: parsedSources.warnings, manualReview: true,
+    text, description, sources: parsedSources.sources, candidates: findCandidates(text, rows),
+    errors, warnings: parsedSources.warnings, manualReview: true,
   }
 }
 
-/** Applies a proposal to the CSV text. Throws when the result breaks the data model (parseSiteRows). */
-export function applyProposal(csvText, proposal, { issueNumber, today }) {
-  if (proposal.manualReview) throw new Error('Denne innmeldingen må behandles manuelt. Oppdater CSV og opprett en PR med henvisning til saken; fritekst blir ikke automatisk oversatt til dataendringer.')
-  if (proposal.errors.length) throw new Error(`Innmeldingen har uløste mangler:\n- ${proposal.errors.join('\n- ')}`)
-  if (proposal.kind === 'other') throw new Error('Innmeldingen viser ikke til et datasenter og kan ikke oversettes til en dataendring.')
-  const { eol, trailing, header, lines, rows } = readCsv(csvText)
-  if (header.join(',') !== SITE_COLUMNS.join(',')) throw new Error('Kolonnene i data/datacenters.csv er endret; oppdater datacenter-issue.mjs')
-  let before = null
-  let after
-  let lineIndex
-  if (proposal.kind === 'update') {
-    const index = rows.findIndex(row => row.id === proposal.targetId)
-    if (index < 0) throw new Error(`Fant ikke ${proposal.targetId} i data/datacenters.csv`)
-    before = rows[index]
-    after = { ...before, ...proposal.changes }
-    if (proposal.sources.length) {
-      after.source_urls = [before.source_urls, ...proposal.sources.map(source => source.url)].filter(Boolean).join('|')
-      after.source_dates = [before.source_dates, ...proposal.sources.map(source => source.date)].join('|')
+export function analyzeSourceText(html, baseUrl) {
+  const document = load(html)
+  document('script, style, nav, footer, header').remove()
+  const title = document('h1').first().text().trim() || document('title').text().trim()
+  const date = document('meta[property="article:published_time"], meta[name="date"], time[datetime]').first()
+  const reportedDate = date.attr('content') || date.attr('datetime') || ''
+  const documents = []
+  document('a[href]').each((_, element) => {
+    let url
+    try { url = new URL(document(element).attr('href'), baseUrl) } catch { return }
+    if (!/^https?:$/.test(url.protocol) || url.username || url.password || !/\.pdf$/i.test(url.pathname)) return
+    if (documents.length < 5 && !documents.some(item => item.url === url.href)) {
+      documents.push({ url: url.href, title: document(element).text().trim() || 'Dokument' })
     }
-    lineIndex = index + 1
-  } else {
-    const ids = new Set(rows.map(row => row.id))
-    const base = slugify(proposal.changes.name)
-    let id = base
-    for (let n = 2; ids.has(id); n++) id = `${base}-${n}`
-    after = Object.fromEntries(SITE_COLUMNS.map(column => [column, '']))
-    Object.assign(after, { id, precision: 'place' }, proposal.changes, {
-      source_urls: proposal.sources.map(source => source.url).join('|'),
-      source_dates: proposal.sources.map(source => source.date).join('|'),
-      note: `Innmeldt via GitHub-sak #${issueNumber}.`,
-    })
-    lineIndex = lines.length
-  }
-  after.reviewed_at = today
-  const nextLines = [...lines]
-  nextLines[lineIndex] = csvLine(header, after)
-  const csv = nextLines.join(eol) + (trailing ? eol : '')
-  parseSiteRows(csv)
-  return { csv, id: after.id, before, after }
-}
-
-/** Changed columns. Source dates are shown together with the source URLs, so they only count as a change of sources. */
-export function diffRows(before, after) {
-  const changed = SITE_COLUMNS.filter(column => (before?.[column] ?? '') !== (after[column] ?? ''))
-  const columns = changed.includes('source_dates') && !changed.includes('source_urls') ? changed.map(column => column === 'source_dates' ? 'source_urls' : column) : changed.filter(column => column !== 'source_dates')
-  return columns.map(column => ({ column, label: COLUMN_LABELS[column] }))
-}
-
-const optionLabel = (options, value) => Object.entries(options).find(([, code]) => code === value)?.[0]
-
-function cellValue(column, row) {
-  const value = row?.[column] ?? ''
-  if (value === '') return MW_FIELDS.includes(column) ? '*tom (ukjent)*' : '*tom*'
-  if (MW_FIELDS.includes(column)) return `${value.replace('.', ',')} MW`
-  if (column === 'status') return `${optionLabel(STATUS_OPTIONS, value) ?? ''} (\`${value}\`)`
-  if (column === 'mw_planned_basis') return `${optionLabel(BASIS_OPTIONS, value) ?? ''} (\`${value}\`)`
-  if (column === 'source_urls') {
-    const dates = row.source_dates.split('|')
-    return value.split('|').map((url, index) => `[${index + 1}](${new URL(url).href.replace(/\)/g, '%29')}) ${dates[index] || 'udatert'}`).join('<br>')
-  }
-  return safeInline(value, 160)
-}
-
-export function changeTable(before, after) {
-  const rows = before ? diffRows(before, after) : SITE_COLUMNS.filter(column => after[column] && column !== 'source_dates').map(column => ({ column, label: COLUMN_LABELS[column] }))
-  if (!rows.length) return '*Ingen endrede felt.*'
-  return before
-    ? ['| Felt | Før | Etter |', '| --- | --- | --- |', ...rows.map(row => `| ${row.label} | ${cellValue(row.column, before)} | ${cellValue(row.column, after)} |`)].join('\n')
-    : ['| Felt | Verdi |', '| --- | --- |', ...rows.map(row => `| ${row.label} | ${cellValue(row.column, after)} |`)].join('\n')
-}
-
-/** Finds what a fetched source says about the proposal. Absence is reported as uncertainty, never as an error. */
-export function analyzeSourceText(text, proposal) {
-  const plain = fold(String(text ?? '').replace(/<(script|style)[\s\S]*?<\/\1>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/&nbsp;|&#160;/g, ' '))
-  const names = [proposal.changes.name, proposal.target?.name, proposal.changes.operator ?? proposal.target?.operator, proposal.changes.place ?? proposal.target?.place]
-    .filter(Boolean).filter((value, index, all) => all.indexOf(value) === index)
-  const mentions = names.filter(name => fold(name) && plain.includes(fold(name)))
-  const numbers = MW_FIELDS.filter(field => proposal.changes[field]).map(field => {
-    const variants = [...new Set([proposal.changes[field], proposal.changes[field].replace('.', ' ')])].map(variant => variant.replace(/[.]/g, ' '))
-    const pattern = variants.map(variant => variant.replace(/ /g, '\\s')).join('|')
-    const near = unit => new RegExp(`(?:^|[^0-9 ])\\s?(?:${pattern})\\s?(?:${unit})\\b`).test(plain)
-    const found = near('mw|megawatt') ? 'mw' : new RegExp(`(?:^|\\D)(?:${pattern})(?:\\D|$)`).test(plain) ? 'number' : 'missing'
-    return { field, value: proposal.changes[field], found, energy: near('[kmgt]wh') }
   })
-  return { mentions, missingNames: names.filter(name => !mentions.includes(name)), numbers }
+  const text = (document('main, article').first().text() || document('body').text()).replace(/\s+/g, ' ').trim()
+  return { title, reportedDate, documents, text }
 }
 
 function sourceLine(check) {
   const url = safeUrl(check.url)
-  if (check.status !== 'ok') return `- ${url}: ${check.note ?? 'ikke tilgjengelig'}. Regnes som usikkerhet, ikke som feil.`
-  const parts = []
-  if (check.analysis) {
-    const { mentions, missingNames, numbers } = check.analysis
-    if (mentions.length) parts.push(`nevner ${mentions.map(name => `«${safeInline(name, 60)}»`).join(', ')}`)
-    if (missingNames.length) parts.push(`fant ikke ${missingNames.map(name => `«${safeInline(name, 60)}»`).join(', ')}`)
-    for (const number of numbers) {
-      const label = `${COLUMN_LABELS[number.field].replace(' (MW)', '')} ${number.value.replace('.', ',')} MW`
-      parts.push(number.found === 'mw' ? `fant ${label}` : number.found === 'number' ? `fant tallet for ${label}, men ikke sammen med MW` : `fant ikke tallet for ${label}`)
-      if (number.energy) parts.push(`tallet ${number.value.replace('.', ',')} står også sammen med en energienhet (Wh)`)
-    }
-  }
+  if (check.status !== 'ok') return `- ${url}: ${safeInline(check.note ?? 'kunne ikke hentes')}. Kontrolleres manuelt.`
+  const parts = ['tilgjengelig']
+  if (check.analysis?.title) parts.push(`«${safeInline(check.analysis.title, 160)}»`)
+  if (check.analysis?.reportedDate) parts.push(`dato oppgitt på siden: ${safeInline(check.analysis.reportedDate, 40)}`)
   if (check.note) parts.push(check.note)
-  return `- ${url}: tilgjengelig${parts.length ? `; ${parts.join('; ')}` : ''}.`
+  const documents = (check.analysis?.documents ?? []).map(item => `  - ${safeInline(item.title, 100)}: ${safeUrl(item.url)} (ikke innholdskontrollert)`)
+  return [`- ${url}: ${parts.join('; ')}.`, ...documents].join('\n')
 }
 
 export const ACK_BODY = `${marker(MARKERS.ack)}
-Takk for at du tok deg tid til å bidra! Vi kvalitetssikrer opplysningene før eventuell publisering. Hvis vi trenger mer informasjon, spør vi her. Du får også beskjed her når endringen er publisert, med lenke til oversikten.`
+Takk for tipset! Vi sjekker opplysningene før eventuell publisering og spør her hvis noe må avklares. Du får beskjed her når en tilknyttet endring er publisert.`
 
 export function assessmentStatus(proposal) {
   return proposal.errors.length ? LABELS.needsInfo : LABELS.review
 }
 
-export function assessmentBody({ proposal, preview, previewError, duplicates = [], relatedIssues = [], sourceChecks = [], hash, reapproval = false, checkedAt }) {
-  const target = proposal.target
-  const subject = proposal.kind === 'update'
-    ? `Eksisterende datasenter \`${target.id}\` (${safeInline(target.name, 80)}), ${safeUrl(siteLink(target.id))}`
-    : proposal.kind === 'new' ? `Nytt datasenter «${safeInline(proposal.changes.name ?? 'uten navn', 80)}»` : 'Uklart hvilket datasenter innmeldingen gjelder'
-  const ready = !proposal.errors.length && !previewError
+export function assessmentBody({ proposal, candidates = proposal.candidates, relatedIssues = [], sourceChecks = [], hash, issueNumber, checkedAt }) {
   const sections = [
-    `${marker(MARKERS.assessment, `sha=${hash}`)}`,
-    '### Automatisk førstevurdering',
-    'Dette er en maskinell sjekk, ikke en godkjenning. En moderator kontrollerer opplysningene mot kildene før noe publiseres.',
+    marker(MARKERS.assessment, `sha=${hash}`),
+    '### Automatisk oversikt',
+    proposal.errors.length ? proposal.errors.join('\n') : 'Tipset er klart for manuell vurdering. Du trenger ikke vite om det gjelder et nytt eller eksisterende datasenter.',
   ]
-  if (reapproval) sections.push('> **Innmeldingen er endret etter godkjenning.** Godkjenningen og en eventuell PR er trukket tilbake. Det endrede innholdet må godkjennes på nytt.')
-  sections.push(`**Gjelder:** ${subject}\n**Vurdering:** ${ready ? 'Klar for manuell vurdering.' : 'Trenger mer informasjon.'}`)
-  const problems = [...proposal.errors]
-  if (previewError) problems.push(`Endringen gir en ugyldig rad i datafilen: ${previewError}`)
-  if (problems.length) sections.push(`#### Må avklares\n${problems.map(problem => `- ${safeInline(problem, 300)}`).join('\n')}\n\nRett opp ved å redigere innmeldingen. Vurderingen oppdateres da automatisk.`)
-  if (preview) sections.push(`#### Foreslått endring\n${changeTable(preview.before, preview.after)}\n\n${preview.before ? '' : 'Id og posisjon kan justeres i PR-en før publisering. '}«Gjennomgått» settes til datoen for godkjenning.`)
-  if (proposal.description) sections.push(`#### Innsenders begrunnelse\n> ${safeInline(proposal.description, 600)}`)
-  const sources = proposal.kind === 'update' && !proposal.sources.length ? [] : sourceChecks
-  sections.push(`#### Kilder (inntil ${MAX_SOURCE_CHECKS} sjekket automatisk)\n${sources.length ? sources.map(sourceLine).join('\n') : '*Ingen nye kilder å sjekke.*'}\n\nSjekken leser bare sideteksten og ser etter navn og tall. Den kan ikke bekrefte at kilden faktisk støtter påstanden.`)
-  const uncertainty = [...proposal.warnings]
-  if (proposal.changes.mw_planned && !proposal.changes.mw_planned_basis && proposal.target?.mw_planned_basis) uncertainty.push('Det planlagte tallet beholder dagens grunnlag. Kontroller at kilden beskriver samme type kapasitet.')
-  if (uncertainty.length) sections.push(`#### Usikkerhet\n${uncertainty.map(item => `- ${safeInline(item, 300)}`).join('\n')}`)
-  const related = [...duplicates.map(item => `- Mulig duplikat i kartet: \`${item.id}\` (${safeInline(item.name, 80)}): ${item.reasons.join(', ')}`), ...relatedIssues.map(issue => `- Annen åpen innmelding om samme anlegg: #${Number(issue.number)}`)]
-  if (related.length) sections.push(`#### Mulige duplikater\n${related.join('\n')}`)
-  sections.push(proposal.manualReview
-    ? `<sub>Moderator: kontroller beskrivelsen og kildene, oppdater CSV manuelt og opprett en PR med henvisning til saken. Etiketten \`${LABELS.approved}\` skal ikke brukes for dette skjemaet. Sist vurdert ${checkedAt}.</sub>`
-    : `<sub>Moderator: kontroller kildene, rett eventuelt feltene i innmeldingen, og sett etiketten \`${LABELS.approved}\` for å lage en PR. Sist vurdert ${checkedAt}.</sub>`)
+  if (sourceChecks.length) sections.push(`#### Kilder\n${sourceChecks.map(sourceLine).join('\n')}`)
+  else sections.push('Ingen kildelenker funnet. Det er ikke til hinder for at en moderator vurderer tipset.')
+  const unchecked = proposal.sources.length - sourceChecks.length
+  if (unchecked > 0) sections.push(`${unchecked} flere lenker er ikke hentet automatisk; de finnes i innmeldingen eller kommentarene.`)
+  if (proposal.warnings.length) sections.push(proposal.warnings.map(item => `- ${safeInline(item, 200)}`).join('\n'))
+  const details = [
+    ...candidates.map(item => `- Mulig anlegg: ${safeInline(item.name, 80)}, ${safeUrl(siteLink(item.id))} (${item.reasons.join(', ')}).`),
+    ...relatedIssues.map(issue => `- Mulig relatert innmelding: #${Number(issue.number)}.`),
+    'Treff er forslag, ikke bekreftet identitet. Kildenes innhold og eventuelle tall må kontrolleres manuelt.',
+    `Oppdater CSV manuelt og opprett en PR med \`Innmelding: #${issueNumber}\` på en egen linje i PR-beskrivelsen. Legg eventuelt til \`Datasenter: <id>\` for direkte lenke etter publisering. Ikke bruk «Fixes» eller «Closes»; saken lukkes etter vellykket publisering.`,
+    `Vurderingen inkluderer kommentarer fra personer. Kontroller siste opplysninger før merge. Sist vurdert ${checkedAt}.`,
+  ]
+  sections.push(`<details>\n<summary>For moderator</summary>\n\n${details.join('\n\n')}\n\n</details>`)
   return sections.join('\n\n')
 }
 
-export function pullRequestTitle(issueNumber, applied) {
-  return `Data: ${applied.before ? 'oppdater' : 'legg til'} ${applied.id} (#${issueNumber})`
+export function parsePullLinks(body) {
+  const text = normalizeEol(body).replace(/^(`{3,}|~{3,})[^\n]*\n[\s\S]*?^\1[^\n]*$/gm, '')
+  const issues = [...text.matchAll(/^Innmelding:[ \t]*#([1-9]\d*)[ \t]*$/gmi)].map(match => Number(match[1])).filter(Number.isSafeInteger)
+  const sites = [...text.matchAll(/^Datasenter:[ \t]*([a-z0-9]+(?:-[a-z0-9]+)*)[ \t]*$/gm)].map(match => match[1])
+  return { issues: [...new Set(issues)], sites: [...new Set(sites)] }
 }
 
-export function pullRequestBody({ issueNumber, proposal, applied, hash, approvedBy, runUrl }) {
-  const sources = applied.after.source_urls.split('|').map((url, index) => {
-    const date = applied.after.source_dates.split('|')[index]
-    const isNew = proposal.sources.some(source => source.url === url)
-    return `- ${safeUrl(url)} (${date || 'udatert'})${isNew ? ' **ny**' : ''}`
-  })
-  const uncertainty = [...proposal.warnings]
-  if (!proposal.sources.some(source => source.date)) uncertainty.push('Ingen av de nye kildene har oppgitt publiseringsdato.')
-  return [
-    marker(MARKERS.issue, `issue=${issueNumber} sha=${hash}`),
-    marker(MARKERS.site, `site=${applied.id}`),
-    `Dataendring fra innmelding #${issueNumber}, godkjent av @${approvedBy}. ${applied.before ? `Oppdaterer \`${applied.id}\`.` : `Legger til nytt datasenter \`${applied.id}\`.`}`,
-    `**Begrunnelse fra innsender:**\n> ${safeInline(proposal.description, 600)}`,
-    `### ${applied.before ? 'Før og etter' : 'Ny rad'}\n${changeTable(applied.before, applied.after)}`,
-    `### Kilder\n${sources.join('\n')}`,
-    uncertainty.length ? `### Usikkerhet\n${uncertainty.map(item => `- ${safeInline(item, 300)}`).join('\n')}` : '',
-    `### Kontroll\n- Validering, datapipeline, enhetstester, bygg og e2e-test av kartet kjørte i ${runUrl}.\n- Forhåndsvisning: skjermbilder av kartet (desktop og mobil) ligger som artefakt \`kart-forhandsvisning\` på samme kjøring.\n- Merge gjøres manuelt. Saken #${issueNumber} får beskjed og lukkes først når GitHub Pages er publisert.`,
-    'Endres innmeldingen etter godkjenning, lukkes denne PR-en og endringen må godkjennes på nytt.',
-  ].filter(Boolean).join('\n\n')
+export function isPublishRun(run, defaultBranch) {
+  return run?.conclusion === 'success' && ['push', 'workflow_dispatch'].includes(run.event) && run.head_branch === defaultBranch
 }
 
-export function publishedBody(siteId) {
-  return `${marker(MARKERS.published, `site=${siteId}`)}
-Endringen er publisert. Se datasenteret i oversikten: ${safeUrl(siteLink(siteId))}
+export function includesMerge(comparison) {
+  return ['ahead', 'identical'].includes(comparison?.status)
+}
 
-Takk for bidraget!`
+export function publishedBody(siteIds = []) {
+  const links = siteIds.length ? siteIds.map(id => safeUrl(siteLink(id))).join('\n') : safeUrl(`${SITE_URL}#kart`)
+  return `${marker(MARKERS.published)}\nEndringen er publisert. Se oversikten:\n${links}\n\nTakk for bidraget!`
 }

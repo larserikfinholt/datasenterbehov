@@ -1,45 +1,11 @@
-name: Feil eller manglende data
-description: Meld inn et nytt datasenter, en rettelse eller tilleggsinformasjon til datasenterkartet.
-title: "[Data] "
+name: Ny informasjon eller rettelse
+description: Tips oss om et datasenter, nye opplysninger eller noe som bør rettes.
 labels: ["data"]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Takk for at du bidrar! Vi kontrollerer opplysningene mot kildene før de publiseres, og svarer i denne saken.
-
-  - type: dropdown
-    id: type
-    attributes:
-      label: Hva gjelder innmeldingen?
-      options:
-        - Rettelse av eksisterende datasenter
-        - Tilleggsinformasjon til eksisterende datasenter
-        - Nytt datasenter som mangler
-        - Annet
-    validations:
-      required: true
-
-  - type: input
-    id: datacenter
-    attributes:
-      label: Navn på datasenteret
-      placeholder: "OSL-Hamar"
-    validations:
-      required: true
-
-  - type: input
-    id: sources
-    attributes:
-      label: Lenke til en kilde
-      placeholder: "https://..."
-    validations:
-      required: true
-
   - type: textarea
     id: description
     attributes:
       label: Beskrivelse
-      description: Beskriv hva som bør endres eller legges til. Du kan også legge inn flere kildelenker og bilder her.
+      description: Hva har du funnet? Legg gjerne ved lenker eller bilder. Det går fint om du er usikker.
     validations:
       required: true

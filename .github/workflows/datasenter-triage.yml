@@ -1,12 +1,14 @@
 name: Datasenter – vurder innmelding
 
-# Første, automatiske vurdering av innmeldinger fra skjemaet «Feil eller manglende data».
+# Automatisk vurdering av innmeldinger og nye opplysninger i kommentarer.
 # Billig og rask: ingen bygg, bare parsing av saken, sjekk av inntil tre kilder og oppdatering av én kommentar.
 # Saksteksten er upålitelig input. Den leses bare av scripts/issue-bot.mjs og settes aldri inn i shell-kommandoer.
 
 on:
   issues:
-    types: [opened, edited, reopened]
+    types: [opened, edited, reopened, labeled]
+  issue_comment:
+    types: [created, edited, deleted]
   workflow_dispatch:
     inputs:
       issue:
@@ -16,7 +18,6 @@ on:
 permissions:
   contents: read
   issues: write
-  pull-requests: write
 
 concurrency:
   group: datasenter-issue-${{ github.event.issue.number || inputs.issue || 'labels' }}
@@ -27,15 +28,17 @@ jobs:
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (!github.event.issue.pull_request &&
-       (contains(github.event.issue.body, '### Hva gjelder innmeldingen?') || contains(github.event.issue.labels.*.name, 'data')))
+        (github.event_name != 'issue_comment' || github.event.comment.user.type == 'User') &&
+        (github.event.action != 'labeled' || github.event.label.name == 'data') &&
+        (contains(github.event.issue.body, '### Beskrivelse') || contains(github.event.issue.labels.*.name, 'data')))
     runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
       GITHUB_TOKEN: ${{ github.token }}
-      PR_TOKEN: ${{ secrets.DATA_BOT_TOKEN }}
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.repository.default_branch }}
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:

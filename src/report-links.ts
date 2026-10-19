@@ -2,13 +2,6 @@ export const PROJECT_REPO = 'https://github.com/larserikfinholt/datasenterbehov'
 export const SITE_URL = 'https://larserikfinholt.github.io/datasenterbehov/'
 export const REPORT_TEMPLATE = 'data-korreksjon.yml'
 
-/** Option texts in the `type` dropdown of .github/ISSUE_TEMPLATE/data-korreksjon.yml. */
-export const REPORT_TYPES = {
-  correction: 'Rettelse av eksisterende datasenter',
-  supplement: 'Tilleggsinformasjon til eksisterende datasenter',
-  newSite: 'Nytt datasenter som mangler',
-} as const
-
 export const siteUrl = (id: string) => `${SITE_URL}#site-${id}`
 
 function issueUrl(fields: Record<string, string>) {
@@ -17,9 +10,9 @@ function issueUrl(fields: Record<string, string>) {
 
 /** Prefilled issue form for an existing data center. */
 export function reportSiteUrl(site: { id: string, name: string }) {
-  return issueUrl({ title: `[Data] ${site.name}`, type: REPORT_TYPES.correction, datacenter: site.name })
+  return issueUrl({ title: site.name, description: `Gjelder ${site.name}: ${siteUrl(site.id)}\n\n` })
 }
 
 export function reportNewSiteUrl() {
-  return issueUrl({ title: '[Nytt datasenter] ', type: REPORT_TYPES.newSite })
+  return issueUrl({})
 }
