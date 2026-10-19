@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-10-16T09:03:44.404Z",
+  "generatedAt": "2026-10-19T13:43:34.199Z",
   "provenance": {
-    "generatedAt": "2026-10-16T09:03:44.404Z",
+    "generatedAt": "2026-10-19T13:43:34.199Z",
     "nkomFetchedAt": "2026-10-14T12:52:44.929Z",
-    "inputsSha256": "8e3e9a5afeca7b1656ec3b343330cbce54a688d6b7a43e5f88faace1ec4fe69e",
+    "inputsSha256": "ea6f388cfb17464ab54fc97c39846b3ceac5fddfcec397c730f6fd66c317ad5e",
     "inputs": {
-      "data/datacenters.csv": "eeacf301f2db0a9b4b0069229c95e43859e59b25017bcc68a4a31cdc8485c177",
+      "data/datacenters.csv": "5c8f9f9d735540c4677fd4eb4d18d8c67e401b2f476140bd5f765e6319a42745",
       "data/sources/nkom-operatorer.csv": "482c5e4b2476aa60cc26839258e27bac463a24829852a96362ca79a0aa0de2b1",
       "data/sources/brreg-enheter.json": "e63b09b7ddc6c5ea84e3aca8b5d26185f883381630ac34c43aee78f53c451517",
       "data/sources/nkom-totals.json": "5990c41b0ea1705e76cdb118e2d43b078b4a931f8641a1886cc3cee12fab8bac",
@@ -1286,6 +1286,36 @@
       "cryptoMining": false,
       "x": 67.517,
       "y": 529.906
+    },
+    {
+      "id": "kiseaasen-skien",
+      "name": "Kiseåsen (Skien)",
+      "operator": "Coudberry Develop",
+      "operator_orgnr": "",
+      "kommune": "Skien",
+      "place": "Skien",
+      "lat": 59.2096,
+      "lon": 9.609,
+      "precision": "kommune",
+      "status": "planned",
+      "mw_in_use": null,
+      "mw_reserved": null,
+      "mw_planned": null,
+      "mw_planned_basis": null,
+      "mw_queued": null,
+      "power_status": "Ingen effekt oppgitt; varselet oppgir bare areal og fotavtrykk; ikke nettreservasjon",
+      "source_urls": [
+        "https://www.skien.kommune.no/politikk/kunngjoeringer/varsel-om-oppstart-av-detaljregulering-kiseaasen"
+      ],
+      "source_dates": [
+        "2026-08-24"
+      ],
+      "reviewed_at": "2026-10-19",
+      "note": "Forskningsspor lagt til 19.10.2026 etter innmelding: Skien kommune varsler oppstart av detaljregulering for Kiseåsen (gbnr. 11/1; Norconsult på vegne av Coudberry Develop; frist for merknader 10.10.2026); varslingsområde ca. 250 daa i kommuneplanens næringsområde N1 Kisekollen; foreløpig konsept har tre datasenterenheter med samlet fotavtrykk ca. 37 000 m² og byggehøyde ca. 15 m; ingen MW oppgitt; reguleringsvarsel er ikke vedtatt plan og ikke bekreftet nettkapasitet; posisjonen er omtrentlig midtpunkt i Skien kommune og ikke tomta; ikke sjekket mot Gromstul og Bolvik; det er ikke dokumentert at Kiseåsen er samme tomt som noen av dem",
+      "nkomRegistered": false,
+      "cryptoMining": false,
+      "x": 132.367,
+      "y": 557.448
     }
   ],
   "unmappedOperators": [

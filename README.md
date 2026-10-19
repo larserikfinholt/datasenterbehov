@@ -96,7 +96,7 @@ Beregningsprinsippene er videreført, men ingen dashboardkode er portert. Mac-ve
 
 ## Datasenterkart
 
-Kartet under introduksjonen viser et kildebelagt utvalg av 27 anlegg og prosjekter i Fastlands-Norge, ikke et fullstendig register. SVG-kystlinjen og anleggsposisjonene beregnes ved bygging; siden laster verken kartbibliotek eller kartdata over nettverket. Listen kan sorteres etter største oppgitte MW, navn eller status. Kart og liste deler markering ved peker og tastaturfokus; Enter eller mellomrom på en kartmarkør åpner den tilhørende listeposisjonen. Markører med radius under 8 enheter får et usynlig treffområde (`circle.marker-hit`, radius 10) bak den synlige sirkelen, slik at små prikker kan treffes med peker uten at sirkelarealet endres. Treffområdet er ikke fokuserbart; tastaturfokus går alltid til den synlige markøren.
+Kartet under introduksjonen viser et kildebelagt utvalg av 28 anlegg og prosjekter i Fastlands-Norge, ikke et fullstendig register. SVG-kystlinjen og anleggsposisjonene beregnes ved bygging; siden laster verken kartbibliotek eller kartdata over nettverket. Listen kan sorteres etter største oppgitte MW, navn eller status. Kart og liste deler markering ved peker og tastaturfokus; Enter eller mellomrom på en kartmarkør åpner den tilhørende listeposisjonen. Markører med radius under 8 enheter får et usynlig treffområde (`circle.marker-hit`, radius 10) bak den synlige sirkelen, slik at små prikker kan treffes med peker uten at sirkelarealet endres. Treffområdet er ikke fokuserbart; tastaturfokus går alltid til den synlige markøren.
 
 ```sh
 npm run data:datacenters          # regenerer fra cacher; nett bare ved nye steder eller manglende cache
@@ -116,6 +116,7 @@ npm run data:datacenters:refresh  # henter Nkom, Brønnøysund og geokoder på n
 - Google Gromstul i Skien har 240 MW innvilget nettkapasitet ifølge Datacenter Forum (12.02.2024) og NRK (20.04.2025), ikke dokumentert faktisk last. `mw_queued: 840` er historisk rapportert av NRK 20.04.2025; Datacenter Forum oppga 860 MW som tidligere behov, og avviket er ikke avklart. Det er uavklart om de tildelte 240 MW inngår i 840 MW eller kommer i tillegg. Ingen total utledes, og hele køtallet beskrives ikke som neste byggetrinn. Kildedato og overlappsforbehold beholdes i merknaden; dette er ikke verifisert som dagens Statnett-kø. Campus er fortsatt under bygging i dette utvalget; planlagt oppstart er ikke dokumentasjon på faktisk drift.
 - Frier Vest i Bamble: BW Veloras pressemelding 29.05.2026 oppgir omtrent 250 MW planlagt kapasitet (`announced_total`), ikke en verifisert reservasjon. Molandsmoen i Fyresdal: kommunen oppgir 365 MW planlagt nettilknytning totalt (`grid_connection`), hvorav 140 MW tildelt og 225 MW i kø (`mw_queued`, oppdatert 27.08.2026). Digi omtaler påbegynt bygging 24.09.2026. Både reservasjonen og køtallet inngår i 365 MW og skal ikke legges til totalen. Køtallet er ikke verifisert som dagens Statnett-kø. Posisjonene er Kartverkets omtrentlige stedsposisjoner ved Rafnes og Molandsmoen, ikke verifiserte bygningstomter.
 - Forskningsspor Telemark (lagt til 14.10.2026, alle `planned`): HER01 Herøya i Porsgrunn (Polar, 40 MW `it_capacity` fra pressemelding 12.05.2026; lokasjonssiden oppgir 41 MW IT og 100 MW energi), Nscale/Løvenskiold-Fossum ved Bolvik i Skien (ingen tildeling, 576 MW omsøkt ifølge E24 16.09.2026) og Nscales nabotomt til Google på Gromstul (96 MW omsøkt ifølge NRK 29.01.2026). De to Skien-radene har ukjent kapasitet og vises som svarte prikker; køtallene er søknader, ikke reservasjoner, og summeres ikke med Googles tall. Nabotomten deler Gromstul-punktet med Google, så kartet har to overlappende punkter der. Grenland transformatorstasjon er bevisst ikke kartfestet.
+- Kiseåsen i Skien (lagt til 19.10.2026 etter innmelding, `planned`): Skien kommunes varsel om oppstart av detaljregulering (24.08.2026) gjelder et datasenteranlegg for Coudberry Develop på gbnr. 11/1, ca. 250 daa i næringsområde N1 Kisekollen, med tre enheter og ca. 37 000 m² fotavtrykk. Varselet oppgir ingen MW, så effekten står som ukjent. Posisjonen er omtrentlig midtpunkt i Skien kommune (`kommune`), ikke tomta. Det er ikke dokumentert at Kiseåsen er samme tomt som Gromstul eller Bolvik.
 - MW for Bulk N01, Vaultica OSL02, Tydal og Røros står som ukjent fremfor å bruke ubekreftede tall. Tydal kunne ikke leses maskinelt 14.10. eller 16.10.2026 og har tom `reviewed_at`; Bulk-sidene ble lest 16.10.2026. Utvalget utelater fortsatt andre prosjekter; manglende rad betyr ikke at et prosjekt ikke finnes.
 
 ### Kildekontroll 14.10.2026
@@ -166,7 +167,7 @@ Søk etter anlegg som manglet i utvalget, med utgangspunkt i Nkom-operatører ut
   - **Andre Nkom-operatører:** Bitdeer, Datafjellet, Net Zero Compute, Odin Green DC, Datacity, Troll Housing og andre er ikke kontrollert. Søket ble strupet, og ingen kilde med plassering ble lest.
   - **Tydal:** siden svarte ikke.
   - **datacentermap.com:** avviste forespørslene (429).
-- 27 rader er fortsatt et utvalg; Statnett-listene er ikke importert.
+- 28 rader er fortsatt et utvalg; Statnett-listene er ikke importert.
 
 ## Innmeldinger fra leserne
 
