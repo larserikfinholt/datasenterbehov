@@ -60,6 +60,28 @@ describe('bundled datacenter dataset', () => {
     expect(dataset.sites.filter(site => site.id === 'edgeconnex-fyresdal')).toHaveLength(1)
   })
 
+  it('keeps Kiseåsen separate from Gromstul and Bolvik without treating its concept as allocated power', () => {
+    const site = dataset.sites.find(site => site.id === 'cloudberry-kiseasen')
+    expect(site).toMatchObject({
+      kommune: 'Skien', status: 'planned', precision: 'place',
+      lat: 59.27734, lon: 9.53374,
+      mw_in_use: null, mw_reserved: null, mw_planned: 160,
+      mw_planned_basis: 'facility_capacity', mw_queued: null,
+      reviewed_at: '2026-10-22',
+    })
+    expect(maxMw(site!)).toBe(160)
+    expect(site?.power_status).toContain('120 MW IT-effekt')
+    expect(site?.note).toContain('plan-ID 2026009')
+    expect(site?.note).toContain('fremtidig operatør er ikke avklart')
+    expect(site?.source_urls).toContain('https://www.skien.kommune.no/media/oc5a0yku/kiseaasen_planprogram.pdf')
+    for (const id of ['google-skien', 'nscale-gromstul', 'nscale-bolvik']) {
+      const existing = dataset.sites.find(site => site.id === id)
+      expect(existing).toBeDefined()
+      expect([existing?.lat, existing?.lon]).not.toEqual([site?.lat, site?.lon])
+    }
+    expect(dataset.sites.filter(site => site.id === 'cloudberry-kiseasen')).toHaveLength(1)
+  })
+
   it('generates numeric queued MW from the curated CSV and preserves empty fields as null', () => {
     const rows = parse(readFileSync(new URL('../data/datacenters.csv', import.meta.url), 'utf8'), { columns: true, skip_empty_lines: true, trim: true }) as { id: string, mw_queued: string }[]
     expect(rows).toHaveLength(dataset.sites.length)

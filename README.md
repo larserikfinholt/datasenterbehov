@@ -96,7 +96,7 @@ Beregningsprinsippene er videreført, men ingen dashboardkode er portert. Mac-ve
 
 ## Datasenterkart
 
-Kartet under introduksjonen viser et kildebelagt utvalg av 27 anlegg og prosjekter i Fastlands-Norge, ikke et fullstendig register. SVG-kystlinjen og anleggsposisjonene beregnes ved bygging; siden laster verken kartbibliotek eller kartdata over nettverket. Listen kan sorteres etter største oppgitte MW, navn eller status. Kart og liste deler markering ved peker og tastaturfokus; Enter eller mellomrom på en kartmarkør åpner den tilhørende listeposisjonen. Markører med radius under 8 enheter får et usynlig treffområde (`circle.marker-hit`, radius 10) bak den synlige sirkelen, slik at små prikker kan treffes med peker uten at sirkelarealet endres. Treffområdet er ikke fokuserbart; tastaturfokus går alltid til den synlige markøren.
+Kartet under introduksjonen viser et kildebelagt utvalg av 28 anlegg og prosjekter i Fastlands-Norge, ikke et fullstendig register. SVG-kystlinjen og anleggsposisjonene beregnes ved bygging; siden laster verken kartbibliotek eller kartdata over nettverket. Listen kan sorteres etter største oppgitte MW, navn eller status. Kart og liste deler markering ved peker og tastaturfokus; Enter eller mellomrom på en kartmarkør åpner den tilhørende listeposisjonen. Markører med radius under 8 enheter får et usynlig treffområde (`circle.marker-hit`, radius 10) bak den synlige sirkelen, slik at små prikker kan treffes med peker uten at sirkelarealet endres. Treffområdet er ikke fokuserbart; tastaturfokus går alltid til den synlige markøren.
 
 ```sh
 npm run data:datacenters          # regenerer fra cacher; nett bare ved nye steder eller manglende cache
@@ -168,6 +168,16 @@ Søk etter anlegg som manglet i utvalget, med utgangspunkt i Nkom-operatører ut
   - **datacentermap.com:** avviste forespørslene (429).
 - 27 rader er fortsatt et utvalg; Statnett-listene er ikke importert.
 
+### Kildekontroll 22.10.2026
+
+Innmelding #3 om Kiseåsen er gjennomgått mot [kommunens kunngjøring](https://www.skien.kommune.no/politikk/kunngjoeringer/varsel-om-oppstart-av-detaljregulering-kiseaasen) (24.08.2026), [planprogram E02](https://www.skien.kommune.no/media/oc5a0yku/kiseaasen_planprogram.pdf) (21.08.2026), [oppstartsmøtereferatet](https://www.skien.kommune.no/media/dlfpq55i/kiseaasen_referat-oppstartsmoete-29062026.pdf) (revidert 29.06.2026) og [varslingsbrevet](https://www.skien.kommune.no/media/5rmnwz3s/kiseaasen_varslingsbrev.pdf). Alle tre PDF-vedlegg er lest; HTML-kunngjøringen alene mangler effekttallene.
+
+- **Eget prosjekt:** Kiseåsen, gbnr. 11/1, plan-ID 2026009 og arkivsak 26/13001, sør for Rød transformatorstasjon. Cloudberry Develop AS er forslagsstiller, ikke dokumentert fremtidig operatør. Planprogrammet avsnitt 3.5 omtaler Gromstul (plan-ID 2017004) og Brubergåsen separat. Dette er ikke Googles campus eller Nscales nabotomt på Gromstul, og heller ikke Nscale/Løvenskiold-Fossums prosjekt ved Bolvik/Grenland transformatorstasjon, omtalt i E24 16.09.2026. Ny rad: `cloudberry-kiseasen`; de eksisterende Skien-radene er uendret.
+- **Planlagt effekt, ikke tildeling:** avsnitt 4.1 og 5.2 oppgir tre enheter à om lag 40 MW IT-effekt (120 MW totalt) og rundt 160 MW samlet elektrisk effekt. `mw_planned: 160`, `facility_capacity`; IT-effekten inngår og legges ikke til. Avsnitt 1.4 krever videre avklaring av nettkapasitet og tilknytning. Reservasjon, kø og faktisk last er ikke dokumentert og forblir ukjent. Formuleringen «Energibruken i driftsfasen er 160 MW» i avsnitt 6.1 er et planpremiss, ikke målt forbruk.
+- **Plassering:** Kartverkets stedspunkt for åsen Kiseåsen i Skien, stedsnummer 548720, 59.27734 / 9.53374; `place`, ikke verifisert anleggstomt eller transformatorstasjonens posisjon.
+- **Kildefeil beholdt som merknader:** kunngjøringen skriver «Coudberry», mens planvedleggene identifiserer Cloudberry Develop AS. Varslingsbrevet har både 22.03.2026 og 10.10.2026 som merknadsfrist; kunngjøringen oppgir 10.10.2026. Konfliktene er ikke rettet i kildene eller brukt til å utlede kapasitet; de står også i radens `note`.
+- 28 rader er fortsatt et utvalg; ingen Statnett-lister er importert og ingen andre prosjekters krafttall er overført til Kiseåsen.
+
 ## Innmeldinger fra leserne
 
 Et banner over kartet inviterer leseren til å bidra med «Tips oss». Hvert anlegg har «Ny informasjon eller rettelse». Alle innmeldingslenkene åpner skjemaet [.github/ISSUE_TEMPLATE/data-korreksjon.yml](.github/ISSUE_TEMPLATE/data-korreksjon.yml) i en ny fane. GitHub-konto kreves. Skjemaet heter «Ny informasjon eller rettelse» og har bare GitHubs vanlige tittel og ett beskrivelsesfelt, uten prefiks eller kategorivalg. Beskrivelsen kan inneholde lenker og bilder. Navn og kildelenke er ikke påkrevd; også usikre tips er velkomne. Fra et anlegg fylles navnet inn i tittelen og en lenke til anlegget inn i beskrivelsen.
@@ -180,13 +190,13 @@ Lenkene bygges i `src/report-links.ts`. Beskrivelsesfeltet samsvarer med `FORM_F
 | --- | --- | --- |
 | Ny, redigert eller gjenåpnet sak; etiketten `data` legges til | `datasenter-triage.yml` legger én takkekommentar og én kort vurdering som oppdateres på stedet. Boten finner lenker i tittel og beskrivelse og prøver inntil 3 av dem. Manglende navn eller kilder stopper ikke vurderingen. | `data`, `status: til-vurdering`; bare tom beskrivelse uten utfyllende kommentar gir `status: trenger-info` |
 | Kommentar opprettes, redigeres eller slettes | Kommentarer fra personer inngår i ny vurdering. Botkommentarer ignoreres. Nye opplysninger oppdaterer samme vurderingskommentar og lukker aldri PR-er. | Beholder eventuell `status: pr-opprettet` |
-| Moderator velger videre behandling | Tildel saken til Copilot under **Assignees** for videre kildeundersøkelse, forslag til dataendringer og PR. Du kan også behandle saken selv. Ingen godkjenningsetikett trengs; tildeling er ikke faktagodkjenning. | `status: til-vurdering` til en PR er knyttet til saken |
-| Copilot undersøker | Skyagenten følger `AGENTS.md`, kontrollerer kilder og relevante vedlegg, avklarer nytt eller eksisterende anlegg, foreslår kildebelagte endringer og kjører verifiseringen. Uten tilstrekkelig grunnlag forklares funn og mangler uten å gjette data. | uendret |
+| Moderator undersøker lokalt | Åpne saken og kildeoversikten i lokal editor, eventuelt med Copilot. Les primærkilder og relevante PDF-vedlegg, avklar nytt eller eksisterende anlegg, oppdater kildebelagte data og kjør verifiseringen i `AGENTS.md`. Ingen tildeling til skyagent eller godkjenningsetikett trengs. | `status: til-vurdering` til en PR er knyttet til saken |
+| Moderator klargjør PR | Gjennomgå lokale endringer, commit og push selv, og opprett eller oppdater PR med referansen nedenfor. Manglende kildegrunnlag forklares i saken uten å gjette data. | uendret |
 | PR opprettes eller endres | `datasenter-pr.yml` knytter PR-en til innmeldingen. Avvises PR-en eller referansen fjernes, går saken tilbake til vurdering dersom ingen andre PR-er er knyttet til den. | `status: pr-opprettet` |
 | Merge | Gjøres manuelt etter gjennomgang av PR-en. Merge alene gir ingen melding til innsenderen. | uendret |
 | Publisert | `datasenter-published.yml` finner manuelt opprettede, flettede PR-er og kontrollerer at merge inngår i en vellykket Pages-publisering fra hovedgrenen. Boten svarer med lenke og lukker saken, også om PR-koblingskjøringen ikke rakk å kjøre. | `status: publisert` |
 
-I PR-beskrivelsen skriver moderator eller Copilot følgende på egne linjer, utenfor kodeblokk:
+I PR-beskrivelsen skriver moderator følgende på egne linjer, utenfor kodeblokk:
 
 ```text
 Innmelding: #2
@@ -195,19 +205,19 @@ Datasenter: gm-hamar
 
 `Innmelding` er påkrevd for automatisk oppfølging. `Datasenter` er valgfritt og gir direkte lenke til et anlegg som finnes i den publiserte CSV-en; ellers lenkes det til kartet. Gjenta linjene ved flere saker eller anlegg. Referanser i kodeblokker ignoreres. Ikke bruk `Fixes #2` eller `Closes #2`: GitHub ville da lukket saken ved merge, før publiseringen er bekreftet.
 
-### Tildeling til Copilot
+### Lokal behandling og bruk av Copilot
 
-Copilot-skyagenten må være aktivert for repoet og tilgjengelig for kontoen din. Velg **Assignees → Copilot** på innmeldingen. Det starter GitHubs egen agentflyt; det finnes ingen separat etikett eller lokal workflow som må startes først. Repoets `AGENTS.md` beskriver oppdraget, kildekravene og verifiseringen. En ekstra oppdragstekst er derfor normalt ikke nødvendig.
+Anbefalt standard er lokal behandling: gi editoragenten saksnummer eller PR-lenke, be den lese innmelding og kommentarer, kontrollere primærkilder og vedlegg, avklare mulig overlapp og foreslå dataendringer. Moderator gjennomgår resultatet og håndterer commit, push og PR. Repoets `AGENTS.md` beskriver kildekravene og verifiseringen.
 
-Lokale editoragenter skal fortsatt ikke committe eller pushe. Bare skyagenten som er eksplisitt tildelt saken, kan pushe til sin egen PR-gren og opprette eller oppdatere PR-en. Moderator kontrollerer kilder, ukjente tall, mulige overlapp og PR-referansen før merge. Verken tildeling eller en ferdig PR betyr at dataene er godkjent.
+PR #4 viste at skyagentens nettbegrensninger blokkerte Skien kommunes kilder. Dette betyr ikke at alle skyagenter mangler internett, men nett- og domenetilgang kan ikke tas for gitt. En automatisk kildeoversikt eller innlimt HTML erstatter ikke lesing av relevante planvedlegg; Kiseåsens effekttall sto bare i PDF-en. Manglende tilgang skal føre til lokal overtakelse, ikke en ubekreftet ny rad eller en tom PR.
 
-GitHub gir skyagenten tittel, beskrivelse og eksisterende kommentarer når den starter. Senere issue-kommentarer oppdaterer kildeoversikten, men videresendes ikke automatisk til agenten. Gi videre instruksjoner med `@copilot` i PR-en. GitHub Actions for Copilot-PR-er kan kreve **Approve and run workflows**; kontroller endringene før du godkjenner kjøring. Sjekk at PR-beskrivelsen har `Innmelding: #<nr>` og ingen lukkende referanse som `Fixes`, `Closes` eller `Resolves` med saksnummer.
+Skyagenten kan unntaksvis brukes til et avgrenset oppdrag når nødvendige kilder er tilgjengelige i miljøet eller kildegrunnlaget allerede er kontrollert lokalt. Tildeling under **Assignees → Copilot** starter GitHubs agentflyt og er ikke faktagodkjenning. Bare en eksplisitt tildelt skyagent kan pushe til sin egen PR-gren; lokale editoragenter skal ikke committe eller pushe. Senere issue-kommentarer videresendes ikke automatisk til skyagenten; videre instruksjoner gis med `@copilot` i PR-en. Ved lokal overtakelse må eventuell aktiv skyagentjobb stoppes i GitHub før samme gren oppdateres. Moderator kontrollerer kilder, ukjente tall, overlapp og PR-referansen før merge. Kontroller også eventuelt automatisk tillegg i PR-beskrivelsen: `Innmelding: #<nr>` skal stå på egen linje, uten lukkende referanser som `Fixes`, `Closes` eller `Resolves` med saksnummer. Actions kan kreve **Approve and run workflows** etter gjennomgang.
 
 Den gamle etiketten `status: godkjent` er ikke en startknapp og skal fjernes fra repoet. Behold `data` på innmeldingen. En sak uten PR står til vurdering; etter PR-kobling og bekreftet publisering oppdaterer boten statusen.
 
 - **Ingen gjetting.** Moderator fyller bare inn kildebelagte opplysninger. Planlagt kapasitet krever grunnlag. Rader valideres med `parseSiteRows`, samme regler som pipelinen. Kildekonflikter noteres i `note` og under «Kildekontroll».
 - **`reviewed_at`** settes manuelt til datoen moderatoren gjennomgår raden mot kildene.
-- **Kildehjelp, ikke faktagodkjenning.** Kildeoversiktsboten leser HTML med Cheerio for sidetittel, oppgitt dato og inntil fem PDF-lenker per kilde. Den henter ikke dokumentenes innhold automatisk; videre dokumentgjennomgang gjøres av moderator eller en eksplisitt tildelt Copilot-skyagent. Datering er uverifisert metadata og overføres ikke til CSV. Mulige anleggstreff basert på navn, sted, kommune eller kildelenke vises bare som forslag i en sammenfoldet moderatordel. Publisering krever fortsatt moderatorens gjennomgang og merge.
+- **Kildehjelp, ikke faktagodkjenning.** Kildeoversiktsboten leser HTML med Cheerio for sidetittel, oppgitt dato og inntil fem PDF-lenker per kilde. Den henter ikke dokumentenes innhold automatisk; videre dokumentgjennomgang gjøres normalt lokalt av moderator, eventuelt med editoragent. Datering er uverifisert metadata og overføres ikke til CSV. Mulige anleggstreff basert på navn, sted, kommune eller kildelenke vises bare som forslag i en sammenfoldet moderatordel. Publisering krever fortsatt moderatorens gjennomgang og merge.
 - **Upålitelig input.** Sakstekst, kommentarer, PR-beskrivelser og nettsider er upålitelige og settes aldri inn i shell-kommandoer. De vises escapet i botkommentarer. Kildesjekken følger bare http(s), avviser interne adresser og lenker med påloggingsinformasjon, venter maks 8 sekunder og leser maks 1 MB. En utilgjengelig kilde sendes til manuell kontroll, ikke tilbake som en mangel innsenderen må løse. Inntil 10 ulike lenker registreres, og inntil 3 hentes per vurdering.
 - **Idempotent.** Bare botens egne kommentarer med skjulte markører oppdateres. Fingeravtrykket omfatter tittel, beskrivelse og kommentarer fra personer; botens egne svar starter ingen ny vurdering. En vurdering som er blitt utdatert under kildehentingen, publiseres ikke.
 - **Endrede saker:** Moderator kontrollerer siste versjon av beskrivelsen og kildene før publisering. Feiler geokodingen for et nytt sted, rettes posisjonen manuelt i CSV-en.

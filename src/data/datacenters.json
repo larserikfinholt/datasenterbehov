@@ -1,11 +1,11 @@
 {
-  "generatedAt": "2026-10-16T09:03:44.404Z",
+  "generatedAt": "2026-10-22T07:37:11.146Z",
   "provenance": {
-    "generatedAt": "2026-10-16T09:03:44.404Z",
+    "generatedAt": "2026-10-22T07:37:11.146Z",
     "nkomFetchedAt": "2026-10-14T12:52:44.929Z",
-    "inputsSha256": "8e3e9a5afeca7b1656ec3b343330cbce54a688d6b7a43e5f88faace1ec4fe69e",
+    "inputsSha256": "2b070a235a30eaf11da176aea32d458c128e86a1a69ea4e08e96eec976609788",
     "inputs": {
-      "data/datacenters.csv": "eeacf301f2db0a9b4b0069229c95e43859e59b25017bcc68a4a31cdc8485c177",
+      "data/datacenters.csv": "ba651b892471849ad78076c9c3d18ae67e3ce9893a18d03b9c554021da91c269",
       "data/sources/nkom-operatorer.csv": "482c5e4b2476aa60cc26839258e27bac463a24829852a96362ca79a0aa0de2b1",
       "data/sources/brreg-enheter.json": "e63b09b7ddc6c5ea84e3aca8b5d26185f883381630ac34c43aee78f53c451517",
       "data/sources/nkom-totals.json": "5990c41b0ea1705e76cdb118e2d43b078b4a931f8641a1886cc3cee12fab8bac",
@@ -1042,6 +1042,40 @@
       "cryptoMining": false,
       "x": 129.918,
       "y": 560.781
+    },
+    {
+      "id": "cloudberry-kiseasen",
+      "name": "Kiseåsen Skien",
+      "operator": "Cloudberry Develop AS (forslagsstiller)",
+      "operator_orgnr": "",
+      "kommune": "Skien",
+      "place": "Kiseåsen",
+      "lat": 59.27734,
+      "lon": 9.53374,
+      "precision": "place",
+      "status": "planned",
+      "mw_in_use": null,
+      "mw_reserved": null,
+      "mw_planned": 160,
+      "mw_planned_basis": "facility_capacity",
+      "mw_queued": null,
+      "power_status": "Planprogram 21.08.2026 beskriver rundt 160 MW samlet elektrisk effekt og 120 MW IT-effekt (tre enheter à 40 MW); planlagt konsept uten dokumentert nettreservasjon eller køtall; ikke faktisk last",
+      "source_urls": [
+        "https://www.skien.kommune.no/politikk/kunngjoeringer/varsel-om-oppstart-av-detaljregulering-kiseaasen",
+        "https://www.skien.kommune.no/media/oc5a0yku/kiseaasen_planprogram.pdf",
+        "https://www.skien.kommune.no/media/dlfpq55i/kiseaasen_referat-oppstartsmoete-29062026.pdf"
+      ],
+      "source_dates": [
+        "2026-08-24",
+        "2026-08-21",
+        "2026-06-29"
+      ],
+      "reviewed_at": "2026-10-22",
+      "note": "Eget planområde sør for Rød transformatorstasjon på gbnr. 11/1; plan-ID 2026009 og arkivsak 26/13001; Cloudberry Develop AS er forslagsstiller og fremtidig operatør er ikke avklart; planprogram E02 avsnitt 4.1 og 5.2 oppgir effekt; 120 MW IT inngår i rundt 160 MW samlet effekt og summeres ikke; nettkapasitet og tilknytning må avklares ifølge avsnitt 1.4; Gromstul (plan-ID 2017004) omtales som et annet planområde i avsnitt 3.5; ikke Nscales Bolvik-prosjekt; posisjon er Kartverkets stedspunkt for åsen Kiseåsen (stedsnummer 548720) og ikke verifisert anleggstomt; kunngjøringen skriver Coudberry mens planvedleggene skriver Cloudberry; varslingsbrevet har motstridende merknadsfrister 22.03.2026 og 10.10.2026",
+      "nkomRegistered": false,
+      "cryptoMining": false,
+      "x": 130.962,
+      "y": 554.426
     },
     {
       "id": "bw-frier-vest",
